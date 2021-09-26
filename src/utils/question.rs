@@ -14,7 +14,7 @@ impl Question{
         }
     }
 
-    pub fn solve(&self, row: Vec<i32>) -> bool{
+    pub fn solve(&self, row: &Vec<i32>) -> bool{
         let val_to_check = row[self.column as usize];
         if self.column_is_categorical{
             return val_to_check == self.value;

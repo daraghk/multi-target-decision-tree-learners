@@ -10,6 +10,8 @@ mod class_counter;
 mod question;
 #[path = "threshold_finders/threshold_finder.rs"]
 mod threshold_finder;
+#[path = "tree/decision_tree.rs"]
+mod decision_tree;
 
 fn main() {
     let _data = fs::read_to_string("./data_arff/iris.arff").expect("Unable to read file");
