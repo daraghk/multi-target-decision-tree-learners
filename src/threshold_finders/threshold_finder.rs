@@ -60,14 +60,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_working() {
+    fn test_find_best_threshold_dummy() {
         let data = vec![vec![10, 2, 2], vec![6, 2, 2], vec![1, 2, 1]];
         let result = find_best_split(&data);
-        println!("{:?}", result);
+        assert_eq!(result.question.value, 6);
+    }
 
+    #[test]
+    fn test_find_first_best_threshold_iris() {
         let _data = fs::read_to_string("./data_arff/iris.arff").expect("Unable to read file");
-        let unnamed_data: Vec<Vec<i32>> = arff::from_str(&_data).unwrap();
-        let result = find_best_split(&unnamed_data);
-        println!("{:?}", result);
+        let iris: Vec<Vec<i32>> = arff::from_str(&_data).unwrap();
+        let result = find_best_split(&iris);
+        assert_eq!(result.question.column, 2);
+        assert_eq!(result.question.value, 30);
     }
 }
