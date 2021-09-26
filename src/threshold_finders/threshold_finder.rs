@@ -8,7 +8,7 @@ use crate::{
 
 #[derive(Debug)]
 struct LastSeen {
-    count: i32,
+    count: u32,
     value: i32,
 }
 
@@ -35,14 +35,14 @@ pub fn find_best_split(data: &Vec<Vec<i32>>) -> BestSplitResult {
     for i in (0..last_feature_column_index) {
         let best_threshold_for_feature = threshold_finder_numeric::determine_best_numeric_threshold(
             &data,
-            i as i32,
+            i as u32,
             &class_counts_all,
         );
 
         let information_gain = gini_all - best_threshold_for_feature.loss;
         if (information_gain > best_gain) {
             best_gain = information_gain;
-            best_question.column = i as i32;
+            best_question.column = i as u32;
             best_question.value = best_threshold_for_feature.threshold_value as i32;
         }
     }

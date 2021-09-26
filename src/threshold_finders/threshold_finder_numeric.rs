@@ -5,14 +5,14 @@ use crate::threshold_finder::LastSeen;
 
 pub (super) fn determine_best_numeric_threshold(
     data: &Vec<Vec<i32>>,
-    column: i32,
+    column: u32,
     class_counts_all: &ClassCounter<i32, i32>,
 ) -> BestThresholdResult {
     let mut best_result_container = BestThresholdResult {
         loss: f32::INFINITY,
         threshold_value: 0.0,
     };
-    let number_of_rows = data.len() as f32;
+    let number_of_rows = data.len() as u32;
 
     let mut class_counts_right: ClassCounter<i32, i32> = ClassCounter::new();
     class_counts_right.map = class_counts_all.map.clone();
@@ -31,7 +31,7 @@ pub (super) fn determine_best_numeric_threshold(
         if (feature_val == last_seen.value) {
             last_seen.count += 1;
         } else {
-            true_rows_count -= last_seen.count as f32;
+            true_rows_count -= last_seen.count;
 
             update_class_counts_left(
                 &mut class_counts_left,
@@ -40,8 +40,8 @@ pub (super) fn determine_best_numeric_threshold(
             );
 
             let loss = calculate_loss(
-                number_of_rows,
-                true_rows_count,
+                number_of_rows as f32,
+                true_rows_count as f32,
                 &class_counts_left,
                 &class_counts_right,
             );
@@ -87,7 +87,7 @@ fn update_class_counts_right(
         .insert(class, class_counts_right.map[&class] - 1);
 }
 
-fn get_sorted_feature_tuple_vector(data: &Vec<Vec<i32>>, column: i32) -> Vec<(i32, i32)> {
+fn get_sorted_feature_tuple_vector(data: &Vec<Vec<i32>>, column: u32) -> Vec<(i32, i32)> {
     let mut feature_tuple_vector = vec![];
     let mut row_index = 0;
     data.iter().for_each(|row| {

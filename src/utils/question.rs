@@ -1,12 +1,12 @@
 #[derive(Debug)]
 pub struct Question{
-    pub column: i32,
+    pub column: u32,
     column_is_categorical: bool,
     pub value: i32
 }
 
 impl Question{
-    pub fn new(column: i32, column_is_categorical: bool, value: i32) -> Self{
+    pub fn new(column: u32, column_is_categorical: bool, value: i32) -> Self{
         Self{
             column,
             column_is_categorical,
