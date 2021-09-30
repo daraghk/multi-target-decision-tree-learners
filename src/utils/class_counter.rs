@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct ClassCounter<K, V> {
     pub map: HashMap<K, V>,
 }

@@ -1,22 +1,35 @@
 use crate::question::Question;
 
+use super::leaf::Leaf;
+
 #[derive(Debug)]
-pub struct TreeNode<'a> {
+pub struct TreeNode {
     question: Question,
-    true_branch: &'a Vec<Vec<i32>>,
-    false_branch: &'a Vec<Vec<i32>>,
+    true_branch: Option<Box<TreeNode>>,
+    false_branch: Option<Box<TreeNode>>,
+    leaf: Option<Leaf>,
 }
 
-impl<'a> TreeNode<'a> {
+impl TreeNode {
     pub fn new(
         question: Question,
-        true_branch: &'a Vec<Vec<i32>>,
-        false_branch: &'a Vec<Vec<i32>>,
+        true_branch: Box<TreeNode>,
+        false_branch: Box<TreeNode>,
     ) -> Self {
         Self {
             question,
-            true_branch,
-            false_branch,
+            true_branch: Some(true_branch),
+            false_branch: Some(false_branch),
+            leaf: None,
+        }
+    }
+
+    pub fn leaf_node(question: Question, leaf: Leaf) -> Self {
+        Self {
+            question,
+            true_branch: None,
+            false_branch: None,
+            leaf: Some(leaf),
         }
     }
 }

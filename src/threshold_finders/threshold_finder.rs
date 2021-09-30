@@ -20,8 +20,8 @@ struct BestThresholdResult {
 
 #[derive(Debug)]
 pub struct BestSplitResult {
-    gain: f32,
-    question: Question,
+    pub gain: f32,
+    pub question: Question,
 }
 
 pub fn find_best_split(data: &Vec<Vec<i32>>) -> BestSplitResult {

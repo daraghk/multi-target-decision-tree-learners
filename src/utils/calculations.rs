@@ -39,17 +39,14 @@ pub fn gini(class_counts: &ClassCounter<i32, i32>, number_of_rows: f32) -> f32 {
     impurity - reduction
 }
 
-pub fn partition<'a>(
-    data: &'a Vec<Vec<i32>>,
-    question: &Question,
-) -> (Vec<&'a Vec<i32>>, Vec<&'a Vec<i32>>) {
+pub fn partition(data: &Vec<Vec<i32>>, question: &Question) -> (Vec<Vec<i32>>, Vec<Vec<i32>>) {
     let mut true_rows = vec![];
     let mut false_rows = vec![];
     data.iter().for_each(|row| {
         if (question.solve(row)) {
-            true_rows.push(row);
+            true_rows.push(row.clone());
         } else {
-            false_rows.push(row);
+            false_rows.push(row.clone());
         }
     });
     (true_rows, false_rows)
