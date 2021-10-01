@@ -24,7 +24,7 @@ impl DecisionTree {
 
 pub fn build_tree(data: Vec<Vec<i32>>) -> TreeNode {
     let split_result = threshold_finder::find_best_split(&data);
-    if split_result.gain <= 0.0 {
+    if split_result.gain == 0.0 {
         let predictions = get_class_counts(&data);
         let leaf = Leaf { predictions };
         return TreeNode::leaf_node(split_result.question, leaf);
