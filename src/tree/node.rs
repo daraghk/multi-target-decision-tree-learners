@@ -4,10 +4,10 @@ use super::leaf::Leaf;
 
 #[derive(Debug)]
 pub struct TreeNode {
-    question: Question,
-    true_branch: Option<Box<TreeNode>>,
-    false_branch: Option<Box<TreeNode>>,
-    leaf: Option<Leaf>,
+    pub question: Question,
+    pub true_branch: Option<Box<TreeNode>>,
+    pub false_branch: Option<Box<TreeNode>>,
+    pub leaf: Option<Leaf>,
 }
 
 impl TreeNode {

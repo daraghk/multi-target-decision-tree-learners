@@ -31,7 +31,7 @@ pub fn find_best_split(data: &Vec<Vec<i32>>) -> BestSplitResult {
     let class_counts_all = get_class_counts(data);
     let gini_all = gini(&class_counts_all, data.len() as f32);
 
-    let last_feature_column_index = data[0].len();
+    let last_feature_column_index = data[0].len()-1;
     for i in (0..last_feature_column_index) {
         let best_threshold_for_feature = threshold_finder_numeric::determine_best_numeric_threshold(
             &data,

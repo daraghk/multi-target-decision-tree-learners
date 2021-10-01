@@ -21,6 +21,10 @@ impl Question{
         }
         val_to_check >= self.value
     }
+
+    pub fn to_string(&self) -> String{
+        format!("Is {} >= {}", self.column, self.value)
+    }
 }
 
 #[cfg(test)]
