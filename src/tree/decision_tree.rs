@@ -33,8 +33,8 @@ pub fn build_tree(data: Vec<Vec<i32>>, number_of_classes: u32) -> TreeNode {
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 
-        let left_tree = build_tree(left_data.data, number_of_classes);
-        let right_tree = build_tree(right_data.data, number_of_classes);
+        let left_tree = build_tree(left_data, number_of_classes);
+        let right_tree = build_tree(right_data, number_of_classes);
         TreeNode::new(
             split_result.question,
             Box::new(left_tree),

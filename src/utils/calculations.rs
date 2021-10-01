@@ -38,37 +38,18 @@ pub fn gini(class_counts: &ClassCounter, number_of_rows: f32) -> f32 {
     impurity - reduction
 }
 
-#[derive(Debug)]
-pub struct PartitionedData {
-    pub number_of_classes: u32,
-    pub data: Vec<Vec<i32>>,
-}
-
-pub fn partition(data: &Vec<Vec<i32>>, question: &Question) -> (PartitionedData, PartitionedData) {
+pub fn partition(data: &Vec<Vec<i32>>, question: &Question) -> (Vec<Vec<i32>>, Vec<Vec<i32>>) {
     let mut true_rows = vec![];
     let mut false_rows = vec![];
-    let mut true_classes = HashSet::new();
-    let mut false_classes = HashSet::new();
 
     data.iter().for_each(|row| {
-        let class = row[row.len() - 1];
         if (question.solve(row)) {
             true_rows.push(row.clone());
-            true_classes.insert(class);
         } else {
             false_rows.push(row.clone());
-            false_classes.insert(class);
         }
     });
-    let true_partition = PartitionedData {
-        number_of_classes: true_classes.len() as u32,
-        data: true_rows,
-    };
-    let false_partition = PartitionedData {
-        number_of_classes: false_classes.len() as u32,
-        data: false_rows,
-    };
-    (true_partition, false_partition)
+    (true_rows, false_rows)
 }
 
 #[cfg(test)]
@@ -120,8 +101,8 @@ mod tests {
         let question = Question::new(0, false, 2);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
-        assert_eq!(partitioned_data.0.data.len(), 0);
-        assert_eq!(partitioned_data.1.data.len(), 3);
+        assert_eq!(partitioned_data.0.len(), 0);
+        assert_eq!(partitioned_data.1.len(), 3);
     }
 
     #[test]
@@ -130,8 +111,8 @@ mod tests {
         let question = Question::new(0, false, 0);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
-        assert_eq!(partitioned_data.0.data.len(), 3);
-        assert_eq!(partitioned_data.1.data.len(), 0);
+        assert_eq!(partitioned_data.0.len(), 3);
+        assert_eq!(partitioned_data.1.len(), 0);
     }
 
     #[test]
@@ -140,7 +121,7 @@ mod tests {
         let question = Question::new(0, false, 3);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
-        assert_eq!(partitioned_data.0.data.len(), 2);
-        assert_eq!(partitioned_data.1.data.len(), 2);
+        assert_eq!(partitioned_data.0.len(), 2);
+        assert_eq!(partitioned_data.1.len(), 2);
     }
 }
