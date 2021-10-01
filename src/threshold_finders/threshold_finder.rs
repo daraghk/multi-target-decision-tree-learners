@@ -24,11 +24,11 @@ pub struct BestSplitResult {
     pub question: Question,
 }
 
-pub fn find_best_split(data: &Vec<Vec<i32>>) -> BestSplitResult {
+pub fn find_best_split(data: &Vec<Vec<i32>>, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;
     let mut best_question = Question::new(0, false, 0);
 
-    let class_counts_all = get_class_counts(data);
+    let class_counts_all = get_class_counts(data, number_of_classes);
     let gini_all = gini(&class_counts_all, data.len() as f32);
 
     let last_feature_column_index = data[0].len()-1;
@@ -61,8 +61,8 @@ mod tests {
 
     #[test]
     fn test_find_best_threshold_dummy() {
-        let data = vec![vec![10, 2, 2], vec![6, 2, 2], vec![1, 2, 1]];
-        let result = find_best_split(&data);
+        let data = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
+        let result = find_best_split(&data, 2);
         assert_eq!(result.question.value, 6);
     }
 
@@ -70,7 +70,7 @@ mod tests {
     fn test_find_first_best_threshold_iris() {
         let _data = fs::read_to_string("./data_arff/iris.arff").expect("Unable to read file");
         let iris: Vec<Vec<i32>> = arff::from_str(&_data).unwrap();
-        let result = find_best_split(&iris);
+        let result = find_best_split(&iris,3);
         assert_eq!(result.question.column, 2);
         assert_eq!(result.question.value, 30);
     }

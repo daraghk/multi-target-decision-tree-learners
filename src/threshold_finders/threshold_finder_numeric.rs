@@ -3,10 +3,10 @@ use crate::class_counter::ClassCounter;
 use crate::threshold_finder::BestThresholdResult;
 use crate::threshold_finder::LastSeen;
 
-pub (super) fn determine_best_numeric_threshold(
+pub(super) fn determine_best_numeric_threshold(
     data: &Vec<Vec<i32>>,
     column: u32,
-    class_counts_all: &ClassCounter<i32, i32>,
+    class_counts_all: &ClassCounter,
 ) -> BestThresholdResult {
     let mut best_result_container = BestThresholdResult {
         loss: f32::INFINITY,
@@ -14,9 +14,12 @@ pub (super) fn determine_best_numeric_threshold(
     };
     let number_of_rows = data.len() as u32;
 
-    let mut class_counts_right: ClassCounter<i32, i32> = ClassCounter::new();
-    class_counts_right.map = class_counts_all.map.clone();
-    let mut class_counts_left: ClassCounter<i32, i32> = ClassCounter::new();
+    let mut class_counts_right: ClassCounter =
+        ClassCounter::new(class_counts_all.counts.len() as u32);
+    class_counts_right.counts = class_counts_all.counts.clone();
+    
+    let mut class_counts_left: ClassCounter =
+        ClassCounter::new(class_counts_all.counts.len() as u32);
 
     let sorted_feature_data = get_sorted_feature_tuple_vector(data, column);
     let mut true_rows_count = number_of_rows;
@@ -61,30 +64,25 @@ pub (super) fn determine_best_numeric_threshold(
 }
 
 fn update_class_counts_left(
-    class_counts_left: &mut ClassCounter<i32, i32>,
-    class_counts_right: &ClassCounter<i32, i32>,
-    class_counts_all: &ClassCounter<i32, i32>,
+    class_counts_left: &mut ClassCounter,
+    class_counts_right: &ClassCounter,
+    class_counts_all: &ClassCounter,
 ) {
-    class_counts_all.map.iter().for_each(|kv| {
-        let class = *kv.0;
-        class_counts_left.map.insert(
-            class,
-            class_counts_all.map[&class] - class_counts_right.map[&class],
-        );
-    });
+    for class in (0..class_counts_all.counts.len()) {
+        class_counts_left.counts[class] =
+            class_counts_all.counts[class] - class_counts_right.counts[class];
+    }
 }
 
 fn update_class_counts_right(
     tuple: &(i32, i32),
     data: &Vec<Vec<i32>>,
-    class_counts_right: &mut ClassCounter<i32, i32>,
+    class_counts_right: &mut ClassCounter,
 ) {
     let real_row_index = tuple.1;
     let row = &data[real_row_index as usize];
     let class = row[row.len() - 1];
-    class_counts_right
-        .map
-        .insert(class, class_counts_right.map[&class] - 1);
+    class_counts_right.counts[class as usize] -= 1;
 }
 
 fn get_sorted_feature_tuple_vector(data: &Vec<Vec<i32>>, column: u32) -> Vec<(i32, i32)> {
@@ -116,9 +114,9 @@ mod tests {
 
     #[test]
     fn test_best_threshold_for_particular_feature() {
-        let data = vec![vec![10, 2, 2], vec![6, 2, 2], vec![1, 2, 1]];
+        let data = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
         let column = 0;
-        let class_counts = get_class_counts(&data);
+        let class_counts = get_class_counts(&data, 2);
         let best = determine_best_numeric_threshold(&data, column, &class_counts);
         assert_eq!(best.loss, 0.0);
         assert_eq!(best.threshold_value, 6.0);

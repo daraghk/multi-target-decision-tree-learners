@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 
 #[derive(Debug)]
-pub struct ClassCounter<K, V> {
-    pub map: HashMap<K, V>,
+pub struct ClassCounter {
+    pub counts: Vec<u32>,
 }
 
-impl<K, V> ClassCounter<K, V> {
-    pub fn new() -> Self {
+impl ClassCounter {
+    pub fn new(number_of_classes: u32) -> Self {
         Self {
-            map: HashMap::new(),
+            counts: vec![0; number_of_classes as usize],
         }
     }
 }
