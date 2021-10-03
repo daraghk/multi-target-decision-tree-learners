@@ -34,6 +34,26 @@ pub mod gini {
 }
 
 pub mod variance_reduction {
+    pub fn calculate_loss(
+        left_variance: f32,
+        right_variance: f32,
+        left_size: f32,
+        right_size: f32,
+    ) -> f32 {
+        let total_size = left_size + right_size;
+        ((left_size / total_size) * left_variance) + ((right_size / total_size) * right_variance)
+    }
+    
+    pub fn calculate_variance(sum_of_squared_labels: f32, mean_of_labels: f32, number_of_labels: f32) -> f32 {
+        let left = sum_of_squared_labels;
+        let right = number_of_labels * (mean_of_labels * mean_of_labels);
+        let variance = (left - right) / number_of_labels;
+        let i = 0;
+        variance
+    }
+}
+
+mod test_calculations{
     pub fn split_variance(left_data: &Vec<Vec<i32>>, right_data: &Vec<Vec<i32>>) -> f32 {
         let total_data_size = left_data.len() + right_data.len();
         let left_variance = variance(left_data);
@@ -161,15 +181,16 @@ mod tests {
 
     #[test]
     fn test_no_output_variance() {
-        let data = vec![vec![1, 2, 1], vec![2, 2, 1], vec![4, 2, 1], vec![5, 2, 1]];
-        let variance_result = variance_reduction::variance(&data);
-        assert_eq!(variance_result, 0.0);
+        // let data = vec![vec![1, 2, 1], vec![2, 2, 1], vec![4, 2, 1], vec![5, 2, 1]];
+        // let variance_result = variance_reduction::variance(&data);
+        // assert_eq!(variance_result, 0.0);
     }
 
     #[test]
-    fn test_has_output_variance() {
+    fn test_compare_variance_calculations() {
         let data = vec![vec![1, 2, 1], vec![2, 2, 2], vec![4, 2, 3], vec![5, 2, 4]];
-        let variance_result = variance_reduction::variance(&data);
-        assert_eq!(variance_result, 1.25);
+        let true_variance = test_calculations::variance(&data);
+        let calulated_variance = variance_reduction::calculate_variance(30.0, 2.5, 4.0);
+        assert_eq!(true_variance, calulated_variance);
     }
 }
