@@ -1,9 +1,10 @@
-use crate::calculations::calculate_loss;
-use crate::class_counter::ClassCounter;
+use crate::{calculations::gini::calculate_loss, class_counter::ClassCounter};
 use crate::threshold_finder::BestThresholdResult;
 use crate::threshold_finder::LastSeen;
 
-pub(super) fn determine_best_numeric_threshold(
+use super::get_sorted_feature_tuple_vector;
+
+pub(super) fn determine_best_threshold(
     data: &Vec<Vec<i32>>,
     column: u32,
     class_counts_all: &ClassCounter,
@@ -17,7 +18,7 @@ pub(super) fn determine_best_numeric_threshold(
     let mut class_counts_right: ClassCounter =
         ClassCounter::new(class_counts_all.counts.len() as u32);
     class_counts_right.counts = class_counts_all.counts.clone();
-    
+
     let mut class_counts_left: ClassCounter =
         ClassCounter::new(class_counts_all.counts.len() as u32);
 
@@ -85,21 +86,9 @@ fn update_class_counts_right(
     class_counts_right.counts[class as usize] -= 1;
 }
 
-fn get_sorted_feature_tuple_vector(data: &Vec<Vec<i32>>, column: u32) -> Vec<(i32, i32)> {
-    let mut feature_tuple_vector = vec![];
-    let mut row_index = 0;
-    data.iter().for_each(|row| {
-        let feature_value = row[column as usize];
-        feature_tuple_vector.push((feature_value, row_index));
-        row_index += 1;
-    });
-    feature_tuple_vector.sort_by_key(|tuple| tuple.0);
-    feature_tuple_vector
-}
-
 #[cfg(test)]
 mod tests {
-    use crate::calculations::get_class_counts;
+    use crate::{calculations::get_class_counts};
 
     use super::*;
 
@@ -117,7 +106,7 @@ mod tests {
         let data = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
         let column = 0;
         let class_counts = get_class_counts(&data, 2);
-        let best = determine_best_numeric_threshold(&data, column, &class_counts);
+        let best = determine_best_threshold(&data, column, &class_counts);
         assert_eq!(best.loss, 0.0);
         assert_eq!(best.threshold_value, 6.0);
     }

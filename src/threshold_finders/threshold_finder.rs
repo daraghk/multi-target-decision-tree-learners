@@ -1,10 +1,7 @@
-mod threshold_finder_categorical;
-mod threshold_finder_numeric;
+mod threshold_finder_variance;
+mod threshold_finder_gini;
 
-use crate::{
-    calculations::{get_class_counts, gini},
-    question::Question,
-};
+use crate::{calculations::{get_class_counts, gini::{calculate_gini}}, question::Question};
 
 #[derive(Debug)]
 struct LastSeen {
@@ -29,11 +26,11 @@ pub fn find_best_split(data: &Vec<Vec<i32>>, number_of_classes: u32) -> BestSpli
     let mut best_question = Question::new(0, false, 0);
 
     let class_counts_all = get_class_counts(data, number_of_classes);
-    let gini_all = gini(&class_counts_all, data.len() as f32);
+    let gini_all = calculate_gini(&class_counts_all, data.len() as f32);
 
     let last_feature_column_index = data[0].len()-1;
     for i in (0..last_feature_column_index) {
-        let best_threshold_for_feature = threshold_finder_numeric::determine_best_numeric_threshold(
+        let best_threshold_for_feature = threshold_finder_gini::determine_best_threshold(
             &data,
             i as u32,
             &class_counts_all,
@@ -51,6 +48,18 @@ pub fn find_best_split(data: &Vec<Vec<i32>>, number_of_classes: u32) -> BestSpli
         gain: best_gain,
         question: best_question,
     }
+}
+
+fn get_sorted_feature_tuple_vector(data: &Vec<Vec<i32>>, column: u32) -> Vec<(i32, i32)> {
+    let mut feature_tuple_vector = vec![];
+    let mut row_index = 0;
+    data.iter().for_each(|row| {
+        let feature_value = row[column as usize];
+        feature_tuple_vector.push((feature_value, row_index));
+        row_index += 1;
+    });
+    feature_tuple_vector.sort_by_key(|tuple| tuple.0);
+    feature_tuple_vector
 }
 
 #[cfg(test)]

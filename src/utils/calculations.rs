@@ -5,18 +5,62 @@ use crate::{
 use core::num;
 use std::{collections::HashSet, hash::*};
 
-pub fn calculate_loss(
-    number_of_rows: f32,
-    true_rows_count: f32,
-    class_counts_left: &ClassCounter,
-    class_counts_right: &ClassCounter,
-) -> f32 {
-    let false_rows_count = number_of_rows - true_rows_count;
-    let gini_left = gini(class_counts_left, false_rows_count);
-    let gini_right = gini(class_counts_right, true_rows_count);
-    let sum = (false_rows_count * gini_left) + (true_rows_count * gini_right);
-    let result = sum / number_of_rows;
-    result
+pub mod gini {
+    use super::*;
+
+    pub fn calculate_loss(
+        number_of_rows: f32,
+        true_rows_count: f32,
+        class_counts_left: &ClassCounter,
+        class_counts_right: &ClassCounter,
+    ) -> f32 {
+        let false_rows_count = number_of_rows - true_rows_count;
+        let gini_left = calculate_gini(class_counts_left, false_rows_count);
+        let gini_right = calculate_gini(class_counts_right, true_rows_count);
+        let sum = (false_rows_count * gini_left) + (true_rows_count * gini_right);
+        let result = sum / number_of_rows;
+        result
+    }
+
+    pub fn calculate_gini(class_counts: &ClassCounter, number_of_rows: f32) -> f32 {
+        let impurity: f32 = 1.0;
+        let mut reduction: f32 = 0.0;
+        class_counts.counts.iter().for_each(|class_count| {
+            let probability_i = *class_count as f32 / number_of_rows;
+            reduction += probability_i * probability_i;
+        });
+        impurity - reduction
+    }
+}
+
+pub mod variance_reduction {
+    pub fn split_variance(left_data: &Vec<Vec<i32>>, right_data: &Vec<Vec<i32>>) -> f32 {
+        let total_data_size = left_data.len() + right_data.len();
+        let left_variance = variance(left_data);
+        let right_variance = variance(right_data);
+        ((left_data.len() / total_data_size) as f32 * left_variance)
+            + ((right_data.len() / total_data_size) as f32 * right_variance)
+    }
+
+    pub fn variance(data: &Vec<Vec<i32>>) -> f32 {
+        let mean = output_mean(data);
+        let mut sum_differences_squared = 0.0;
+        data.iter().for_each(|row| {
+            let output_value = row[row.len() - 1];
+            let difference = (output_value as f32 - mean);
+            sum_differences_squared += difference * difference;
+        });
+        sum_differences_squared / data.len() as f32
+    }
+
+    fn output_mean(data: &Vec<Vec<i32>>) -> f32 {
+        let mut sum = 0.0;
+        data.iter().for_each(|row| {
+            let output_value = row[row.len() - 1];
+            sum += output_value as f32;
+        });
+        sum / data.len() as f32
+    }
 }
 
 pub fn get_class_counts(data: &Vec<Vec<i32>>, number_of_classes: u32) -> ClassCounter {
@@ -26,16 +70,6 @@ pub fn get_class_counts(data: &Vec<Vec<i32>>, number_of_classes: u32) -> ClassCo
         class_counter.counts[class as usize] += 1;
     });
     class_counter
-}
-
-pub fn gini(class_counts: &ClassCounter, number_of_rows: f32) -> f32 {
-    let impurity: f32 = 1.0;
-    let mut reduction: f32 = 0.0;
-    class_counts.counts.iter().for_each(|class_count| {
-        let probability_i = *class_count as f32 / number_of_rows;
-        reduction += probability_i * probability_i;
-    });
-    impurity - reduction
 }
 
 pub fn partition(data: &Vec<Vec<i32>>, question: &Question) -> (Vec<Vec<i32>>, Vec<Vec<i32>>) {
@@ -54,7 +88,7 @@ pub fn partition(data: &Vec<Vec<i32>>, question: &Question) -> (Vec<Vec<i32>>, V
 
 #[cfg(test)]
 mod tests {
-    use crate::question;
+    use crate::{calculations::gini::*, question};
 
     use super::*;
 
@@ -82,7 +116,7 @@ mod tests {
         let number_classes = 1;
         let data = vec![vec![1, 2, 0], vec![1, 2, 0], vec![1, 2, 0]];
         let class_counts = get_class_counts(&data, number_classes);
-        let gini_result = gini(&class_counts, data.len() as f32);
+        let gini_result = calculate_gini(&class_counts, data.len() as f32);
         assert_eq!(gini_result, 0.0);
     }
 
@@ -91,7 +125,7 @@ mod tests {
         let number_classes = 3;
         let data = vec![vec![1, 2, 0], vec![1, 2, 1], vec![1, 2, 2]];
         let class_counts = get_class_counts(&data, number_classes);
-        let gini_result = gini(&class_counts, data.len() as f32);
+        let gini_result = calculate_gini(&class_counts, data.len() as f32);
         assert_eq!(gini_result, 1.0 - (1.0 / 3.0));
     }
 
@@ -123,5 +157,19 @@ mod tests {
         println!("{:?}", partitioned_data);
         assert_eq!(partitioned_data.0.len(), 2);
         assert_eq!(partitioned_data.1.len(), 2);
+    }
+
+    #[test]
+    fn test_no_output_variance() {
+        let data = vec![vec![1, 2, 1], vec![2, 2, 1], vec![4, 2, 1], vec![5, 2, 1]];
+        let variance_result = variance_reduction::variance(&data);
+        assert_eq!(variance_result, 0.0);
+    }
+
+    #[test]
+    fn test_has_output_variance() {
+        let data = vec![vec![1, 2, 1], vec![2, 2, 2], vec![4, 2, 3], vec![5, 2, 4]];
+        let variance_result = variance_reduction::variance(&data);
+        assert_eq!(variance_result, 1.25);
     }
 }
