@@ -1,8 +1,10 @@
 use crate::{calculations::gini::calculate_loss, class_counter::ClassCounter};
 use crate::threshold_finder::BestThresholdResult;
-use crate::threshold_finder::LastSeen;
-
 use super::get_sorted_feature_tuple_vector;
+struct LastSeen {
+    count: u32,
+    value: i32,
+}
 
 pub(super) fn determine_best_threshold(
     data: &Vec<Vec<i32>>,
@@ -91,15 +93,6 @@ mod tests {
     use crate::{calculations::get_class_counts};
 
     use super::*;
-
-    #[test]
-    fn test_get_sorted_feature_tuple_vector() {
-        let data = vec![vec![10, 2, 1], vec![6, 2, 2], vec![1, 2, 3]];
-        let column = 0;
-        let sorted_feature_tuple_vector = get_sorted_feature_tuple_vector(&data, column);
-        println!("{:?}", sorted_feature_tuple_vector);
-        assert_eq!(sorted_feature_tuple_vector, vec![(1, 2), (6, 1), (10, 0)])
-    }
 
     #[test]
     fn test_best_threshold_for_particular_feature() {

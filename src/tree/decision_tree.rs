@@ -23,15 +23,15 @@ impl DecisionTree {
 }
 
 pub fn build_tree(data: Vec<Vec<i32>>, number_of_classes: u32) -> TreeNode {
-    let split_result = threshold_finder::find_best_split(&data, number_of_classes);
+    let split_result = threshold_finder::variance::find_best_split(&data, number_of_classes);
     if split_result.gain == 0.0 {
         let predictions = get_class_counts(&data, number_of_classes);
         let leaf = Leaf { predictions };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
         let partitioned_data = partition(&data, &split_result.question);
-        let left_data = partitioned_data.0;
-        let right_data = partitioned_data.1;
+        let left_data = partitioned_data.1;
+        let right_data = partitioned_data.0;
 
         let left_tree = build_tree(left_data, number_of_classes);
         let right_tree = build_tree(right_data, number_of_classes);
