@@ -136,7 +136,7 @@ mod tests {
 
     #[test]
     fn test_partition_all_false() {
-        let data = vec![vec![1, 2, 0], vec![1, 2, 1], vec![1, 2, 2]];
+        let data = vec![vec![2, 2, 0], vec![2, 2, 1], vec![2, 2, 2]];
         let question = Question::new(0, false, 2);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
@@ -150,8 +150,8 @@ mod tests {
         let question = Question::new(0, false, 0);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
-        assert_eq!(partitioned_data.0.len(), 3);
-        assert_eq!(partitioned_data.1.len(), 0);
+        assert_eq!(partitioned_data.0.len(), 0);
+        assert_eq!(partitioned_data.1.len(), 3);
     }
 
     #[test]
