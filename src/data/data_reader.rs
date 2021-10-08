@@ -6,18 +6,9 @@ use std::process;
 
 use csv::StringRecord;
 
-#[derive(Debug)]
-pub struct DataSet {
-    pub features: Vec<Vec<i32>>,
-    pub labels: Vec<i32>,
-}
+use crate::dataset::DataSet;
 
-struct MultiTargetData {
-    features: Vec<Vec<i32>>,
-    labels: Vec<Vec<i32>>,
-}
-
-pub fn read_csv_data(file_path: &str, has_multi_target_labels: bool) -> DataSet {
+pub fn read_csv_data(file_path: &str, has_multi_target_labels: bool) -> DataSet<i32, i32> {
     let data_set_read = read_data("./data_arff/iris.csv").unwrap();
     parse_data_into_features_and_labels(data_set_read)
 }
@@ -34,7 +25,7 @@ fn read_data(file_path: &str) -> Result<Vec<Vec<i32>>, Box<dyn Error>> {
     Ok(data)
 }
 
-fn parse_data_into_features_and_labels(data_set: Vec<Vec<i32>>) -> DataSet {
+fn parse_data_into_features_and_labels(data_set: Vec<Vec<i32>>) -> DataSet<i32, i32>{
     let mut features = vec![];
     let mut labels = vec![];
     data_set.iter().for_each(|row| {
@@ -66,10 +57,12 @@ mod tests {
     #[test]
     fn print_csv_reading_and_mt_labels() {
         let data_set = read_csv_data("./data_arff/iris.csv", false);
-        //println!("{:?}", data_set);
         let mt_labels = create_multi_target_labels(data_set.labels);
-        println!("{:?}", mt_labels);
         assert_eq!(*mt_labels.get(0).unwrap(), vec![1, 0, 0]);
-        println!("{:?}", data_set.features.get(0).unwrap());
+        let multi_target_dataset = DataSet{
+            features: data_set.features.clone(),
+            labels: mt_labels
+        };
+        println!("{:?}", multi_target_dataset);
     }
 }

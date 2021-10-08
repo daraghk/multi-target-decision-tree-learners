@@ -1,9 +1,4 @@
-use core::num;
-
-use crate::{calculations::{
-    self,
-    variance_reduction::{calculate_loss, calculate_variance},
-}, data::DataSet};
+use crate::{calculations::variance::*, dataset::DataSet};
 
 use super::{get_sorted_feature_tuple_vector, BestThresholdResult};
 
@@ -15,7 +10,7 @@ struct VarianceValueTracker {
 }
 
 pub(super) fn determine_best_threshold(
-    data: &DataSet,
+    data: &DataSet<i32, i32>,
     column: u32,
     total_sum_of_squared_labels: f32,
     total_sum_of_labels: f32,
@@ -63,7 +58,7 @@ pub(super) fn determine_best_threshold(
                 left_value_tracker.number_of_labels,
                 right_value_tracker.number_of_labels,
             );
-            if (split_variance < best_result_container.loss) {
+            if split_variance < best_result_container.loss {
                 best_result_container.loss = split_variance;
                 best_result_container.threshold_value = feature_value;
             }
@@ -94,22 +89,15 @@ fn update_right_value_tracker(right_value_tracker: &mut VarianceValueTracker, la
 }
 
 mod tests {
-    use std::fs;
-
-    use crate::{calculations::{get_class_counts, variance_reduction::get_label_sums}, data::read_csv_data};
-
-    use super::*;
+    use crate::{calculations::variance::get_label_sums, data_reader::read_csv_data, dataset::DataSet};
 
     #[test]
     fn test_best_threshold_for_particular_feature() {
         let features = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
         let labels = vec![0, 0, 1];
-        let data = DataSet{
-            features,
-            labels
-        };
+        let data = DataSet { features, labels };
         let column = 0;
-        let best = determine_best_threshold(&data, column, 1.0, 1.0);
+        let best = super::determine_best_threshold(&data, column, 1.0, 1.0);
         assert_eq!(best.loss, 0.0);
         assert_eq!(best.threshold_value, 6.0);
     }
@@ -119,7 +107,7 @@ mod tests {
         let iris = read_csv_data("./data_arff/iris.csv", false);
         let column = 2;
         let label_sums = get_label_sums(&iris.labels);
-        let result = determine_best_threshold(&iris, column, label_sums.1, label_sums.0);
+        let result = super::determine_best_threshold(&iris, column, label_sums.1, label_sums.0);
         assert_eq!(result.threshold_value, 30.0);
     }
 }

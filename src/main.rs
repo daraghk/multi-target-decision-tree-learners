@@ -1,19 +1,20 @@
 #![allow(unused)]
-use serde::{Deserialize, Serialize};
-use std::fs; // imports both the trait and the derive macro
 
-#[path = "utils/calculations.rs"]
+#[path = "utils/calculations/calculations.rs"]
 mod calculations;
 #[path = "utils/class_counter.rs"]
 mod class_counter;
-#[path = "utils/question.rs"]
-mod question;
-#[path = "threshold_finders/threshold_finder.rs"]
-mod threshold_finder;
+#[path = "utils/data_partitioner.rs"]
+mod data_partitioner;
+#[path = "data/data_reader.rs"]
+mod data_reader;
+#[path = "data/dataset.rs"]
+mod dataset;
 #[path = "tree/decision_tree.rs"]
 mod decision_tree;
-#[path = "data_reader/data.rs"]
-mod data;
+#[path = "utils/question.rs"]
+mod question;
+#[path = "split_finders/split_finder.rs"]
+mod split_finder;
 
-fn main() {
-}
+fn main() {}
