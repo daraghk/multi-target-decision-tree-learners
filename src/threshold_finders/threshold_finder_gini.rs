@@ -1,3 +1,4 @@
+use crate::data::DataSet;
 use crate::{calculations::gini::calculate_loss, class_counter::ClassCounter};
 use crate::threshold_finder::BestThresholdResult;
 use super::get_sorted_feature_tuple_vector;
@@ -7,7 +8,7 @@ struct LastSeen {
 }
 
 pub(super) fn determine_best_threshold(
-    data: &Vec<Vec<i32>>,
+    data: &DataSet,
     column: u32,
     class_counts_all: &ClassCounter,
 ) -> BestThresholdResult {
@@ -15,7 +16,7 @@ pub(super) fn determine_best_threshold(
         loss: f32::INFINITY,
         threshold_value: 0.0,
     };
-    let number_of_rows = data.len() as u32;
+    let number_of_rows = data.features.len() as u32;
 
     let mut class_counts_right: ClassCounter =
         ClassCounter::new(class_counts_all.counts.len() as u32);
@@ -24,7 +25,7 @@ pub(super) fn determine_best_threshold(
     let mut class_counts_left: ClassCounter =
         ClassCounter::new(class_counts_all.counts.len() as u32);
 
-    let sorted_feature_data = get_sorted_feature_tuple_vector(data, column);
+    let sorted_feature_data = get_sorted_feature_tuple_vector(&data.features, column);
     let mut true_rows_count = number_of_rows;
     let mut last_seen = LastSeen {
         count: 0,
@@ -79,12 +80,11 @@ fn update_class_counts_left(
 
 fn update_class_counts_right(
     tuple: &(i32, i32),
-    data: &Vec<Vec<i32>>,
+    data: &DataSet,
     class_counts_right: &mut ClassCounter,
 ) {
     let real_row_index = tuple.1;
-    let row = &data[real_row_index as usize];
-    let class = row[row.len() - 1];
+    let class = *data.labels.get(real_row_index as usize).unwrap() as f32;
     class_counts_right.counts[class as usize] -= 1;
 }
 
@@ -96,9 +96,14 @@ mod tests {
 
     #[test]
     fn test_best_threshold_for_particular_feature() {
-        let data = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
+        let features = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
+        let labels = vec![0, 0, 1];
+        let data = DataSet{
+            features,
+            labels
+        };
         let column = 0;
-        let class_counts = get_class_counts(&data, 2);
+        let class_counts = get_class_counts(&data.labels, 2);
         let best = determine_best_threshold(&data, column, &class_counts);
         assert_eq!(best.loss, 0.0);
         assert_eq!(best.threshold_value, 6.0);

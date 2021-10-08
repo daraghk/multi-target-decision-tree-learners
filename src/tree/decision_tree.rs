@@ -1,8 +1,4 @@
-use crate::{
-    calculations::{get_class_counts, partition},
-    class_counter::ClassCounter,
-    threshold_finder,
-};
+use crate::{calculations::{get_class_counts, partition}, class_counter::ClassCounter, data::{self, DataSet, read_csv_data}, threshold_finder};
 
 use self::{leaf::Leaf, node::TreeNode};
 
@@ -15,17 +11,17 @@ pub struct DecisionTree {
 }
 
 impl DecisionTree {
-    pub fn new(data: Vec<Vec<i32>>, number_of_classes: u32) -> Self {
+    pub fn new(data: DataSet, number_of_classes: u32) -> Self {
         Self {
             root: build_tree(data, number_of_classes),
         }
     }
 }
 
-pub fn build_tree(data: Vec<Vec<i32>>, number_of_classes: u32) -> TreeNode {
+pub fn build_tree(data: DataSet, number_of_classes: u32) -> TreeNode {
     let split_result = threshold_finder::variance::find_best_split(&data, number_of_classes);
     if split_result.gain == 0.0 {
-        let predictions = get_class_counts(&data, number_of_classes);
+        let predictions = get_class_counts(&data.labels, number_of_classes);
         let leaf = Leaf { predictions };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
@@ -69,9 +65,8 @@ mod tests {
     use super::*;
     #[test]
     fn test_build_tree() {
-        let _data = fs::read_to_string("./data_arff/iris.arff").expect("Unable to read file");
-        let iris: Vec<Vec<i32>> = arff::from_str(&_data).unwrap();
-        let tree = DecisionTree::new(iris, 3);
+        let data_set = read_csv_data("./data_arff/iris.csv", false);
+        let tree = DecisionTree::new(data_set, 3);
         print_tree(Box::new(tree.root), "".to_string())
     }
 }

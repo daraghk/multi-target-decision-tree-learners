@@ -12,9 +12,8 @@ mod question;
 mod threshold_finder;
 #[path = "tree/decision_tree.rs"]
 mod decision_tree;
+#[path = "data_reader/data.rs"]
+mod data;
 
 fn main() {
-    let _data = fs::read_to_string("./data_arff/iris.arff").expect("Unable to read file");
-    let unnamed_data: Vec<Vec<i32>> = arff::from_str(&_data).unwrap();
-    println!("{:?}", unnamed_data[0]);
 }
