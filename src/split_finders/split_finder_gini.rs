@@ -34,9 +34,7 @@ pub fn find_best_split(data: &DataSet<i32, i32>, number_of_classes: u32) -> Best
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        data_reader::read_csv_data, dataset::DataSet, split_finder::get_sorted_feature_tuple_vector,
-    };
+    use crate::{data_reader::read_csv_data, dataset::DataSet};
 
     #[test]
     fn test_find_best_split_dummy() {

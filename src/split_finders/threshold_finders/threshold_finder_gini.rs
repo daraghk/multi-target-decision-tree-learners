@@ -1,7 +1,8 @@
 use crate::calculations::gini::*;
 use crate::class_counter::ClassCounter;
 use crate::dataset::DataSet;
-use crate::split_finder::{get_sorted_feature_tuple_vector, BestThresholdResult};
+use crate::feature_sorter::get_sorted_feature_tuple_vector;
+use crate::split_finder::BestThresholdResult;
 
 struct LastSeen {
     count: u32,

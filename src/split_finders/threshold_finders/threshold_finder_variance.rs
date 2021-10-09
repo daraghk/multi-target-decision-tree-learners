@@ -1,6 +1,6 @@
-use crate::{calculations::variance::*, dataset::DataSet};
+use crate::{calculations::variance::*, dataset::DataSet, feature_sorter::get_sorted_feature_tuple_vector};
 
-use super::{get_sorted_feature_tuple_vector, BestThresholdResult};
+use super::BestThresholdResult;
 
 struct VarianceValueTracker {
     number_of_labels: f32,
@@ -89,7 +89,9 @@ fn update_right_value_tracker(right_value_tracker: &mut VarianceValueTracker, la
 }
 
 mod tests {
-    use crate::{calculations::variance::get_label_sums, data_reader::read_csv_data, dataset::DataSet};
+    use crate::{
+        calculations::variance::get_label_sums, data_reader::read_csv_data, dataset::DataSet,
+    };
 
     #[test]
     fn test_best_threshold_for_particular_feature() {
