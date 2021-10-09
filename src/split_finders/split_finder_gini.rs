@@ -39,7 +39,7 @@ mod tests {
     };
 
     #[test]
-    fn test_find_best_threshold_dummy() {
+    fn test_find_best_split_dummy() {
         let features = vec![vec![10, 2, 0], vec![6, 2, 0], vec![1, 2, 1]];
         let labels = vec![0, 0, 1];
         let data = DataSet { features, labels };
@@ -48,18 +48,7 @@ mod tests {
     }
 
     #[test]
-    fn test_get_sorted_feature_tuple_vector() {
-        let features = vec![vec![10, 2, 1], vec![6, 2, 2], vec![1, 2, 3]];
-        let labels = vec![1, 2, 3];
-        let data = DataSet { features, labels };
-        let column = 0;
-        let sorted_feature_tuple_vector = get_sorted_feature_tuple_vector(&data.features, column);
-        println!("{:?}", sorted_feature_tuple_vector);
-        assert_eq!(sorted_feature_tuple_vector, vec![(1, 2), (6, 1), (10, 0)])
-    }
-
-    #[test]
-    fn test_find_first_best_threshold_iris() {
+    fn test_find_first_best_split_iris() {
         let iris = read_csv_data("./data_arff/iris.csv", false);
         let result = super::find_best_split(&iris, 3);
         assert_eq!(result.question.column, 2);
