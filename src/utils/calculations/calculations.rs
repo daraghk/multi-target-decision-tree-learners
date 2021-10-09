@@ -1,6 +1,6 @@
 mod calculations_gini;
 mod calculations_variance;
-mod calculations_variance_mt;
+mod calculations_variance_multi_target;
 
 pub mod gini {
     use super::*;
@@ -53,14 +53,14 @@ pub mod variance {
 }
 
 pub mod variance_multi_target {
-    use super::calculations_variance_mt;
+    use super::calculations_variance_multi_target;
     pub fn calculate_loss(
         left_variance: f32,
         right_variance: f32,
         left_size: f32,
         right_size: f32,
     ) -> f32 {
-        calculations_variance_mt::calculate_loss(
+        calculations_variance_multi_target::calculate_loss(
             left_variance,
             right_variance,
             left_size,
@@ -73,7 +73,7 @@ pub mod variance_multi_target {
         mean_of_labels: f32,
         number_of_labels: f32,
     ) -> f32 {
-        calculations_variance_mt::calculate_variance(
+        calculations_variance_multi_target::calculate_variance(
             sum_of_squared_labels,
             mean_of_labels,
             number_of_labels,
@@ -81,6 +81,6 @@ pub mod variance_multi_target {
     }
 
     pub fn get_label_sums(labels: &Vec<i32>) -> (f32, f32) {
-        calculations_variance_mt::get_label_sums(labels)
+        calculations_variance_multi_target::get_label_sums(labels)
     }
 }

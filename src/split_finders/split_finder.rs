@@ -3,7 +3,7 @@ use crate::dataset::DataSet;
 
 mod split_finder_gini;
 mod split_finder_variance;
-mod split_finder_variance_mt;
+mod split_finder_variance_multi_target;
 
 #[derive(Debug)]
 struct BestThresholdResult {
@@ -59,6 +59,6 @@ mod use_variance{
 mod use_variance_multi_target{
     use super::*;
     pub fn find_best_split(data: &DataSet<i32, i32>, number_of_classes: u32)-> super::BestSplitResult {
-        split_finder_variance_mt::find_best_split(data, number_of_classes)
+        split_finder_variance_multi_target::find_best_split(data, number_of_classes)
     }
 }
