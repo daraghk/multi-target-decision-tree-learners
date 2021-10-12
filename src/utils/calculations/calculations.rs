@@ -3,7 +3,7 @@ mod calculations_variance;
 mod calculations_variance_multi_target;
 
 pub mod gini {
-    use super::*;
+    use super::calculations_gini;
     use crate::class_counter::ClassCounter;
     pub fn calculate_loss(
         number_of_rows: f32,
@@ -53,34 +53,34 @@ pub mod variance {
 }
 
 pub mod variance_multi_target {
-    use super::calculations_variance_multi_target;
-    pub fn calculate_loss(
-        left_variance: f32,
-        right_variance: f32,
-        left_size: f32,
-        right_size: f32,
-    ) -> f32 {
-        calculations_variance_multi_target::calculate_loss(
-            left_variance,
-            right_variance,
-            left_size,
-            right_size,
-        )
-    }
+//     use super::calculations_variance_multi_target;
+//     pub fn calculate_loss(
+//         left_variance: f32,
+//         right_variance: f32,
+//         left_size: f32,
+//         right_size: f32,
+//     ) -> f32 {
+//         calculations_variance_multi_target::calculate_loss(
+//             left_variance,
+//             right_variance,
+//             left_size,
+//             right_size,
+//         )
+//     }
 
-    pub fn calculate_variance(
-        sum_of_squared_labels: f32,
-        mean_of_labels: f32,
-        number_of_labels: f32,
-    ) -> f32 {
-        calculations_variance_multi_target::calculate_variance(
-            sum_of_squared_labels,
-            mean_of_labels,
-            number_of_labels,
-        )
-    }
+//     pub fn calculate_variance(
+//         sum_of_squared_labels: f32,
+//         mean_of_labels: f32,
+//         number_of_labels: f32,
+//     ) -> f32 {
+//         calculations_variance_multi_target::calculate_variance(
+//             sum_of_squared_labels,
+//             mean_of_labels,
+//             number_of_labels,
+//         )
+//     }
 
-    pub fn get_label_sums(labels: &Vec<i32>) -> (f32, f32) {
-        calculations_variance_multi_target::get_label_sums(labels)
-    }
-}
+//     pub fn get_label_sums(labels: &Vec<i32>) -> (f32, f32) {
+//         calculations_variance_multi_target::get_label_sums(labels)
+//     }
+ }

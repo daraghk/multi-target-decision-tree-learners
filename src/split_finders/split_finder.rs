@@ -34,31 +34,10 @@ impl SplitFinder{
         Self{
             split_metric: metric,
             find_best_split: match metric{
-                SplitMetric::Gini => use_gini::find_best_split,
-                SplitMetric::Variance => use_variance::find_best_split,
-                SplitMetric::VarianceMultiTarget => use_variance_multi_target::find_best_split
+                SplitMetric::Gini => split_finder_gini::find_best_split,
+                SplitMetric::Variance => split_finder_variance::find_best_split,
+                SplitMetric::VarianceMultiTarget => split_finder_variance_multi_target::find_best_split
             }
         }
-    }
-}
-
-mod use_gini{
-    use super::*;
-    pub fn find_best_split(data: &DataSet<i32, i32>, number_of_classes: u32)-> super::BestSplitResult {
-        split_finder_gini::find_best_split(data, number_of_classes)
-    }
-}
-
-mod use_variance{
-    use super::*;
-    pub fn find_best_split(data: &DataSet<i32, i32>, number_of_classes: u32)-> super::BestSplitResult {
-        split_finder_variance::find_best_split(data, number_of_classes)
-    }
-}
-
-mod use_variance_multi_target{
-    use super::*;
-    pub fn find_best_split(data: &DataSet<i32, i32>, number_of_classes: u32)-> super::BestSplitResult {
-        split_finder_variance_multi_target::find_best_split(data, number_of_classes)
     }
 }
