@@ -13,6 +13,16 @@ pub fn read_csv_data(file_path: &str, has_multi_target_labels: bool) -> DataSet<
     parse_data_into_features_and_labels(data_set_read)
 }
 
+pub fn read_csv_data_multi_target(file_path: &str, has_multi_target_labels: bool) -> DataSet<i32, Vec<i32>> {
+    let data_set_read = read_data("./data_arff/iris.csv").unwrap();
+    let dataset = parse_data_into_features_and_labels(data_set_read);
+    let multi_target_labels = create_multi_target_labels(dataset.labels);
+    DataSet{
+        features: dataset.features,
+        labels: multi_target_labels
+    }
+}
+
 //reading in data from csv, presume header included and label is at the end of each record
 fn read_data(file_path: &str) -> Result<Vec<Vec<i32>>, Box<dyn Error>> {
     let file = File::open(file_path)?;
