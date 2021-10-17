@@ -1,7 +1,5 @@
+use crate::{calculations::variance::*, feature_sorter::get_sorted_feature_tuple_vector};
 use common::{datasets::DataSet, results::BestThresholdResult};
-use crate::{
-    calculations::variance::*, feature_sorter::get_sorted_feature_tuple_vector,
-};
 
 struct VarianceValueTracker {
     number_of_labels: f32,
@@ -92,9 +90,7 @@ fn update_right_value_tracker(right_value_tracker: &mut VarianceValueTracker, la
 mod tests {
     use common::{data_reader::read_csv_data, datasets::DataSet};
 
-    use crate::{
-        calculations::variance::get_label_sums
-    };
+    use crate::calculations::variance::get_label_sums;
 
     #[test]
     fn test_best_threshold_for_particular_feature() {
@@ -109,7 +105,7 @@ mod tests {
 
     #[test]
     fn test_best_threshold_for_particular_feature_in_iris() {
-        let iris = read_csv_data("./data_arff/iris.csv");
+        let iris = read_csv_data("./../common/data_files/iris.csv");
         let column = 2;
         let label_sums = get_label_sums(&iris.labels);
         let result = super::determine_best_threshold(&iris, column, label_sums.1, label_sums.0);

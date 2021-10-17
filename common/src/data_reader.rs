@@ -5,15 +5,12 @@ use crate::datasets::DataSet;
 use crate::datasets::MultiTargetDataSet;
 
 pub fn read_csv_data(file_path: &str) -> DataSet {
-    let data_set_read = read_data("./../data_arff/iris.csv").unwrap();
+    let data_set_read = read_data(file_path).unwrap();
     parse_data_into_features_and_labels(data_set_read)
 }
 
-pub fn read_csv_data_multi_target(
-    file_path: &str,
-    number_of_targets: usize,
-) -> MultiTargetDataSet {
-    let data_set_read = read_data("./../data_files/iris.csv").unwrap();
+pub fn read_csv_data_multi_target(file_path: &str, number_of_targets: usize) -> MultiTargetDataSet {
+    let data_set_read = read_data(file_path).unwrap();
     let dataset = parse_data_into_features_and_labels(data_set_read);
     let multi_target_labels = create_multi_target_labels(dataset.labels, number_of_targets);
     MultiTargetDataSet {
@@ -75,7 +72,7 @@ mod tests {
 
     #[test]
     fn print_csv_reading() {
-        let data_set = read_csv_data("../data_files/iris.csv");
+        let data_set = read_csv_data("./data_files/iris.csv");
         println!("{:?}", data_set);
     }
 }

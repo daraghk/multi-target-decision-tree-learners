@@ -69,7 +69,7 @@ mod tests {
 
     #[test]
     fn test_find_first_best_split_iris() {
-        let iris = read_csv_data_multi_target("./data_arff/iris.csv", 3);
+        let iris = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
         let result = super::find_best_split(&iris, 3);
         assert_eq!(result.question.column, 2);
         assert_eq!(result.question.value, 30.);

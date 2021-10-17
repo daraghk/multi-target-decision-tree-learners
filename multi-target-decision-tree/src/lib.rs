@@ -5,9 +5,9 @@ mod calculations;
 mod class_counter;
 #[path = "utils/data_partitioner.rs"]
 mod data_partitioner;
+#[path = "tree/decision_tree.rs"]
+pub mod decision_tree;
 #[path = "utils/feature_sorter.rs"]
 mod feature_sorter;
-#[path = "tree/decision_tree.rs"]
-mod decision_tree;
 #[path = "split_finders/split_finder.rs"]
-mod split_finder;
+pub mod split_finder;

@@ -11,7 +11,7 @@ mod leaf;
 mod node;
 
 pub struct MultiTargetDecisionTree {
-    root: TreeNode,
+    pub root: TreeNode,
 }
 
 impl MultiTargetDecisionTree {
@@ -51,7 +51,7 @@ pub fn build_tree(
     }
 }
 
-fn print_tree(root: Box<TreeNode>, spacing: String) {
+pub fn print_tree(root: Box<TreeNode>, spacing: String) {
     if root.leaf.is_some() {
         let leaf_ref = &root.leaf.unwrap();
         println!("{} Predict:{:?}", spacing, leaf_ref.predictions);
@@ -72,14 +72,12 @@ fn print_tree(root: Box<TreeNode>, spacing: String) {
 mod tests {
     use common::data_reader::read_csv_data_multi_target;
 
-    use crate::{
-        split_finder::{SplitFinder, SplitMetric},
-    };
+    use crate::split_finder::{SplitFinder, SplitMetric};
 
     use super::*;
     #[test]
     fn test_build_tree() {
-        let data_set = read_csv_data_multi_target("./data_arff/iris.csv", 3);
+        let data_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3);
         print_tree(Box::new(tree.root), "".to_string())

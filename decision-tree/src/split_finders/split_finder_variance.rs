@@ -3,7 +3,7 @@ mod threshold_finder_variance;
 use common::question::Question;
 
 use super::*;
-use crate::{calculations::variance::*};
+use crate::calculations::variance::*;
 
 pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;

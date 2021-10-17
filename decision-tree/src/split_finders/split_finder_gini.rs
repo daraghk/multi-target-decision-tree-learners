@@ -3,9 +3,7 @@ mod threshold_finder_gini;
 use common::question::Question;
 
 use super::*;
-use crate::{
-    calculations::gini::calculate_gini, class_counter::get_class_counts,
-};
+use crate::{calculations::gini::calculate_gini, class_counter::get_class_counts};
 
 pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;
@@ -48,7 +46,7 @@ mod tests {
 
     #[test]
     fn test_find_first_best_split_iris() {
-        let iris = read_csv_data("./data_arff/iris.csv");
+        let iris = read_csv_data("./../common/data_files/iris.csv");
         let result = super::find_best_split(&iris, 3);
         assert_eq!(result.question.column, 2);
         assert_eq!(result.question.value, 30.);

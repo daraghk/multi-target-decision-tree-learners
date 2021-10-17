@@ -1,10 +1,10 @@
 use common::{datasets::MultiTargetDataSet, results::BestThresholdResult};
 
+use crate::calculations::variance::MultiTargetLabelMetrics;
 use crate::{
     calculations::variance::{calculate_loss_vector, calculate_variance_vector},
     feature_sorter::get_sorted_feature_tuple_vector,
 };
-use crate::calculations::variance::MultiTargetLabelMetrics;
 
 struct VarianceValueTrackerMultiTarget {
     number_of_labels: f32,
@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn test_best_threshold_for_particular_feature_in_iris() {
-        let iris = read_csv_data_multi_target("./data_arff/iris.csv", 3);
+        let iris = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
         let column = 2;
         let total_mt_label_metrics = get_multi_target_label_metrics(&iris.labels, 3);
         let best = super::determine_best_threshold(&iris, column, &total_mt_label_metrics, 2);

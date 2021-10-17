@@ -42,9 +42,6 @@ pub mod variance {
         labels: &Vec<Vec<f32>>,
         number_of_targets: usize,
     ) -> MultiTargetLabelMetrics {
-        calculations_variance::get_multi_target_label_metrics(
-            labels,
-            number_of_targets,
-        )
+        calculations_variance::get_multi_target_label_metrics(labels, number_of_targets)
     }
 }

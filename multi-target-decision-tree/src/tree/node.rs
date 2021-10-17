@@ -1,6 +1,5 @@
-
-use common::question::Question;
 use super::leaf::Leaf;
+use common::question::Question;
 
 #[derive(Debug)]
 pub struct TreeNode {

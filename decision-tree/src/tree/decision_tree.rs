@@ -12,7 +12,7 @@ mod leaf;
 mod node;
 
 pub struct DecisionTree {
-    root: TreeNode,
+    pub root: TreeNode,
 }
 
 impl DecisionTree {
@@ -44,7 +44,7 @@ pub fn build_tree(data: DataSet, split_finder: &SplitFinder, number_of_classes: 
     }
 }
 
-fn print_tree(root: Box<TreeNode>, spacing: String) {
+pub fn print_tree(root: Box<TreeNode>, spacing: String) {
     if root.leaf.is_some() {
         let leaf_ref = &root.leaf.unwrap();
         println!("{} Predict:{:?}", spacing, leaf_ref.predictions);
@@ -71,7 +71,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_build_tree() {
-        let data_set = read_csv_data("./data_arff/iris.csv");
+        let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = DecisionTree::new(data_set, split_finder, 3);
         print_tree(Box::new(tree.root), "".to_string())
