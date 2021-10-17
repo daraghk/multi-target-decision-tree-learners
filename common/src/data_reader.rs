@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn print_csv_reading() {
-        let data_set = read_csv_data("./data_files/iris.csv");
+        let data_set = read_csv_data("../data_files/iris.csv");
         println!("{:?}", data_set);
     }
 }

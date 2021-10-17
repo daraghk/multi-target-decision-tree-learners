@@ -4,7 +4,7 @@ use self::{leaf::Leaf, node::TreeNode};
 use crate::{
     class_counter::get_class_counts_multi_target,
     data_partitioner::partition,
-    split_finder::{self, SplitFinderMultiTarget},
+    split_finder::{self, SplitFinder},
 };
 
 mod leaf;
@@ -17,7 +17,7 @@ pub struct MultiTargetDecisionTree {
 impl MultiTargetDecisionTree {
     pub fn new(
         data: MultiTargetDataSet,
-        split_finder: SplitFinderMultiTarget,
+        split_finder: SplitFinder,
         number_of_classes: u32,
     ) -> Self {
         Self {
@@ -28,7 +28,7 @@ impl MultiTargetDecisionTree {
 
 pub fn build_tree(
     data: MultiTargetDataSet,
-    split_finder: &SplitFinderMultiTarget,
+    split_finder: &SplitFinder,
     number_of_classes: u32,
 ) -> TreeNode {
     let split_result = (split_finder.find_best_split)(&data, number_of_classes);
@@ -73,14 +73,14 @@ mod tests {
     use common::data_reader::read_csv_data_multi_target;
 
     use crate::{
-        split_finder::{SplitFinderMultiTarget, SplitMetricMultiTarget},
+        split_finder::{SplitFinder, SplitMetric},
     };
 
     use super::*;
     #[test]
     fn test_build_tree() {
         let data_set = read_csv_data_multi_target("./data_arff/iris.csv", 3);
-        let split_finder = SplitFinderMultiTarget::new(SplitMetricMultiTarget::Variance);
+        let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3);
         print_tree(Box::new(tree.root), "".to_string())
     }
