@@ -1,6 +1,5 @@
+use crate::leaf::Leaf;
 use common::question::Question;
-
-use super::leaf::Leaf;
 
 #[derive(Debug)]
 pub struct TreeNode {
@@ -31,5 +30,9 @@ impl TreeNode {
             false_branch: None,
             leaf: Some(leaf),
         }
+    }
+
+    pub fn is_leaf_node(&self) -> bool {
+        self.true_branch.is_none() && self.false_branch.is_none()
     }
 }

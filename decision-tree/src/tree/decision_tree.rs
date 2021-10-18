@@ -3,13 +3,10 @@ use common::datasets::DataSet;
 use crate::{
     class_counter::get_class_counts,
     data_partitioner::partition,
+    leaf::Leaf,
+    node::TreeNode,
     split_finder::{self, SplitFinder},
 };
-
-use self::{leaf::Leaf, node::TreeNode};
-
-mod leaf;
-mod node;
 
 pub struct DecisionTree {
     pub root: TreeNode,
