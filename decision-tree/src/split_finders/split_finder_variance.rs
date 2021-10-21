@@ -7,7 +7,7 @@ use crate::calculations::variance::*;
 
 pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;
-    let mut best_question = Question::new(0, false, 0.);
+    let mut best_question = Question::new(0, 0.);
 
     let label_sums = get_label_sums(&data.labels);
     let sum_of_labels = label_sums.0;

@@ -41,7 +41,7 @@ mod tests {
         let features = vec![vec![2., 2., 0.], vec![2., 2., 1.], vec![2., 2., 2.]];
         let labels = vec![0., 1., 2.];
         let data = DataSet { features, labels };
-        let question = Question::new(0, false, 2.);
+        let question = Question::new(0, 2.);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
         assert_eq!(partitioned_data.0.features.len(), 0);
@@ -53,7 +53,7 @@ mod tests {
         let features = vec![vec![2., 2., 0.], vec![2., 2., 1.], vec![2., 2., 2.]];
         let labels = vec![0., 1., 2.];
         let data = DataSet { features, labels };
-        let question = Question::new(0, false, 0.);
+        let question = Question::new(0, 0.);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
         assert_eq!(partitioned_data.0.features.len(), 0);
@@ -70,7 +70,7 @@ mod tests {
         ];
         let labels = vec![0., 1., 2., 3.];
         let data = DataSet { features, labels };
-        let question = Question::new(0, false, 3.);
+        let question = Question::new(0, 3.);
         let partitioned_data = partition(&data, &question);
         println!("{:?}", partitioned_data);
         assert_eq!(partitioned_data.0.features.len(), 2);

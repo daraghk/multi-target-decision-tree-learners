@@ -41,7 +41,7 @@ pub fn build_tree(data: DataSet, split_finder: &SplitFinder, number_of_classes: 
     }
 }
 
-pub fn print_tree(root: Box<TreeNode>, spacing: String) {
+pub fn print_tree(root: Box<TreeNode>, spacing: String, feature_names: &Vec<String>) {
     if root.leaf.is_some() {
         let leaf_ref = &root.leaf.unwrap();
         println!("{} Predict:{:?}", spacing, leaf_ref.predictions);
@@ -49,19 +49,32 @@ pub fn print_tree(root: Box<TreeNode>, spacing: String) {
     }
     println!(
         "{}",
-        format!("{} {:?}", spacing.clone(), root.question.to_string())
+        format!(
+            "{} {:?}",
+            spacing.clone(),
+            root.question
+                .to_string(feature_names.get(root.question.column as usize).unwrap())
+        )
     );
     println!("{}", spacing.clone() + "--> True: ");
-    print_tree(root.true_branch.unwrap(), spacing.clone() + "    ");
+    print_tree(
+        root.true_branch.unwrap(),
+        spacing.clone() + "    ",
+        feature_names,
+    );
 
     println!("{}", spacing.clone() + "--> False: ");
-    print_tree(root.false_branch.unwrap(), spacing.clone() + "    ");
+    print_tree(
+        root.false_branch.unwrap(),
+        spacing.clone() + "    ",
+        feature_names,
+    );
 }
 
 #[cfg(test)]
 mod tests {
 
-    use common::data_reader::read_csv_data;
+    use common::data_reader::{get_feature_names, read_csv_data};
 
     use crate::split_finder::SplitMetric;
 
@@ -71,6 +84,7 @@ mod tests {
         let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = DecisionTree::new(data_set, split_finder, 3);
-        print_tree(Box::new(tree.root), "".to_string())
+        let feature_names = get_feature_names("./../common/data_files/iris.csv");
+        print_tree(Box::new(tree.root), "".to_string(), &feature_names)
     }
 }

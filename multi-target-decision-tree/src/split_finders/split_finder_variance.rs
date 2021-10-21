@@ -7,7 +7,7 @@ use crate::calculations::variance::*;
 
 pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> BestSplitResult {
     let mut best_gain = 0.0;
-    let mut best_question = Question::new(0, false, 0.);
+    let mut best_question = Question::new(0, 0.);
 
     let number_of_targets = number_of_targets as usize;
     let total_multi_target_label_metrics =

@@ -7,7 +7,7 @@ use crate::{calculations::gini::calculate_gini, class_counter::get_class_counts}
 
 pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;
-    let mut best_question = Question::new(0, false, 0.);
+    let mut best_question = Question::new(0, 0.);
 
     let class_counts_all = get_class_counts(&data.labels, number_of_classes);
     let gini_all = calculate_gini(&class_counts_all, data.features.len() as f32);

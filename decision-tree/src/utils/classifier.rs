@@ -48,7 +48,7 @@ mod tests {
         decision_tree::{print_tree, DecisionTree},
         split_finder::{SplitFinder, SplitMetric},
     };
-    use common::data_reader::read_csv_data;
+    use common::data_reader::{get_feature_names, read_csv_data};
 
     #[test]
     fn test_classifier_known_data() {
@@ -102,6 +102,7 @@ mod tests {
         let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = DecisionTree::new(data_set, split_finder, 3);
-        print_tree(Box::new(tree.root), "".to_string())
+        let feature_names = get_feature_names("./../common/data_files/iris.csv");
+        print_tree(Box::new(tree.root), "".to_string(), &feature_names)
     }
 }

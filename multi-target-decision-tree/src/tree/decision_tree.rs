@@ -59,7 +59,7 @@ pub fn print_tree(root: Box<TreeNode>, spacing: String) {
     }
     println!(
         "{}",
-        format!("{} {:?}", spacing.clone(), root.question.to_string())
+        format!("{} {:?}", spacing.clone(), root.question.to_string(""))
     );
     println!("{}", spacing.clone() + "--> True: ");
     print_tree(root.true_branch.unwrap(), spacing.clone() + "    ");

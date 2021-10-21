@@ -1,6 +1,8 @@
 use std::error::Error;
 use std::fs::File;
 
+use csv::StringRecord;
+
 use crate::datasets::DataSet;
 use crate::datasets::MultiTargetDataSet;
 
@@ -17,6 +19,23 @@ pub fn read_csv_data_multi_target(file_path: &str, number_of_targets: usize) -> 
         features: dataset.features,
         labels: multi_target_labels,
     }
+}
+
+pub fn get_feature_names(file_path: &str) -> Vec<String> {
+    let feature_names = get_header_record(file_path).unwrap();
+    let mut names_vec = vec![];
+    for i in 0..feature_names.len() - 1 {
+        names_vec.push(feature_names.get(i).unwrap().to_owned());
+    }
+    names_vec
+}
+
+fn get_header_record(file_path: &str) -> Result<StringRecord, Box<dyn Error>> {
+    //feature names should be in the header of the csv file
+    let file = File::open(file_path)?;
+    let mut reader = csv::Reader::from_reader(file);
+    let headers = reader.headers()?;
+    Ok(headers.to_owned())
 }
 
 //reading in data from csv, presume header included and label is at the end of each record
@@ -74,5 +93,16 @@ mod tests {
     fn print_csv_reading() {
         let data_set = read_csv_data("./data_files/iris.csv");
         println!("{:?}", data_set);
+    }
+
+    #[test]
+    fn print_get_feature_names() {
+        let feature_names = get_header_record("./data_files/iris.csv");
+        let names_unwrapped = feature_names.unwrap();
+        let mut names_vec = vec![];
+        for i in 0..names_unwrapped.len() - 1 {
+            names_vec.push(names_unwrapped.get(i).unwrap());
+        }
+        println!("{:?}", names_vec)
     }
 }
