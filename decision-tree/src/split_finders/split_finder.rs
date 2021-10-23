@@ -9,6 +9,7 @@ pub enum SplitMetric {
     Variance,
 }
 
+#[derive(Clone, Copy)]
 pub struct SplitFinder {
     split_metric: SplitMetric,
     pub find_best_split: fn(&DataSet, u32) -> BestSplitResult,

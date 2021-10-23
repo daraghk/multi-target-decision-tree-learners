@@ -1,3 +1,5 @@
+use std::thread;
+
 use common::datasets::DataSet;
 
 use crate::{
@@ -13,14 +15,22 @@ pub struct DecisionTree {
 }
 
 impl DecisionTree {
-    pub fn new(data: DataSet, split_finder: SplitFinder, number_of_classes: u32) -> Self {
+    pub fn new(
+        data: DataSet,
+        split_finder: SplitFinder,
+        number_of_classes: u32,
+        use_multi_threading: bool,
+    ) -> Self {
         Self {
-            root: build_tree(data, &split_finder, number_of_classes),
+            root: match use_multi_threading {
+                true => build_tree_using_multiple_threads(data, split_finder, number_of_classes),
+                false => build_tree(data, split_finder, number_of_classes),
+            },
         }
     }
 }
 
-pub fn build_tree(data: DataSet, split_finder: &SplitFinder, number_of_classes: u32) -> TreeNode {
+fn build_tree(data: DataSet, split_finder: SplitFinder, number_of_classes: u32) -> TreeNode {
     let split_result = (split_finder.find_best_split)(&data, number_of_classes);
     if split_result.gain == 0.0 {
         let predictions = get_class_counts(&data.labels, number_of_classes);
@@ -33,6 +43,41 @@ pub fn build_tree(data: DataSet, split_finder: &SplitFinder, number_of_classes: 
 
         let left_tree = build_tree(left_data, split_finder, number_of_classes);
         let right_tree = build_tree(right_data, split_finder, number_of_classes);
+
+        TreeNode::new(
+            split_result.question,
+            Box::new(left_tree),
+            Box::new(right_tree),
+        )
+    }
+}
+
+fn build_tree_using_multiple_threads(
+    data: DataSet,
+    split_finder: SplitFinder,
+    number_of_classes: u32,
+) -> TreeNode {
+    let split_result = (split_finder.find_best_split)(&data, number_of_classes);
+    if split_result.gain == 0.0 {
+        let predictions = get_class_counts(&data.labels, number_of_classes);
+        let leaf = Leaf { predictions };
+        return TreeNode::leaf_node(split_result.question, leaf);
+    } else {
+        let partitioned_data = partition(&data, &split_result.question);
+        let left_data = partitioned_data.1;
+        let right_data = partitioned_data.0;
+
+        let left_tree_handle = thread::spawn(move || {
+            return build_tree(left_data, split_finder, number_of_classes);
+        });
+
+        let right_tree_handle = thread::spawn(move || {
+            return build_tree(right_data, split_finder, number_of_classes);
+        });
+
+        let left_tree = left_tree_handle.join().unwrap();
+        let right_tree = right_tree_handle.join().unwrap();
+
         TreeNode::new(
             split_result.question,
             Box::new(left_tree),
@@ -73,17 +118,15 @@ pub fn print_tree(root: Box<TreeNode>, spacing: String, feature_names: &Vec<Stri
 
 #[cfg(test)]
 mod tests {
-
-    use common::data_reader::{get_feature_names, read_csv_data};
-
     use crate::split_finder::SplitMetric;
+    use common::data_reader::{get_feature_names, read_csv_data};
 
     use super::*;
     #[test]
     fn test_build_tree() {
         let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = DecisionTree::new(data_set, split_finder, 3);
+        let tree = DecisionTree::new(data_set, split_finder, 3, false);
         let feature_names = get_feature_names("./../common/data_files/iris.csv");
         print_tree(Box::new(tree.root), "".to_string(), &feature_names)
     }

@@ -54,7 +54,7 @@ mod tests {
     fn test_classifier_known_data() {
         let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = DecisionTree::new(data_set, split_finder, 3);
+        let tree = DecisionTree::new(data_set, split_finder, 3, false);
         let row_to_classify = vec![58., 27., 51., 19.];
         let boxed_tree = Box::new(tree.root);
         let predicted_class = predict_class(&row_to_classify, &boxed_tree);
@@ -66,7 +66,7 @@ mod tests {
     fn test_print_classifier_result_unknown_data() {
         let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = DecisionTree::new(data_set, split_finder, 3);
+        let tree = DecisionTree::new(data_set, split_finder, 3, false);
         let row_to_classify = vec![1., 23., 90., 10.];
         let boxed_tree = Box::new(tree.root);
         let predicted_class = predict_class(&row_to_classify, &boxed_tree);
@@ -77,7 +77,7 @@ mod tests {
     fn test_overall_accuracy_on_iris_training_data() {
         let train_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = DecisionTree::new(train_set, split_finder, 3);
+        let tree = DecisionTree::new(train_set, split_finder, 3, false);
         let boxed_tree = Box::new(tree.root);
 
         let test_set = read_csv_data("./../common/data_files/iris.csv");
@@ -89,7 +89,7 @@ mod tests {
     fn test_overall_accuracy_on_iris_test_data() {
         let train_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = DecisionTree::new(train_set, split_finder, 3);
+        let tree = DecisionTree::new(train_set, split_finder, 3, false);
         let boxed_tree = Box::new(tree.root);
 
         let test_set = read_csv_data("./../common/data_files/iris_test.csv");
@@ -101,7 +101,7 @@ mod tests {
     fn print_iris_tree_for_ref() {
         let data_set = read_csv_data("./../common/data_files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = DecisionTree::new(data_set, split_finder, 3);
+        let tree = DecisionTree::new(data_set, split_finder, 3, false);
         let feature_names = get_feature_names("./../common/data_files/iris.csv");
         print_tree(Box::new(tree.root), "".to_string(), &feature_names)
     }
