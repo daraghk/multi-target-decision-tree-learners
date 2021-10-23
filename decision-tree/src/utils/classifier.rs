@@ -7,9 +7,12 @@ pub fn calculate_accuracy(test_data: &DataSet, tree_root: &Box<TreeNode>) -> f32
     for i in 0..test_data.features.len() {
         let prediction = predict_class(&test_data.features[i], tree_root);
         let actual = test_data.labels[i];
-        println!("Prediction: {}, Actual: {}", prediction, actual);
         if prediction == actual {
             accuracy += 1.;
+        }
+        else{
+            //for debugging - print incorrect classifications
+            println!("Prediction: {}, Actual: {}", prediction, actual);
         }
     }
     accuracy / test_data.features.len() as f32

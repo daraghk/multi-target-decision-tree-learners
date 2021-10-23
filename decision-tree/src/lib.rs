@@ -4,8 +4,6 @@
 mod calculations;
 #[path = "utils/class_counter.rs"]
 mod class_counter;
-#[path = "utils/classifier.rs"]
-mod classifier;
 #[path = "utils/data_partitioner.rs"]
 mod data_partitioner;
 #[path = "tree/decision_tree.rs"]
@@ -18,5 +16,5 @@ pub mod leaf;
 pub mod node;
 #[path = "split_finders/split_finder.rs"]
 pub mod split_finder;
-// #[path = "benches/bench.rs"]
-// mod bench;
+#[path = "utils/classifier.rs"]
+pub mod classifier;

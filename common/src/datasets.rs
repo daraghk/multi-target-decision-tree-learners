@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DataSet {
     pub features: Vec<Vec<f32>>,
     pub labels: Vec<f32>,

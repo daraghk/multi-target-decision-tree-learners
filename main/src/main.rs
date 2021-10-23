@@ -1,3 +1,4 @@
+#![allow(unused)]
 use common::data_reader::{read_csv_data, read_csv_data_multi_target};
 use decision_tree::decision_tree::DecisionTree;
 use multi_target_decision_tree::decision_tree::MultiTargetDecisionTree;
