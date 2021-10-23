@@ -9,8 +9,7 @@ pub fn calculate_accuracy(test_data: &DataSet, tree_root: &Box<TreeNode>) -> f32
         let actual = test_data.labels[i];
         if prediction == actual {
             accuracy += 1.;
-        }
-        else{
+        } else {
             //for debugging - print incorrect classifications
             println!("Prediction: {}, Actual: {}", prediction, actual);
         }

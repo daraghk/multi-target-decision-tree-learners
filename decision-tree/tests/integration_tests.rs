@@ -1,7 +1,7 @@
-use common::data_reader::read_csv_data;
+use common::data_reader::{get_feature_names, read_csv_data};
 use decision_tree::{
     classifier::calculate_accuracy,
-    decision_tree::DecisionTree,
+    decision_tree::{print_tree, DecisionTree},
     split_finder::{SplitFinder, SplitMetric},
 };
 
@@ -25,4 +25,13 @@ fn test_decision_tree_for_wine() {
     let test_set = read_csv_data("./../common/data_files/wine_test.csv");
     let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     assert!(accuracy > 0.90)
+}
+
+#[test]
+fn print_tree_for_wine_tree() {
+    let data_set = read_csv_data("./../common/data_files/wine_train.csv");
+    let split_finder = SplitFinder::new(SplitMetric::Variance);
+    let tree = DecisionTree::new(data_set, split_finder, 3, false);
+    let feature_names = get_feature_names("./../common/data_files/wine_train.csv");
+    print_tree(Box::new(tree.root), "".to_string(), &feature_names);
 }

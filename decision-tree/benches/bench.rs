@@ -25,5 +25,9 @@ fn benchmark_build_tree_multi_threaded(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, benchmark_build_tree_single_threaded, benchmark_build_tree_multi_threaded);
+criterion_group!(
+    benches,
+    benchmark_build_tree_single_threaded,
+    benchmark_build_tree_multi_threaded
+);
 criterion_main!(benches);
