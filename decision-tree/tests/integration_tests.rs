@@ -28,7 +28,7 @@ fn test_decision_tree_for_wine() {
 }
 
 #[test]
-fn print_tree_for_wine_tree() {
+fn print_tree_for_wine() {
     let data_set = read_csv_data("./../common/data_files/wine_train.csv");
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     let tree = DecisionTree::new(data_set, split_finder, 3, false);

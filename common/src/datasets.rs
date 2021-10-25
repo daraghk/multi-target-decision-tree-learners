@@ -4,7 +4,7 @@ pub struct DataSet {
     pub labels: Vec<f32>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct MultiTargetDataSet {
     pub features: Vec<Vec<f32>>,
     pub labels: Vec<Vec<f32>>,

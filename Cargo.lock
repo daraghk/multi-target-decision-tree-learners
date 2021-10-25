@@ -291,6 +291,7 @@ name = "multi-target-decision-tree"
 version = "0.1.0"
 dependencies = [
  "common",
+ "criterion",
 ]
 
 [[package]]
