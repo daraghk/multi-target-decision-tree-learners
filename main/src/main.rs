@@ -22,18 +22,18 @@ fn main() {
     // let decision_tree = DecisionTree::new(dataset, split_finder, 3);
     // decision_tree::decision_tree::print_tree(Box::new(decision_tree.root), "".to_string());
 
-    let multi_target_dataset_other = read_csv_data_multi_target("./common/data_files/wine.csv", 3);
-    let multi_target_split_finder_other =
-        multi_target_decision_tree::split_finder::SplitFinder::new(
-            multi_target_decision_tree::split_finder::SplitMetric::Variance,
-        );
-    let multi_target_decision_tree_other = MultiTargetDecisionTree::new(
-        multi_target_dataset_other,
-        multi_target_split_finder_other,
-        3,
-    );
-    multi_target_decision_tree::decision_tree::print_tree(
-        Box::new(multi_target_decision_tree_other.root),
-        "".to_string(),
-    );
+    // let multi_target_dataset_other = read_csv_data_multi_target("./common/data_files/wine.csv", 3);
+    // let multi_target_split_finder_other =
+    //     multi_target_decision_tree::split_finder::SplitFinder::new(
+    //         multi_target_decision_tree::split_finder::SplitMetric::Variance,
+    //     );
+    // let multi_target_decision_tree_other = MultiTargetDecisionTree::new(
+    //     multi_target_dataset_other,
+    //     multi_target_split_finder_other,
+    //     3,
+    // );
+    // multi_target_decision_tree::decision_tree::print_tree(
+    //     Box::new(multi_target_decision_tree_other.root),
+    //     "".to_string(),
+    // );
 }

@@ -31,4 +31,8 @@ impl TreeNode {
             leaf: Some(leaf),
         }
     }
+
+    pub fn is_leaf_node(&self) -> bool {
+        self.true_branch.is_none() && self.false_branch.is_none()
+    }
 }

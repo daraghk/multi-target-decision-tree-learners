@@ -17,11 +17,11 @@ pub fn get_class_counts_multi_target(
 ) -> ClassCounter {
     let mut class_counter = ClassCounter::new(number_of_unique_classes);
     classes.iter().for_each(|label_vector| {
-        label_vector.iter().for_each(|class| {
-            if *class == 1. {
-                class_counter.counts[*class as usize] += 1;
+        for i in 0..label_vector.len() {
+            if label_vector[i] == 1. {
+                class_counter.counts[i] += 1;
             }
-        })
+        }
     });
     class_counter
 }
