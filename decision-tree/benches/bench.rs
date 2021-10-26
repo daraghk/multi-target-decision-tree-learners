@@ -6,21 +6,21 @@ use decision_tree::{
 };
 
 fn benchmark_build_tree_single_threaded(c: &mut Criterion) {
-    let data_set = read_csv_data("./../common/data_files/iris.csv");
+    let data_set = read_csv_data("./../common/data_files/digits_train.csv");
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     c.bench_function("tree build - single thread", |b| {
         b.iter(|| {
-            return DecisionTree::new(data_set.clone(), split_finder, 3, false);
+            return DecisionTree::new(data_set.clone(), split_finder, 10, false);
         })
     });
 }
 
 fn benchmark_build_tree_multi_threaded(c: &mut Criterion) {
-    let data_set = read_csv_data("./../common/data_files/iris.csv");
+    let data_set = read_csv_data("./../common/data_files/digits_train.csv");
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     c.bench_function("tree build - multi thread", |b| {
         b.iter(|| {
-            return DecisionTree::new(data_set.clone(), split_finder, 3, true);
+            return DecisionTree::new(data_set.clone(), split_finder, 10, true);
         })
     });
 }
