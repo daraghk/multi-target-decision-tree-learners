@@ -11,7 +11,7 @@ pub fn calculate_accuracy(test_data: &DataSet, tree_root: &Box<TreeNode>) -> f32
             accuracy += 1.;
         } else {
             //for debugging - print incorrect classifications
-            println!("Prediction: {}, Actual: {}", prediction, actual);
+            //println!("Prediction: {}, Actual: {}", prediction, actual);
         }
     }
     accuracy / test_data.features.len() as f32

@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use common::data_reader::{get_feature_names, read_csv_data};
 use decision_tree::{
     classifier::calculate_accuracy,
@@ -45,6 +47,32 @@ fn test_decision_tree_for_wine() {
     let tree = DecisionTree::new(data_set, split_finder, 3, false);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data("./../common/data_files/wine_test.csv");
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
+    assert!(accuracy > 0.90)
+}
+
+#[test]
+fn test_decision_tree_for_covtype() {
+    let data_set = read_csv_data("./../common/data_files/covtype_train.csv");
+    let split_finder = SplitFinder::new(SplitMetric::Variance);
+    let before = Instant::now();
+    let tree = DecisionTree::new(data_set, split_finder, 7, false);
+    println!("Elapsed time: {:.2?}", before.elapsed());
+    let boxed_tree = Box::new(tree.root);
+    let test_set = read_csv_data("./../common/data_files/covtype_test.csv");
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
+    println!("{}", accuracy);
+    assert!(accuracy > 0.90)
+}
+
+#[test]
+fn test_decision_tree_for_covtype_multi_threaded() {
+    let data_set = read_csv_data("./../common/data_files/covtype_train.csv");
+    let split_finder = SplitFinder::new(SplitMetric::Variance);
+    let before = Instant::now();
+    let tree = DecisionTree::new(data_set, split_finder, 7, true);
+    println!("Elapsed time: {:.2?}", before.elapsed());    let boxed_tree = Box::new(tree.root);
+    let test_set = read_csv_data("./../common/data_files/covtype_test.csv");
     let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     assert!(accuracy > 0.90)
 }

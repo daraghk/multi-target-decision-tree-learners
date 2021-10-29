@@ -68,11 +68,11 @@ fn build_tree_using_multiple_threads(
         let right_data = partitioned_data.0;
 
         let left_tree_handle = thread::spawn(move || {
-            return build_tree(left_data, split_finder, number_of_classes);
+            return build_tree_using_multiple_threads(left_data, split_finder, number_of_classes);
         });
 
         let right_tree_handle = thread::spawn(move || {
-            return build_tree(right_data, split_finder, number_of_classes);
+            return build_tree_using_multiple_threads(right_data, split_finder, number_of_classes);
         });
 
         let left_tree = left_tree_handle.join().unwrap();
