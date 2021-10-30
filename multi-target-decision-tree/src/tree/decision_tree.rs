@@ -207,30 +207,30 @@ fn calculate_average_vector(data: &MultiTargetDataSet) -> Vec<f32> {
 #[cfg(test)]
 mod tests {
     use crate::split_finder::{SplitFinder, SplitMetric};
-    use common::data_reader::{get_feature_names, read_csv_data_multi_target};
+    use common::data_reader::{get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
 
     use super::*;
     #[test]
     fn test_build_tree() {
-        let data_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
-        let feature_names = get_feature_names("./../common/data_files/iris.csv");
+        let feature_names = get_feature_names("./../common/data-files/iris.csv");
         print_tree(Box::new(tree.root), "".to_string(), &feature_names);
     }
 
     #[test]
     fn test_build_tree_regression() {
-        let data_set = read_csv_data_multi_target("./../common/data_files/digits_train.csv", 10);
+        let data_set = read_csv_data_multi_target("./../common/data-files/multi-target/features_train_mt.csv", "./../common/data-files/multi-target/labels_train_mt.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = MultiTargetDecisionTree::new(data_set, split_finder, 10, false, true);
-        let feature_names = get_feature_names("./../common/data_files/digits_train.csv");
+        let tree = MultiTargetDecisionTree::new(data_set, split_finder, 2, false, true);
+        let feature_names = get_feature_names("./../common/data-files/multi-target/features_train_mt.csv");
         print_tree_regression(Box::new(tree.root), "".to_string(), &feature_names);
     }
 
     #[test]
     fn calculate_average_vector_test() {
-        let data_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let average_of_labels = calculate_average_vector(&data_set);
         println!("{:?}", average_of_labels);
     }

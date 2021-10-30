@@ -11,13 +11,28 @@ pub fn read_csv_data(file_path: &str) -> DataSet {
     parse_data_into_features_and_labels(data_set_read)
 }
 
-pub fn read_csv_data_multi_target(file_path: &str, number_of_targets: usize) -> MultiTargetDataSet {
+pub fn read_csv_data_one_hot_multi_target(
+    file_path: &str,
+    number_of_targets: usize,
+) -> MultiTargetDataSet {
     let data_set_read = read_data(file_path).unwrap();
     let dataset = parse_data_into_features_and_labels(data_set_read);
     let multi_target_labels = create_multi_target_labels(dataset.labels, number_of_targets);
     MultiTargetDataSet {
         features: dataset.features,
         labels: multi_target_labels,
+    }
+}
+
+pub fn read_csv_data_multi_target(
+    file_path_to_features: &str,
+    file_path_to_labels: &str,
+) -> MultiTargetDataSet {
+    let data_set_features = read_data(file_path_to_features).unwrap();
+    let data_set_labels = read_data(file_path_to_labels).unwrap();
+    MultiTargetDataSet {
+        features: data_set_features,
+        labels: data_set_labels,
     }
 }
 
@@ -79,7 +94,7 @@ mod tests {
 
     #[test]
     fn print_csv_reading_and_mt_labels() {
-        let data_set = read_csv_data("./data_files/iris.csv");
+        let data_set = read_csv_data("./data-files/iris.csv");
         let mt_labels = create_multi_target_labels(data_set.labels, 3);
         assert_eq!(*mt_labels.get(0).unwrap(), vec![1., 0., 0.]);
         let multi_target_dataset = MultiTargetDataSet {
@@ -91,13 +106,13 @@ mod tests {
 
     #[test]
     fn print_csv_reading() {
-        let data_set = read_csv_data("./data_files/iris.csv");
+        let data_set = read_csv_data("./data-files/iris.csv");
         println!("{:?}", data_set);
     }
 
     #[test]
     fn print_get_feature_names() {
-        let feature_names = get_header_record("./data_files/iris.csv");
+        let feature_names = get_header_record("./data-files/iris.csv");
         let names_unwrapped = feature_names.unwrap();
         let mut names_vec = vec![];
         for i in 0..names_unwrapped.len() - 1 {

@@ -68,11 +68,11 @@ mod tests {
         decision_tree::{print_tree, MultiTargetDecisionTree},
         split_finder::{SplitFinder, SplitMetric},
     };
-    use common::data_reader::{get_feature_names, read_csv_data_multi_target};
+    use common::data_reader::{get_feature_names, read_csv_data_one_hot_multi_target};
 
     #[test]
     fn test_classifier_known_data() {
-        let data_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
         let row_to_classify = vec![58., 27., 51., 19.];
@@ -84,7 +84,7 @@ mod tests {
     use super::*;
     #[test]
     fn test_print_classifier_result_unknown_data() {
-        let data_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
         let row_to_classify = vec![1., 23., 90., 10.];
@@ -95,34 +95,36 @@ mod tests {
 
     #[test]
     fn test_overall_accuracy_on_iris_training_data() {
-        let train_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let train_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(train_set, split_finder, 3, false, false);
         let boxed_tree = Box::new(tree.root);
 
-        let test_set = read_csv_data_multi_target("./../common/data_files/iris_test.csv", 3);
+        let test_set =
+            read_csv_data_one_hot_multi_target("./../common/data-files/iris_test.csv", 3);
         let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
         assert_eq!(accuracy, 1.0);
     }
 
     #[test]
     fn test_overall_accuracy_on_iris_test_data() {
-        let train_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let train_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(train_set, split_finder, 3, false, false);
         let boxed_tree = Box::new(tree.root);
 
-        let test_set = read_csv_data_multi_target("./../common/data_files/iris_test.csv", 3);
+        let test_set =
+            read_csv_data_one_hot_multi_target("./../common/data-files/iris_test.csv", 3);
         let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
         assert_eq!(accuracy, 1.0);
     }
 
     #[test]
     fn print_iris_tree_for_ref() {
-        let data_set = read_csv_data_multi_target("./../common/data_files/iris.csv", 3);
+        let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
-        let feature_names = get_feature_names("./../common/data_files/iris.csv");
+        let feature_names = get_feature_names("./../common/data-files/iris.csv");
         print_tree(Box::new(tree.root), "".to_string(), &feature_names)
     }
 }

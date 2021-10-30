@@ -24,7 +24,7 @@ mod tests {
 
     #[test]
     fn test_build_tree() {
-        let data_set = read_csv_data("./../common/data_files/iris.csv");
+        let data_set = read_csv_data("./../common/data-files/iris.csv");
         let single_target = Data::SingleTarget(data_set);
         match single_target {
             Data::SingleTarget(_) => {

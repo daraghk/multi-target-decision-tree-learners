@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     fn test_best_threshold_for_particular_feature_in_iris() {
-        let iris = read_csv_data("./../common/data_files/iris.csv");
+        let iris = read_csv_data("./../common/data-files/iris.csv");
         let column = 2;
         let label_sums = get_label_sums(&iris.labels);
         let result = super::determine_best_threshold(&iris, column, label_sums.1, label_sums.0);

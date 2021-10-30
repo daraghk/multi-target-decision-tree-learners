@@ -124,10 +124,10 @@ mod tests {
     use super::*;
     #[test]
     fn test_build_tree() {
-        let data_set = read_csv_data("./../common/data_files/iris.csv");
+        let data_set = read_csv_data("./../common/data-files/iris.csv");
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = DecisionTree::new(data_set, split_finder, 3, false);
-        let feature_names = get_feature_names("./../common/data_files/iris.csv");
+        let feature_names = get_feature_names("./../common/data-files/iris.csv");
         print_tree(Box::new(tree.root), "".to_string(), &feature_names)
     }
 }

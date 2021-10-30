@@ -6,7 +6,7 @@ use decision_tree::{
 };
 
 fn benchmark_build_tree_single_threaded(c: &mut Criterion) {
-    let data_set = read_csv_data("./../common/data_files/covtype_train.csv");
+    let data_set = read_csv_data("./../common/data-files/covtype_train.csv");
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     c.bench_function("single target tree build - single thread", |b| {
         b.iter(|| {
@@ -16,7 +16,7 @@ fn benchmark_build_tree_single_threaded(c: &mut Criterion) {
 }
 
 fn benchmark_build_tree_multi_threaded(c: &mut Criterion) {
-    let data_set = read_csv_data("./../common/data_files/covtype_train.csv");
+    let data_set = read_csv_data("./../common/data-files/covtype_train.csv");
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     c.bench_function("single target tree build - multi thread", |b| {
         b.iter(|| {
