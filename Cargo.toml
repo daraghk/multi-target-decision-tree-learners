@@ -4,5 +4,6 @@ members = [
     "decision-tree",
     "multi-target-decision-tree",
     "common",
-    "main"
+    "main",
+    "multi-target-grad-boost"
 ]
