@@ -43,10 +43,10 @@ pub fn build_tree(
 ) -> TreeNode {
     let split_result = (split_finder.find_best_split)(&data, number_of_classes);
     if split_result.gain == 0.0 {
-        let predictions = get_class_counts_multi_target(&data.labels, number_of_classes);
+        let class_counts = get_class_counts_multi_target(&data.labels, number_of_classes);
         let leaf = Leaf {
-            predictions: Some(predictions),
-            regression_pred: None,
+            predictions: Some(class_counts),
+            data: None,
         };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
@@ -74,7 +74,7 @@ fn build_tree_using_multiple_threads(
         let predictions = get_class_counts_multi_target(&data.labels, number_of_classes);
         let leaf = Leaf {
             predictions: Some(predictions),
-            regression_pred: None,
+            data: None,
         };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
@@ -101,66 +101,6 @@ fn build_tree_using_multiple_threads(
     }
 }
 
-pub fn print_tree(root: Box<TreeNode>, spacing: String, feature_names: &Vec<String>) {
-    if root.leaf.is_some() {
-        let leaf_ref = &root.leaf.unwrap();
-        println!("{} Predict:{:?}", spacing, leaf_ref.predictions);
-        return;
-    }
-    println!(
-        "{}",
-        format!(
-            "{} {:?}",
-            spacing.clone(),
-            root.question
-                .to_string(feature_names.get(root.question.column as usize).unwrap())
-        )
-    );
-    println!("{}", spacing.clone() + "--> True: ");
-    print_tree(
-        root.true_branch.unwrap(),
-        spacing.clone() + "    ",
-        feature_names,
-    );
-
-    println!("{}", spacing.clone() + "--> False: ");
-    print_tree(
-        root.false_branch.unwrap(),
-        spacing.clone() + "    ",
-        feature_names,
-    );
-}
-
-pub fn print_tree_regression(root: Box<TreeNode>, spacing: String, feature_names: &Vec<String>) {
-    if root.leaf.is_some() {
-        let leaf_ref = &root.leaf.unwrap();
-        println!("{} Predict:{:?}", spacing, leaf_ref.regression_pred);
-        return;
-    }
-    println!(
-        "{}",
-        format!(
-            "{} {:?}",
-            spacing.clone(),
-            root.question
-                .to_string(feature_names.get(root.question.column as usize).unwrap())
-        )
-    );
-    println!("{}", spacing.clone() + "--> True: ");
-    print_tree_regression(
-        root.true_branch.unwrap(),
-        spacing.clone() + "    ",
-        feature_names,
-    );
-
-    println!("{}", spacing.clone() + "--> False: ");
-    print_tree_regression(
-        root.false_branch.unwrap(),
-        spacing.clone() + "    ",
-        feature_names,
-    );
-}
-
 pub fn build_tree_regression(
     data: MultiTargetDataSet,
     split_finder: SplitFinder,
@@ -168,10 +108,9 @@ pub fn build_tree_regression(
 ) -> TreeNode {
     let split_result = (split_finder.find_best_split)(&data, number_of_classes);
     if split_result.gain == 0.0 {
-        let prediction = calculate_average_vector(&data);
         let leaf = Leaf {
             predictions: None,
-            regression_pred: Some(prediction),
+            data: Some(data),
         };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
@@ -189,25 +128,15 @@ pub fn build_tree_regression(
     }
 }
 
-fn calculate_average_vector(data: &MultiTargetDataSet) -> Vec<f32> {
-    let labels = &data.labels;
-    let label_length = data.labels[0].len();
-    let mut average_vector = vec![0.; label_length];
-    for i in 0..data.labels.len() {
-        for j in 0..label_length {
-            average_vector[j] += labels[i][j];
-        }
-    }
-    for j in 0..label_length {
-        average_vector[j] /= labels.len() as f32;
-    }
-    average_vector
-}
-
 #[cfg(test)]
 mod tests {
-    use crate::split_finder::{SplitFinder, SplitMetric};
-    use common::data_reader::{get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
+    use crate::{
+        printer::{print_tree, print_tree_regression},
+        split_finder::{SplitFinder, SplitMetric},
+    };
+    use common::data_reader::{
+        get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
+    };
 
     use super::*;
     #[test]
@@ -216,22 +145,21 @@ mod tests {
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
         let feature_names = get_feature_names("./../common/data-files/iris.csv");
+        println!("{:?}", feature_names);
         print_tree(Box::new(tree.root), "".to_string(), &feature_names);
     }
 
     #[test]
     fn test_build_tree_regression() {
-        let data_set = read_csv_data_multi_target("./../common/data-files/multi-target/features_train_mt.csv", "./../common/data-files/multi-target/labels_train_mt.csv");
+        let data_set = read_csv_data_multi_target(
+            "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/features_train_mt.csv",
+            "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/labels_train_mt.csv",
+        );
         let split_finder = SplitFinder::new(SplitMetric::Variance);
         let tree = MultiTargetDecisionTree::new(data_set, split_finder, 2, false, true);
-        let feature_names = get_feature_names("./../common/data-files/multi-target/features_train_mt.csv");
+        let feature_names =
+            get_feature_names(            "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/features_train_mt.csv"
+        );
         print_tree_regression(Box::new(tree.root), "".to_string(), &feature_names);
-    }
-
-    #[test]
-    fn calculate_average_vector_test() {
-        let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
-        let average_of_labels = calculate_average_vector(&data_set);
-        println!("{:?}", average_of_labels);
     }
 }

@@ -39,7 +39,7 @@ pub fn read_csv_data_multi_target(
 pub fn get_feature_names(file_path: &str) -> Vec<String> {
     let feature_names = get_header_record(file_path).unwrap();
     let mut names_vec = vec![];
-    for i in 0..feature_names.len() - 1 {
+    for i in 0..feature_names.len() {
         names_vec.push(feature_names.get(i).unwrap().to_owned());
     }
     names_vec
@@ -93,7 +93,7 @@ mod tests {
     use std::fs;
 
     #[test]
-    fn print_csv_reading_and_mt_labels() {
+    fn print_csv_reading_and_mt_one_hot_labels() {
         let data_set = read_csv_data("./data-files/iris.csv");
         let mt_labels = create_multi_target_labels(data_set.labels, 3);
         assert_eq!(*mt_labels.get(0).unwrap(), vec![1., 0., 0.]);
@@ -102,6 +102,15 @@ mod tests {
             labels: mt_labels,
         };
         println!("{:?}", multi_target_dataset);
+    }
+
+    #[test]
+    fn print_csv_reading_and_mt_labels() {
+        let data_set = read_csv_data_multi_target(
+            "./../common/data-files/multi-target/features_train_mt.csv",
+            "./../common/data-files/multi-target/labels_train_mt.csv",
+        );
+        println!("{:?}", &data_set.labels);
     }
 
     #[test]

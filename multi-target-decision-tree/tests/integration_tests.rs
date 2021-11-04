@@ -1,7 +1,10 @@
-use common::data_reader::{get_feature_names, read_csv_data_one_hot_multi_target};
+use common::data_reader::{
+    get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
+};
 use multi_target_decision_tree::{
-    classifier::calculate_accuracy,
-    decision_tree::{print_tree, MultiTargetDecisionTree},
+    decision_tree::MultiTargetDecisionTree,
+    printer::print_tree,
+    scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
     split_finder::{SplitFinder, SplitMetric},
 };
 use std::time::Instant;
@@ -80,6 +83,27 @@ fn test_decision_tree_for_covtype_multi_threaded() {
     let accuracy = calculate_accuracy(&test_set, &boxed_tree, 7);
     println!("{}", accuracy);
     assert!(accuracy > 0.90)
+}
+
+#[test]
+fn test_decision_tree_for_regression() {
+    let data_set = read_csv_data_multi_target(
+        "./../common/data-files/multi-target/features_train_mt.csv",
+        "./../common/data-files/multi-target/labels_train_mt.csv",
+    );
+    let split_finder = SplitFinder::new(SplitMetric::Variance);
+    let before = Instant::now();
+    let tree = MultiTargetDecisionTree::new(data_set, split_finder, 2, true, true);
+    println!("Elapsed time: {:.2?}", before.elapsed());
+    let boxed_tree = Box::new(tree.root);
+    let test_set = read_csv_data_multi_target(
+        "./../common/data-files/multi-target/features_test_mt.csv",
+        "./../common/data-files/multi-target/labels_test_mt.csv",
+    );
+    let score = calculate_overall_mean_squared_error(&test_set, &boxed_tree);
+    let rmse = f32::sqrt(score);
+    println!("{}", score);
+    println!("{}", rmse);
 }
 
 #[test]

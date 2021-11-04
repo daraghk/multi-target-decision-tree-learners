@@ -4,8 +4,6 @@
 mod calculations;
 #[path = "utils/class_counter.rs"]
 mod class_counter;
-#[path = "utils/classifier.rs"]
-pub mod classifier;
 #[path = "utils/data_partitioner.rs"]
 mod data_partitioner;
 #[path = "tree/decision_tree.rs"]
@@ -16,5 +14,9 @@ mod feature_sorter;
 pub mod leaf;
 #[path = "tree/node.rs"]
 pub mod node;
+#[path = "tree/tree_print.rs"]
+pub mod printer;
+#[path = "utils/scorer.rs"]
+pub mod scorer;
 #[path = "split_finders/split_finder.rs"]
 pub mod split_finder;
