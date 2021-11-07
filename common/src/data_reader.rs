@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fs::File;
+use std::os::unix::prelude::OsStringExt;
 
 use csv::StringRecord;
 
@@ -18,9 +19,11 @@ pub fn read_csv_data_one_hot_multi_target(
     let data_set_read = read_data(file_path).unwrap();
     let dataset = parse_data_into_features_and_labels(data_set_read);
     let multi_target_labels = create_multi_target_labels(dataset.labels, number_of_targets);
+    let data_indices = (0..multi_target_labels.len()).collect::<Vec<usize>>();
     MultiTargetDataSet {
         features: dataset.features,
         labels: multi_target_labels,
+        indices: data_indices,
     }
 }
 
@@ -30,9 +33,11 @@ pub fn read_csv_data_multi_target(
 ) -> MultiTargetDataSet {
     let data_set_features = read_data(file_path_to_features).unwrap();
     let data_set_labels = read_data(file_path_to_labels).unwrap();
+    let data_indices = (0..data_set_labels.len()).collect::<Vec<usize>>();
     MultiTargetDataSet {
         features: data_set_features,
         labels: data_set_labels,
+        indices: data_indices,
     }
 }
 
@@ -96,10 +101,12 @@ mod tests {
     fn print_csv_reading_and_mt_one_hot_labels() {
         let data_set = read_csv_data("./data-files/iris.csv");
         let mt_labels = create_multi_target_labels(data_set.labels, 3);
+        let data_indices = (0..mt_labels.len()).collect::<Vec<usize>>();
         assert_eq!(*mt_labels.get(0).unwrap(), vec![1., 0., 0.]);
         let multi_target_dataset = MultiTargetDataSet {
             features: data_set.features.clone(),
             labels: mt_labels,
+            indices: data_indices
         };
         println!("{:?}", multi_target_dataset);
     }

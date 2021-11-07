@@ -8,6 +8,7 @@ pub struct DataSet {
 pub struct MultiTargetDataSet {
     pub features: Vec<Vec<f32>>,
     pub labels: Vec<Vec<f32>>,
+    pub indices:  Vec<usize>
 }
 
 #[derive(Debug)]

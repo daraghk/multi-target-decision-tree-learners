@@ -1,39 +1,41 @@
 #![allow(unused)]
-use common::data_reader::{read_csv_data, read_csv_data_one_hot_multi_target};
-use decision_tree::decision_tree::DecisionTree;
-use multi_target_decision_tree::decision_tree::MultiTargetDecisionTree;
+
+use std::time::Instant;
+
+use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
+use multi_target_decision_tree::{
+    decision_tree::MultiTargetDecisionTree,
+    scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
+    split_finder::{SplitFinder, SplitMetric},
+};
 
 fn main() {
-    // let multi_target_dataset = read_csv_data_multi_target("./common/data-files/iris.csv", 3);
-    // let multi_target_split_finder = multi_target_decision_tree::split_finder::SplitFinder::new(
-    //     multi_target_decision_tree::split_finder::SplitMetric::Variance,
-    // );
-    // let multi_target_decision_tree =
-    //     MultiTargetDecisionTree::new(multi_target_dataset, multi_target_split_finder, 3);
-    // multi_target_decision_tree::decision_tree::print_tree(
-    //     Box::new(multi_target_decision_tree.root),
-    //     "".to_string(),
-    // );
+    // //multi-target tree with one hot 'classification' data
+    // let data_set = read_csv_data_one_hot_multi_target("./common/data-files/iris.csv", 3);
+    // let split_finder = SplitFinder::new(SplitMetric::Variance);
+    // let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
+    // let boxed_tree = Box::new(tree.root);
+    // let test_set = read_csv_data_one_hot_multi_target("./common/data-files/iris_test.csv", 3);
+    // let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
+    // println!("{}", accuracy);
+    // assert_eq!(accuracy, 1.0);
 
-    // let dataset = read_csv_data("./common/data-files/iris2.csv");
-    // let split_finder = decision_tree::split_finder::SplitFinder::new(
-    //     decision_tree::split_finder::SplitMetric::Variance,
+    // //multi-target tree with regression data
+    // let data_set_regression = read_csv_data_multi_target(
+    //     "./common/data-files/multi-target/features_train_mt.csv",
+    //     "./common/data-files/multi-target/labels_train_mt.csv",
     // );
-    // let decision_tree = DecisionTree::new(dataset, split_finder, 3);
-    // decision_tree::decision_tree::print_tree(Box::new(decision_tree.root), "".to_string());
-
-    // let multi_target_dataset_other = read_csv_data_multi_target("./common/data-files/wine.csv", 3);
-    // let multi_target_split_finder_other =
-    //     multi_target_decision_tree::split_finder::SplitFinder::new(
-    //         multi_target_decision_tree::split_finder::SplitMetric::Variance,
-    //     );
-    // let multi_target_decision_tree_other = MultiTargetDecisionTree::new(
-    //     multi_target_dataset_other,
-    //     multi_target_split_finder_other,
-    //     3,
+    // let before = Instant::now();
+    // let regression_tree =
+    //     MultiTargetDecisionTree::new(data_set_regression, split_finder, 5, true, true);
+    // println!("Elapsed time: {:.2?}", before.elapsed());
+    // let boxed_regression_tree = Box::new(regression_tree.root);
+    // let test_set_regression = read_csv_data_multi_target(
+    //     "./common/data-files/multi-target/features_test_mt.csv",
+    //     "./common/data-files/multi-target/labels_test_mt.csv",
     // );
-    // multi_target_decision_tree::decision_tree::print_tree(
-    //     Box::new(multi_target_decision_tree_other.root),
-    //     "".to_string(),
-    // );
+    // let score = calculate_overall_mean_squared_error(&test_set_regression, &boxed_regression_tree);
+    // let rmse = f32::sqrt(score);
+    // println!("{}", score);
+    // println!("{}", rmse);
 }

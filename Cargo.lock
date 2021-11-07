@@ -297,6 +297,10 @@ dependencies = [
 [[package]]
 name = "multi-target-grad-boost"
 version = "0.1.0"
+dependencies = [
+ "common",
+ "multi-target-decision-tree",
+]
 
 [[package]]
 name = "num-traits"

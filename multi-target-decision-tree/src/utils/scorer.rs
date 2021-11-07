@@ -57,14 +57,14 @@ pub fn calculate_overall_mean_squared_error(
     let mut total_error = 0.;
     for i in 0..test_data.features.len() {
         let leaf = find_leaf_node_for_data(&test_data.features[i], tree_root);
-        let prediction = calculate_average_vector(leaf.data.as_ref().unwrap());
+        let prediction = calculate_average_label_vector(leaf.data.as_ref().unwrap());
         let actual = &test_data.labels[i];
         total_error += mean_sum_of_squared_differences_between_vectors(&prediction, actual);
     }
     total_error / test_data.features.len() as f32
 }
 
-fn calculate_average_vector(data: &MultiTargetDataSet) -> Vec<f32> {
+fn calculate_average_label_vector(data: &MultiTargetDataSet) -> Vec<f32> {
     let labels = &data.labels;
     let label_length = data.labels[0].len();
     let mut average_vector = vec![0.; label_length];
@@ -105,10 +105,7 @@ fn find_leaf_node_for_data<'a>(feature_row: &Vec<f32>, node: &'a Box<TreeNode>) 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{
-        decision_tree::MultiTargetDecisionTree,
-        split_finder::{SplitFinder, SplitMetric},
-    };
+    use crate::{decision_tree::{MultiTargetDecisionTree, TreeConfig}, split_finder::{SplitFinder, SplitMetric}};
     use common::data_reader::{
         get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
     };
@@ -117,7 +114,16 @@ mod tests {
     fn test_classifier_known_data() {
         let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = MultiTargetDecisionTree::new(data_set, split_finder, 3, false, false);
+
+        let tree_config = TreeConfig {
+            split_finder,
+            use_multi_threading: false,
+            is_regression_tree: false,
+            number_of_classes: 3,
+            max_levels: 0,
+        };
+
+        let tree = MultiTargetDecisionTree::new(data_set, tree_config);
         let row_to_classify = vec![58., 27., 51., 19.];
         let boxed_tree = Box::new(tree.root);
         let predicted_class = predict_class(&row_to_classify, &boxed_tree, 3);
@@ -128,7 +134,16 @@ mod tests {
     fn test_overall_accuracy_on_iris_test_data() {
         let train_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = MultiTargetDecisionTree::new(train_set, split_finder, 3, false, false);
+
+        let tree_config = TreeConfig {
+            split_finder,
+            use_multi_threading: false,
+            is_regression_tree: false,
+            number_of_classes: 3,
+            max_levels: 0,
+        };
+
+        let tree = MultiTargetDecisionTree::new(train_set, tree_config);
         let boxed_tree = Box::new(tree.root);
 
         let test_set =
@@ -145,7 +160,16 @@ mod tests {
         );
         let feature_row = &data_set.features[0].clone();
         let split_finder = SplitFinder::new(SplitMetric::Variance);
-        let tree = MultiTargetDecisionTree::new(data_set, split_finder, 5, false, true);
+
+        let tree_config = TreeConfig {
+            split_finder,
+            use_multi_threading: false,
+            is_regression_tree: true,
+            number_of_classes: 4,
+            max_levels: 0,
+        };
+
+        let tree = MultiTargetDecisionTree::new(data_set, tree_config);
         let boxed_tree = Box::new(tree.root);
         let test_set = read_csv_data_multi_target(
             "./../common/data-files/multi-target/features_test_mt.csv",
