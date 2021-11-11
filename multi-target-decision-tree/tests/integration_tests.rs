@@ -1,7 +1,13 @@
 use common::data_reader::{
     get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
 };
-use multi_target_decision_tree::{decision_tree::{OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig}, leaf::{OneHotMultiClassLeaf, RegressionLeaf}, printer::print_tree, scorer::{calculate_accuracy, calculate_overall_mean_squared_error}, split_finder::{SplitFinder, SplitMetric}};
+use multi_target_decision_tree::{
+    decision_tree::{OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig},
+    leaf::{OneHotMultiClassLeaf, RegressionLeaf},
+    printer::print_tree,
+    scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
+    split_finder::{SplitFinder, SplitMetric},
+};
 use std::time::Instant;
 
 #[test]
