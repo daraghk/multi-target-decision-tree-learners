@@ -112,14 +112,12 @@ fn find_leaf_node_for_data<'a, L: Leaf>(
 mod tests {
     use super::*;
     use crate::{
-        decision_tree::{
+        decision_trees::{
             OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig,
         },
         split_finder::{SplitFinder, SplitMetric},
     };
-    use common::data_reader::{
-        get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
-    };
+    use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
 
     #[test]
     fn test_classifier_known_data() {
@@ -129,10 +127,8 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: false,
-            is_regression_tree: false,
             number_of_classes: 3,
             max_levels: 0,
-            is_grad_boost_tree: false,
         };
 
         let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
@@ -150,10 +146,8 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: false,
-            is_regression_tree: false,
             number_of_classes: 3,
             max_levels: 0,
-            is_grad_boost_tree: false,
         };
 
         let tree = OneHotMultiTargetDecisionTree::new(train_set, tree_config);
@@ -171,16 +165,13 @@ mod tests {
             "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/features_train_mt.csv",
             "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/labels_train_mt.csv",
         );
-        let feature_row = &data_set.features[0].clone();
         let split_finder = SplitFinder::new(SplitMetric::Variance);
 
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: false,
-            is_regression_tree: true,
             number_of_classes: 4,
             max_levels: 0,
-            is_grad_boost_tree: false,
         };
 
         let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);

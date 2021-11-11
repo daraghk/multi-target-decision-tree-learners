@@ -42,7 +42,7 @@ pub(super) fn get_multi_target_label_metrics(
     let sum_of_labels_vector = label_sum_vectors.0;
     let sum_of_squared_labels_vector = label_sum_vectors.1;
     let number_of_labels = labels.len() as f32;
-    let mut mean_of_labels_vector =
+    let mean_of_labels_vector =
         get_mean_of_labels_vector(number_of_labels, number_of_targets, &sum_of_labels_vector);
     MultiTargetLabelMetrics {
         sum_of_labels_vector,

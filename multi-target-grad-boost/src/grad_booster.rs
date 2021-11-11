@@ -1,5 +1,5 @@
 use common::datasets::MultiTargetDataSet;
-use multi_target_decision_tree::decision_tree::TreeConfig;
+use multi_target_decision_tree::decision_trees::TreeConfig;
 
 struct GradientBooster {
     data: MultiTargetDataSet,

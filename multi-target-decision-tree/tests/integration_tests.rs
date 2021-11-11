@@ -2,8 +2,9 @@ use common::data_reader::{
     get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
 };
 use multi_target_decision_tree::{
-    decision_tree::{OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig},
-    leaf::{OneHotMultiClassLeaf, RegressionLeaf},
+    decision_trees::{
+        OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig,
+    },
     printer::print_tree,
     scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
     split_finder::{SplitFinder, SplitMetric},
@@ -18,10 +19,8 @@ fn test_decision_tree_for_iris() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
@@ -40,10 +39,8 @@ fn test_decision_tree_for_synthetic() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 2,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
@@ -63,10 +60,8 @@ fn test_decision_tree_for_digits() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 10,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
@@ -85,10 +80,8 @@ fn test_decision_tree_for_wine() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let tree = OneHotMultiTargetDecisionTree::new(train_set, tree_config);
@@ -108,10 +101,8 @@ fn test_decision_tree_for_covtype() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 7,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let before = Instant::now();
@@ -133,10 +124,8 @@ fn test_decision_tree_for_covtype_multi_threaded() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let before = Instant::now();
@@ -160,10 +149,8 @@ fn test_decision_tree_for_regression() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        is_regression_tree: true,
         number_of_classes: 4,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let before = Instant::now();
@@ -189,10 +176,8 @@ fn print_tree_for_wine() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
@@ -208,10 +193,8 @@ fn print_tree_for_synthetic() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        is_regression_tree: false,
         number_of_classes: 2,
         max_levels: 0,
-        is_grad_boost_tree: false,
     };
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);

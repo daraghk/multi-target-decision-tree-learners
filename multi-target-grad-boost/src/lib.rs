@@ -3,7 +3,7 @@ use common::{
     vector_calculations::{add_vectors, calculate_average_vector, subtract_vectors},
 };
 use multi_target_decision_tree::{
-    decision_tree::{GradBoostMultiTargetDecisionTree, TreeConfig},
+    decision_trees::{GradBoostMultiTargetDecisionTree, TreeConfig},
     leaf::GradBoostLeaf,
     node::TreeNode,
 };
@@ -128,10 +128,8 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: false,
-            is_regression_tree: true,
             number_of_classes: 4,
             max_levels: 12,
-            is_grad_boost_tree: true,
         };
 
         let mut grad_boost_trees =
@@ -155,10 +153,8 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: false,
-            is_regression_tree: true,
             number_of_classes: 4,
             max_levels: 12,
-            is_grad_boost_tree: true,
         };
 
         let mut grad_boost_trees =

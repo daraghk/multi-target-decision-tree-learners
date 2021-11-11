@@ -74,14 +74,11 @@ pub(crate) fn build_regression_tree_using_multiple_threads(
 #[cfg(test)]
 mod tests {
     use crate::{
-        decision_tree::{RegressionMultiTargetDecisionTree, TreeConfig},
-        leaf::RegressionLeaf,
-        printer::{print_tree, print_tree_regression},
+        decision_trees::{RegressionMultiTargetDecisionTree, TreeConfig},
+        printer::print_tree_regression,
         split_finder::{SplitFinder, SplitMetric},
     };
-    use common::data_reader::{
-        get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
-    };
+    use common::data_reader::{get_feature_names, read_csv_data_multi_target};
 
     #[test]
     fn test_build_tree_regression() {
@@ -94,10 +91,8 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: true,
-            is_regression_tree: true,
             number_of_classes: 4,
             max_levels: 8,
-            is_grad_boost_tree: false,
         };
 
         let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);

@@ -1,5 +1,5 @@
 use crate::{
-    leaf::{Leaf, OneHotMultiClassLeaf, RegressionLeaf},
+    leaf::{OneHotMultiClassLeaf, RegressionLeaf},
     node::TreeNode,
 };
 

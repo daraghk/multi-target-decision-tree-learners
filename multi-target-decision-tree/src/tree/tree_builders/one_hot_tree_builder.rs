@@ -77,13 +77,11 @@ pub(crate) fn build_tree_using_multiple_threads(
 #[cfg(test)]
 mod tests {
     use crate::{
-        decision_tree::OneHotMultiTargetDecisionTree,
-        printer::{print_tree, print_tree_regression},
+        decision_trees::OneHotMultiTargetDecisionTree,
+        printer::print_tree,
         split_finder::{SplitFinder, SplitMetric},
     };
-    use common::data_reader::{
-        get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
-    };
+    use common::data_reader::{get_feature_names, read_csv_data_one_hot_multi_target};
 
     use super::*;
     #[test]
@@ -94,10 +92,8 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: true,
-            is_regression_tree: false,
             number_of_classes: 3,
             max_levels: 0,
-            is_grad_boost_tree: false,
         };
 
         let tree = OneHotMultiTargetDecisionTree::new(data_set.clone(), tree_config);

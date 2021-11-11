@@ -1,9 +1,4 @@
-use std::thread;
-
-use common::{
-    datasets::MultiTargetDataSet,
-    vector_calculations::{calculate_average_vector, subtract_vectors},
-};
+use common::datasets::MultiTargetDataSet;
 
 #[path = "tree_builders/grad_boost_tree_builder.rs"]
 mod grad_boost_tree_builder;
@@ -13,33 +8,21 @@ mod one_hot_tree_builder;
 mod regression_tree_builder;
 
 use crate::{
-    class_counter::get_class_counts_multi_target,
-    data_partitioner::partition,
-    leaf::{GradBoostLeaf, Leaf, OneHotMultiClassLeaf, RegressionLeaf},
+    leaf::{GradBoostLeaf, OneHotMultiClassLeaf, RegressionLeaf},
     node::TreeNode,
-    split_finder::{self, SplitFinder},
+    split_finder::SplitFinder,
 };
 
 #[derive(Copy, Clone)]
 pub struct TreeConfig {
     pub split_finder: SplitFinder,
     pub use_multi_threading: bool,
-    pub is_regression_tree: bool,
-    pub is_grad_boost_tree: bool,
     pub number_of_classes: u32,
     pub max_levels: u32,
 }
 
 pub struct OneHotMultiTargetDecisionTree {
     pub root: TreeNode<OneHotMultiClassLeaf>,
-}
-
-pub struct RegressionMultiTargetDecisionTree {
-    pub root: TreeNode<RegressionLeaf>,
-}
-
-pub struct GradBoostMultiTargetDecisionTree {
-    pub root: TreeNode<GradBoostLeaf>,
 }
 
 impl OneHotMultiTargetDecisionTree {
@@ -51,6 +34,10 @@ impl OneHotMultiTargetDecisionTree {
             },
         }
     }
+}
+
+pub struct RegressionMultiTargetDecisionTree {
+    pub root: TreeNode<RegressionLeaf>,
 }
 
 impl RegressionMultiTargetDecisionTree {
@@ -66,6 +53,10 @@ impl RegressionMultiTargetDecisionTree {
             },
         }
     }
+}
+
+pub struct GradBoostMultiTargetDecisionTree {
+    pub root: TreeNode<GradBoostLeaf>,
 }
 
 impl GradBoostMultiTargetDecisionTree {
