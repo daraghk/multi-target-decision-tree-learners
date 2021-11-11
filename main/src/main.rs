@@ -4,7 +4,6 @@ use std::time::Instant;
 
 use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
 use multi_target_decision_tree::{
-    decision_tree::MultiTargetDecisionTree,
     scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
     split_finder::{SplitFinder, SplitMetric},
 };

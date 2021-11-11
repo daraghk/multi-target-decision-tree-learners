@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ClassCounter {
     pub counts: Vec<u32>,
 }

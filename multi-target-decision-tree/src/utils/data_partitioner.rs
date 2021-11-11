@@ -30,13 +30,13 @@ pub fn partition(
     let false_data = MultiTargetDataSet {
         features: false_rows,
         labels: false_labels,
-        indices: false_indices
+        indices: false_indices,
     };
 
     let true_data = MultiTargetDataSet {
         features: true_rows,
         labels: true_labels,
-        indices: true_indices
+        indices: true_indices,
     };
 
     (false_data, true_data)

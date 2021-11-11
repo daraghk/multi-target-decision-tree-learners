@@ -8,30 +8,5 @@ pub struct DataSet {
 pub struct MultiTargetDataSet {
     pub features: Vec<Vec<f32>>,
     pub labels: Vec<Vec<f32>>,
-    pub indices:  Vec<usize>
-}
-
-#[derive(Debug)]
-pub enum Data {
-    SingleTarget(DataSet),
-    MultiTarget(MultiTargetDataSet),
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::data_reader::read_csv_data;
-
-    use super::Data;
-
-    #[test]
-    fn test_build_tree() {
-        let data_set = read_csv_data("./../common/data-files/iris.csv");
-        let single_target = Data::SingleTarget(data_set);
-        match single_target {
-            Data::SingleTarget(_) => {
-                println!("{:?}", single_target);
-            }
-            _ => {}
-        }
-    }
+    pub indices: Vec<usize>,
 }

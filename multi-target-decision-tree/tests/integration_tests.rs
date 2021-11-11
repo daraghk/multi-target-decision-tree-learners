@@ -1,12 +1,7 @@
 use common::data_reader::{
     get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
 };
-use multi_target_decision_tree::{
-    decision_tree::{MultiTargetDecisionTree, TreeConfig},
-    printer::print_tree,
-    scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
-    split_finder::{SplitFinder, SplitMetric},
-};
+use multi_target_decision_tree::{decision_tree::{OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig}, leaf::{OneHotMultiClassLeaf, RegressionLeaf}, printer::print_tree, scorer::{calculate_accuracy, calculate_overall_mean_squared_error}, split_finder::{SplitFinder, SplitMetric}};
 use std::time::Instant;
 
 #[test]
@@ -20,9 +15,10 @@ fn test_decision_tree_for_iris() {
         is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris_test.csv", 3);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
@@ -41,9 +37,10 @@ fn test_decision_tree_for_synthetic() {
         is_regression_tree: false,
         number_of_classes: 2,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree, 2);
@@ -63,9 +60,10 @@ fn test_decision_tree_for_digits() {
         is_regression_tree: false,
         number_of_classes: 10,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/digits_test.csv", 10);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree, 10);
@@ -84,9 +82,10 @@ fn test_decision_tree_for_wine() {
         is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
-    let tree = MultiTargetDecisionTree::new(train_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(train_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_test.csv", 3);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
@@ -106,10 +105,11 @@ fn test_decision_tree_for_covtype() {
         is_regression_tree: false,
         number_of_classes: 7,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
     let before = Instant::now();
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/covtype_test.csv", 7);
@@ -130,10 +130,11 @@ fn test_decision_tree_for_covtype_multi_threaded() {
         is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
     let before = Instant::now();
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/covtype_test.csv", 7);
@@ -156,10 +157,12 @@ fn test_decision_tree_for_regression() {
         is_regression_tree: true,
         number_of_classes: 4,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
     let before = Instant::now();
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_multi_target(
@@ -183,9 +186,10 @@ fn print_tree_for_wine() {
         is_regression_tree: false,
         number_of_classes: 3,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let feature_names = get_feature_names("./../common/data-files/wine_train.csv");
     print_tree(Box::new(tree.root), "".to_string(), &feature_names);
 }
@@ -201,9 +205,10 @@ fn print_tree_for_synthetic() {
         is_regression_tree: false,
         number_of_classes: 2,
         max_levels: 0,
+        is_grad_boost_tree: false,
     };
 
-    let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let feature_names = get_feature_names("./../common/data-files/synthetic_1.csv");
     print_tree(Box::new(tree.root), "".to_string(), &feature_names);
 }

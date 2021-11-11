@@ -106,7 +106,7 @@ mod tests {
         let multi_target_dataset = MultiTargetDataSet {
             features: data_set.features.clone(),
             labels: mt_labels,
-            indices: data_indices
+            indices: data_indices,
         };
         println!("{:?}", multi_target_dataset);
     }

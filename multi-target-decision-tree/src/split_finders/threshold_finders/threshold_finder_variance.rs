@@ -131,7 +131,11 @@ mod tests {
         let labels = vec![vec![1., 0.], vec![1., 0.], vec![0., 1.]];
         let total_mt_label_metrics = get_multi_target_label_metrics(&labels, 2);
         let indices = (0..labels.len()).collect::<Vec<usize>>();
-        let data = MultiTargetDataSet { features, labels, indices };
+        let data = MultiTargetDataSet {
+            features,
+            labels,
+            indices,
+        };
         let column = 0;
         let best = super::determine_best_threshold(&data, column, &total_mt_label_metrics, 2);
         assert_eq!(best.loss, 0.0);

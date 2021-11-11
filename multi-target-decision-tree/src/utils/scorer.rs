@@ -1,9 +1,12 @@
-use crate::{leaf::Leaf, node::TreeNode};
+use crate::{
+    leaf::{Leaf, OneHotMultiClassLeaf, RegressionLeaf},
+    node::TreeNode,
+};
 use common::datasets::MultiTargetDataSet;
 
 pub fn calculate_accuracy(
     test_data: &MultiTargetDataSet,
-    tree_root: &Box<TreeNode>,
+    tree_root: &Box<TreeNode<OneHotMultiClassLeaf>>,
     number_of_classes: u32,
 ) -> f32 {
     let mut accuracy = 0.;
@@ -26,14 +29,14 @@ pub fn calculate_accuracy(
 
 pub fn predict_class(
     feature_row: &Vec<f32>,
-    node: &Box<TreeNode>,
+    node: &Box<TreeNode<OneHotMultiClassLeaf>>,
     number_of_classes: usize,
 ) -> Vec<f32> {
     let leaf = find_leaf_node_for_data(feature_row, node);
     let mut max = 0;
     let mut max_class = 0.;
     let mut index = 0.;
-    leaf.predictions
+    leaf.class_counts
         .as_ref()
         .unwrap()
         .counts
@@ -52,7 +55,7 @@ pub fn predict_class(
 
 pub fn calculate_overall_mean_squared_error(
     test_data: &MultiTargetDataSet,
-    tree_root: &Box<TreeNode>,
+    tree_root: &Box<TreeNode<RegressionLeaf>>,
 ) -> f32 {
     let mut total_error = 0.;
     for i in 0..test_data.features.len() {
@@ -91,7 +94,10 @@ fn mean_sum_of_squared_differences_between_vectors(
     sum_of_squared_differences / prediction.len() as f32
 }
 
-fn find_leaf_node_for_data<'a>(feature_row: &Vec<f32>, node: &'a Box<TreeNode>) -> &'a Leaf {
+fn find_leaf_node_for_data<'a, L: Leaf>(
+    feature_row: &Vec<f32>,
+    node: &'a Box<TreeNode<L>>,
+) -> &'a L {
     if !node.is_leaf_node() {
         if node.question.solve(feature_row) {
             return find_leaf_node_for_data(feature_row, &node.true_branch.as_ref().unwrap());
@@ -105,7 +111,12 @@ fn find_leaf_node_for_data<'a>(feature_row: &Vec<f32>, node: &'a Box<TreeNode>) 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{decision_tree::{MultiTargetDecisionTree, TreeConfig}, split_finder::{SplitFinder, SplitMetric}};
+    use crate::{
+        decision_tree::{
+            OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig,
+        },
+        split_finder::{SplitFinder, SplitMetric},
+    };
     use common::data_reader::{
         get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
     };
@@ -121,9 +132,10 @@ mod tests {
             is_regression_tree: false,
             number_of_classes: 3,
             max_levels: 0,
+            is_grad_boost_tree: false,
         };
 
-        let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+        let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
         let row_to_classify = vec![58., 27., 51., 19.];
         let boxed_tree = Box::new(tree.root);
         let predicted_class = predict_class(&row_to_classify, &boxed_tree, 3);
@@ -141,9 +153,10 @@ mod tests {
             is_regression_tree: false,
             number_of_classes: 3,
             max_levels: 0,
+            is_grad_boost_tree: false,
         };
 
-        let tree = MultiTargetDecisionTree::new(train_set, tree_config);
+        let tree = OneHotMultiTargetDecisionTree::new(train_set, tree_config);
         let boxed_tree = Box::new(tree.root);
 
         let test_set =
@@ -167,9 +180,10 @@ mod tests {
             is_regression_tree: true,
             number_of_classes: 4,
             max_levels: 0,
+            is_grad_boost_tree: false,
         };
 
-        let tree = MultiTargetDecisionTree::new(data_set, tree_config);
+        let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
         let boxed_tree = Box::new(tree.root);
         let test_set = read_csv_data_multi_target(
             "./../common/data-files/multi-target/features_test_mt.csv",

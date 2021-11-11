@@ -1,9 +1,16 @@
-use crate::node::TreeNode;
+use crate::{
+    leaf::{Leaf, OneHotMultiClassLeaf, RegressionLeaf},
+    node::TreeNode,
+};
 
-pub fn print_tree(root: Box<TreeNode>, spacing: String, feature_names: &Vec<String>) {
+pub fn print_tree(
+    root: Box<TreeNode<OneHotMultiClassLeaf>>,
+    spacing: String,
+    feature_names: &Vec<String>,
+) {
     if root.leaf.is_some() {
         let leaf_ref = &root.leaf.unwrap();
-        println!("{} Predict:{:?}", spacing, leaf_ref.predictions);
+        println!("{} Predict:{:?}", spacing, leaf_ref.class_counts);
         return;
     }
     println!(
@@ -30,9 +37,13 @@ pub fn print_tree(root: Box<TreeNode>, spacing: String, feature_names: &Vec<Stri
     );
 }
 
-pub fn print_tree_regression(root: Box<TreeNode>, spacing: String, feature_names: &Vec<String>) {
+pub fn print_tree_regression(
+    root: &Box<TreeNode<RegressionLeaf>>,
+    spacing: String,
+    feature_names: &Vec<String>,
+) {
     if root.leaf.is_some() {
-        let leaf_ref = &root.leaf.unwrap();
+        let leaf_ref = &root.leaf.as_ref().unwrap();
         println!("{} Predict:{:?}", spacing, leaf_ref.data);
         return;
     }
@@ -47,14 +58,14 @@ pub fn print_tree_regression(root: Box<TreeNode>, spacing: String, feature_names
     );
     println!("{}", spacing.clone() + "--> True: ");
     print_tree_regression(
-        root.true_branch.unwrap(),
+        &root.true_branch.as_ref().unwrap(),
         spacing.clone() + "    ",
         feature_names,
     );
 
     println!("{}", spacing.clone() + "--> False: ");
     print_tree_regression(
-        root.false_branch.unwrap(),
+        &root.false_branch.as_ref().unwrap(),
         spacing.clone() + "    ",
         feature_names,
     );
