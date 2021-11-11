@@ -2,7 +2,6 @@ use common::data_reader::read_csv_data_one_hot_multi_target;
 use criterion::{criterion_group, criterion_main, Criterion};
 use multi_target_decision_tree::{
     decision_trees::{OneHotMultiTargetDecisionTree, TreeConfig},
-    leaf::OneHotMultiClassLeaf,
     split_finder::{SplitFinder, SplitMetric},
 };
 
