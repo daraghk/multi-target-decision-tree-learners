@@ -1,11 +1,9 @@
-pub fn get_sorted_feature_tuple_vector(features: &Vec<Vec<f32>>, column: u32) -> Vec<(f32, i32)> {
+pub fn get_sorted_feature_tuple_vector(features: &Vec<Vec<f32>>, column: u32) -> Vec<(f32, usize)> {
     let mut feature_tuple_vector = vec![];
-    let mut row_index = 0;
-    features.iter().for_each(|row| {
+    for (i, row) in features.iter().enumerate(){
         let feature_value = row[column as usize];
-        feature_tuple_vector.push((feature_value, row_index));
-        row_index += 1;
-    });
+        feature_tuple_vector.push((feature_value, i));
+    }
     //feature_tuple_vector.sort_by_key(|tuple| tuple.0);
     feature_tuple_vector.sort_by(|a, b| a.partial_cmp(&b).unwrap()); // Panics on NaN
 

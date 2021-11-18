@@ -55,25 +55,25 @@ impl RegressionMultiTargetDecisionTree {
     }
 }
 
-pub struct GradBoostMultiTargetDecisionTree {
+pub struct GradBoostMultiTargetDecisionTree<'a> {
     pub root: TreeNode<GradBoostLeaf>,
+    pub true_data: &'a MultiTargetDataSet,
 }
 
-impl GradBoostMultiTargetDecisionTree {
-    pub fn new(data: MultiTargetDataSet, tree_config: TreeConfig) -> Self {
+impl<'a> GradBoostMultiTargetDecisionTree<'a> {
+    pub fn new(
+        true_data: &'a MultiTargetDataSet,
+        learner_data: MultiTargetDataSet,
+        tree_config: TreeConfig,
+    ) -> Self {
         Self {
-            root: match tree_config.use_multi_threading {
-                true => {
-                    grad_boost_tree_builder::build_grad_boost_regression_tree_using_multiple_threads(
-                        data,
-                        tree_config,
-                        0,
-                    )
-                }
-                false => {
-                    grad_boost_tree_builder::build_grad_boost_regression_tree(data, tree_config, 0)
-                }
-            },
+            root: grad_boost_tree_builder::build_grad_boost_regression_tree(
+                &true_data,
+                learner_data,
+                tree_config,
+                0,
+            ),
+            true_data,
         }
     }
 }

@@ -80,7 +80,7 @@ pub(super) fn determine_best_threshold(
             }
         }
 
-        let real_row_index = tuple.1 as usize;
+        let real_row_index = tuple.1;
         let label_vector = data.labels.get(real_row_index).unwrap();
         update_left_value_tracker(&mut left_value_tracker, label_vector, number_of_targets);
         update_right_value_tracker(&mut right_value_tracker, label_vector, number_of_targets);
@@ -111,6 +111,7 @@ fn update_right_value_tracker(
 ) {
     right_value_tracker.number_of_labels -= 1.0;
     let right_multi_label_metrics = &mut right_value_tracker.multi_target_label_metrics;
+
     for i in 0..number_of_targets {
         let label_value = label_vector[i];
         right_multi_label_metrics.sum_of_squared_labels_vector[i] -= label_value * label_value;

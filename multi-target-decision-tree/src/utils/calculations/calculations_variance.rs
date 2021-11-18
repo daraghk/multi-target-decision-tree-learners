@@ -11,9 +11,11 @@ pub(super) fn calculate_loss_vector(
     let total_size = left_size + right_size;
     let left_weight = left_size / total_size;
     let right_weight = right_size / total_size;
-    for i in 0..number_of_targets {
+    
+    assert_eq!(left_variance_vector.len(), right_variance_vector.len());
+    for (i, left_variance_vector_value) in left_variance_vector.iter().enumerate(){
         loss_vector[i] =
-            (left_weight * left_variance_vector[i]) + (right_weight * right_variance_vector[i]);
+            (left_weight * left_variance_vector_value) + (right_weight * right_variance_vector[i]);
     }
     loss_vector
 }
@@ -55,8 +57,7 @@ fn get_label_sum_vectors(labels: &Vec<Vec<f32>>, number_of_targets: usize) -> (V
     let mut sum_of_labels_vector = vec![0.0; number_of_targets];
     let mut sum_of_squared_labels_vector = vec![0.0; number_of_targets];
     labels.iter().for_each(|label_vector| {
-        for i in 0..label_vector.len() {
-            let label_value = label_vector[i];
+        for (i, label_value) in label_vector.iter().enumerate() {
             sum_of_labels_vector[i] += label_value;
             sum_of_squared_labels_vector[i] += label_value * label_value;
         }
@@ -70,8 +71,8 @@ fn get_mean_of_labels_vector(
     sum_of_labels_vector: &Vec<f32>,
 ) -> Vec<f32> {
     let mut mean_of_labels_vector = vec![0.0; number_of_targets];
-    for i in 0..number_of_targets {
-        mean_of_labels_vector[i] = sum_of_labels_vector[i] / number_of_labels;
+    for (i, sum_of_labels_vector_element) in sum_of_labels_vector.iter().enumerate() {
+        mean_of_labels_vector[i] = sum_of_labels_vector_element / number_of_labels;
     }
     mean_of_labels_vector
 }

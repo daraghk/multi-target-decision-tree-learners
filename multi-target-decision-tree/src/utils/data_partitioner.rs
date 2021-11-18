@@ -11,10 +11,9 @@ pub fn partition(
     let mut true_indices = vec![];
     let mut false_indices = vec![];
 
-    let mut index: usize = 0;
-    data.features.iter().for_each(|row| {
-        let current_label_vector = &*data.labels.get(index).unwrap();
-        let current_data_index = *data.indices.get(index).unwrap();
+    for (i, row) in data.features.iter().enumerate(){
+        let current_label_vector = &*data.labels.get(i).unwrap();
+        let current_data_index = *data.indices.get(i).unwrap();
         if question.solve(row) {
             true_rows.push(row.clone());
             true_labels.push(current_label_vector.clone());
@@ -24,8 +23,7 @@ pub fn partition(
             false_labels.push(current_label_vector.clone());
             false_indices.push(current_data_index);
         }
-        index += 1;
-    });
+    }
 
     let false_data = MultiTargetDataSet {
         features: false_rows,

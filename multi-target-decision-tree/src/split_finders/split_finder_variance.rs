@@ -17,9 +17,8 @@ pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> Bes
         data.labels.len() as f32,
         number_of_targets,
     );
-
-    let number_of_features = data.features[0].len();
-    for i in 0..number_of_features {
+    
+    for(i, v) in data.features[0].iter().enumerate(){
         let best_threshold_for_feature = threshold_finder_variance::determine_best_threshold(
             data,
             i as u32,
