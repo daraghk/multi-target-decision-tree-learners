@@ -30,9 +30,7 @@ impl GradientBoostedEnsemble {
         Self { trees }
     }
 
-    pub fn predict(){
-
-    }
+    pub fn predict(feature_row: &Vec<f32>, trees: &Vec<Box<TreeNode<GradBoostLeaf>>>) {}
 
     pub fn test() {}
 }
@@ -73,6 +71,7 @@ fn update_dataset_labels(
     for i in 0..mutable_data.labels.len() {
         let leaf_data = find_leaf_node_for_data(&mutable_data.features[i], boxed_tree_ref);
         let leaf_output = leaf_data.leaf_output.as_ref().unwrap();
+        let leaf_output = leaf_output.into_iter().map(|x| 0.1 * x).collect::<Vec<_>>();
         mutable_data.labels[i] = add_vectors(&mutable_data.labels[i], &leaf_output);
     }
 }

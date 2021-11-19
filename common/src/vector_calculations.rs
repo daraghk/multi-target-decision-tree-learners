@@ -29,3 +29,15 @@ pub fn calculate_average_vector(vector_of_vectors: &Vec<Vec<f32>>) -> Vec<f32> {
     }
     average_vector
 }
+
+pub fn mean_sum_of_squared_differences_between_vectors(
+    prediction: &Vec<f32>,
+    actual: &Vec<f32>,
+) -> f32 {
+    let mut sum_of_squared_differences = 0.;
+    for i in 0..prediction.len() {
+        let error = prediction[i] - actual[i];
+        sum_of_squared_differences += f32::powf(error, 2.);
+    }
+    sum_of_squared_differences / prediction.len() as f32
+}
