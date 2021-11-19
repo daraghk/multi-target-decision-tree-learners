@@ -8,7 +8,7 @@ pub fn calculate_accuracy(
     test_data: &MultiTargetDataSet,
     tree_root: &Box<TreeNode<OneHotMultiClassLeaf>>,
     number_of_classes: u32,
-) -> f32 {
+) -> f64 {
     let mut accuracy = 0.;
     for i in 0..test_data.features.len() {
         let prediction = predict_class(
@@ -24,14 +24,14 @@ pub fn calculate_accuracy(
             //println!("Prediction: {:?}, Actual: {:?}", prediction, actual);
         }
     }
-    accuracy / test_data.features.len() as f32
+    accuracy / test_data.features.len() as f64
 }
 
 pub fn predict_class(
-    feature_row: &Vec<f32>,
+    feature_row: &Vec<f64>,
     node: &Box<TreeNode<OneHotMultiClassLeaf>>,
     number_of_classes: usize,
-) -> Vec<f32> {
+) -> Vec<f64> {
     let leaf = find_leaf_node_for_data(feature_row, node);
     let mut max = 0;
     let mut max_class = 0.;
@@ -56,7 +56,7 @@ pub fn predict_class(
 pub fn calculate_overall_mean_squared_error(
     test_data: &MultiTargetDataSet,
     tree_root: &Box<TreeNode<RegressionLeaf>>,
-) -> f32 {
+) -> f64 {
     let mut total_error = 0.;
     for i in 0..test_data.features.len() {
         let leaf = find_leaf_node_for_data(&test_data.features[i], tree_root);
@@ -64,10 +64,10 @@ pub fn calculate_overall_mean_squared_error(
         let actual = &test_data.labels[i];
         total_error += mean_sum_of_squared_differences_between_vectors(&prediction, actual);
     }
-    total_error / test_data.features.len() as f32
+    total_error / test_data.features.len() as f64
 }
 
-fn calculate_average_label_vector(data: &MultiTargetDataSet) -> Vec<f32> {
+fn calculate_average_label_vector(data: &MultiTargetDataSet) -> Vec<f64> {
     let labels = &data.labels;
     let label_length = data.labels[0].len();
     let mut average_vector = vec![0.; label_length];
@@ -77,25 +77,25 @@ fn calculate_average_label_vector(data: &MultiTargetDataSet) -> Vec<f32> {
         }
     }
     for j in 0..label_length {
-        average_vector[j] /= labels.len() as f32;
+        average_vector[j] /= labels.len() as f64;
     }
     average_vector
 }
 
 fn mean_sum_of_squared_differences_between_vectors(
-    prediction: &Vec<f32>,
-    actual: &Vec<f32>,
-) -> f32 {
+    prediction: &Vec<f64>,
+    actual: &Vec<f64>,
+) -> f64 {
     let mut sum_of_squared_differences = 0.;
     for i in 0..prediction.len() {
         let error = prediction[i] - actual[i];
-        sum_of_squared_differences += f32::powf(error, 2.);
+        sum_of_squared_differences += f64::powf(error, 2.);
     }
-    sum_of_squared_differences / prediction.len() as f32
+    sum_of_squared_differences / prediction.len() as f64
 }
 
 fn find_leaf_node_for_data<'a, L: Leaf>(
-    feature_row: &Vec<f32>,
+    feature_row: &Vec<f64>,
     node: &'a Box<TreeNode<L>>,
 ) -> &'a L {
     if !node.is_leaf_node() {
@@ -185,7 +185,7 @@ mod tests {
         let leaf = find_leaf_node_for_data(feature_row_test, &boxed_tree);
         println!("{:?}", leaf);
         let score = calculate_overall_mean_squared_error(&test_set, &boxed_tree);
-        let rmse = f32::sqrt(score);
+        let rmse = f64::sqrt(score);
         println!("{}", score);
         println!("{}", rmse);
     }

@@ -92,7 +92,7 @@ pub(crate) fn build_grad_boost_regression_tree(
 fn calculate_average_leaf_residuals(
     true_data: &MultiTargetDataSet,
     leaf_data: &MultiTargetDataSet,
-) -> Vec<f32> {
+) -> Vec<f64> {
     let label_length = leaf_data.labels[0].len();
     let mut residuals = vec![vec![0.; label_length]];
     for i in 0..leaf_data.labels.len() {

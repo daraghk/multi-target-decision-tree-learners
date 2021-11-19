@@ -12,7 +12,7 @@ impl ClassCounter {
 }
 
 pub fn get_class_counts_multi_target(
-    classes: &Vec<Vec<f32>>,
+    classes: &Vec<Vec<f64>>,
     number_of_unique_classes: u32,
 ) -> ClassCounter {
     let mut class_counter = ClassCounter::new(number_of_unique_classes);

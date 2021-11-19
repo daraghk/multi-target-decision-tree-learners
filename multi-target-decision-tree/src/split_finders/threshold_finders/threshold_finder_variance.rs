@@ -7,7 +7,7 @@ use crate::{
 };
 
 struct VarianceValueTrackerMultiTarget {
-    number_of_labels: f32,
+    number_of_labels: f64,
     multi_target_label_metrics: MultiTargetLabelMetrics,
 }
 
@@ -18,7 +18,7 @@ pub(super) fn determine_best_threshold(
     number_of_targets: usize,
 ) -> BestThresholdResult {
     let mut best_result_container = BestThresholdResult {
-        loss: f32::INFINITY,
+        loss: f64::INFINITY,
         threshold_value: 0.0,
     };
 
@@ -32,7 +32,7 @@ pub(super) fn determine_best_threshold(
     };
 
     let mut right_value_tracker = VarianceValueTrackerMultiTarget {
-        number_of_labels: data.labels.len() as f32,
+        number_of_labels: data.labels.len() as f64,
         multi_target_label_metrics: MultiTargetLabelMetrics {
             sum_of_squared_labels_vector: total_multi_target_label_metrics
                 .sum_of_squared_labels_vector
@@ -49,7 +49,7 @@ pub(super) fn determine_best_threshold(
     let sorted_feature_data = get_sorted_feature_tuple_vector(&data.features, column);
     let previous_feature_val = sorted_feature_data.get(0).unwrap().0;
     sorted_feature_data.iter().for_each(|tuple| {
-        let feature_value = tuple.0 as f32;
+        let feature_value = tuple.0 as f64;
 
         //only calculate 'loss' on first encounter of a feature value
         if feature_value != previous_feature_val {
@@ -90,7 +90,7 @@ pub(super) fn determine_best_threshold(
 
 fn update_left_value_tracker(
     left_value_tracker: &mut VarianceValueTrackerMultiTarget,
-    label_vector: &Vec<f32>,
+    label_vector: &Vec<f64>,
     number_of_targets: usize,
 ) {
     left_value_tracker.number_of_labels += 1.0;
@@ -106,7 +106,7 @@ fn update_left_value_tracker(
 
 fn update_right_value_tracker(
     right_value_tracker: &mut VarianceValueTrackerMultiTarget,
-    label_vector: &Vec<f32>,
+    label_vector: &Vec<f64>,
     number_of_targets: usize,
 ) {
     right_value_tracker.number_of_labels -= 1.0;

@@ -163,7 +163,7 @@ fn test_decision_tree_for_regression() {
         "./../common/data-files/multi-target/labels_test_mt.csv",
     );
     let score = calculate_overall_mean_squared_error(&test_set, &boxed_tree);
-    let rmse = f32::sqrt(score);
+    let rmse = f64::sqrt(score);
     println!("{}", score);
     println!("{}", rmse);
 }

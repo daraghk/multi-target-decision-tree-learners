@@ -22,5 +22,5 @@ pub struct RegressionLeaf {
 
 #[derive(Debug, Clone)]
 pub struct GradBoostLeaf {
-    pub leaf_output: Option<Vec<f32>>,
+    pub leaf_output: Option<Vec<f64>>,
 }

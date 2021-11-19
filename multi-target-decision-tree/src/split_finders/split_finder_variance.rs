@@ -14,7 +14,7 @@ pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> Bes
         get_multi_target_label_metrics(&data.labels, number_of_targets);
     let total_variance_sum = get_total_variance_sum(
         &total_multi_target_label_metrics,
-        data.labels.len() as f32,
+        data.labels.len() as f64,
         number_of_targets,
     );
     
@@ -42,9 +42,9 @@ pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> Bes
 
 fn get_total_variance_sum(
     total_multi_target_label_metrics: &MultiTargetLabelMetrics,
-    number_of_labels: f32,
+    number_of_labels: f64,
     number_of_targets: usize,
-) -> f32 {
+) -> f64 {
     let total_variance_vector = calculate_variance_vector(
         total_multi_target_label_metrics,
         number_of_labels,
