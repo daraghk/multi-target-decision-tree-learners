@@ -30,7 +30,7 @@ impl GradientBoostedEnsemble {
         Self { trees }
     }
 
-    pub fn predict(feature_row: &Vec<f32>, trees: &Vec<Box<TreeNode<GradBoostLeaf>>>) {}
+    pub fn predict(feature_row: &Vec<f64>, trees: &Vec<Box<TreeNode<GradBoostLeaf>>>) {}
 
     pub fn test() {}
 }
@@ -56,7 +56,7 @@ fn execute_gradient_boosting_loop(
 
 fn update_dataset_labels_with_initial_guess(
     mutable_data: &mut MultiTargetDataSet,
-    initial_guess: &Vec<f32>,
+    initial_guess: &Vec<f64>,
 ) {
     for i in 0..mutable_data.labels.len() {
         mutable_data.labels[i] = initial_guess.clone();
@@ -77,7 +77,7 @@ fn update_dataset_labels(
 }
 
 pub fn find_leaf_node_for_data<'a>(
-    feature_row: &Vec<f32>,
+    feature_row: &Vec<f64>,
     node: &'a Box<TreeNode<GradBoostLeaf>>,
 ) -> &'a GradBoostLeaf {
     if !node.is_leaf_node() {

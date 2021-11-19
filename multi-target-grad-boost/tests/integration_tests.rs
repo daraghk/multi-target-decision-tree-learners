@@ -30,7 +30,7 @@ fn test_gradient_boosting() {
         split_finder,
         use_multi_threading: false,
         number_of_classes: 4,
-        max_levels: 12,
+        max_levels: 24,
     };
 
     let grad_boost_ensemble =
@@ -57,29 +57,29 @@ fn test_gradient_boosting() {
 
     assert_eq!(predictions.len(), test_set.labels.len());
     let mean_squared_error = calculate_overall_mean_squared_error(&test_set.labels, &predictions);
-    let root_mean_squared_error = f32::sqrt(mean_squared_error);
+    let root_mean_squared_error = f64::sqrt(mean_squared_error);
     println!("{:?}", mean_squared_error);
     println!("{:?}", root_mean_squared_error);
 }
 
 fn calculate_overall_mean_squared_error(
-    test_data_labels: &Vec<Vec<f32>>,
-    predictions: &Vec<Vec<f32>>,
-) -> f32 {
+    test_data_labels: &Vec<Vec<f64>>,
+    predictions: &Vec<Vec<f64>>,
+) -> f64 {
     let mut total_error = 0.;
     let number_of_labels = test_data_labels.len();
     for i in 0..number_of_labels {
         total_error +=
             mean_sum_of_squared_differences_between_vectors(&test_data_labels[i], &predictions[i]);
     }
-    total_error / number_of_labels as f32
+    total_error / number_of_labels as f64
 }
 
 fn predict(
-    test_feature_row: &Vec<f32>,
+    test_feature_row: &Vec<f64>,
     grad_boost_ensemble: &GradientBoostedEnsemble,
-    initial_guess: &Vec<f32>,
-) -> Vec<f32> {
+    initial_guess: &Vec<f64>,
+) -> Vec<f64> {
     let test_instance_leaf_outputs =
         collect_leaf_outputs_for_test_instance(test_feature_row, grad_boost_ensemble);
     let mut sum_of_leaf_outputs = initial_guess.clone();
@@ -91,9 +91,9 @@ fn predict(
 }
 
 fn collect_leaf_outputs_for_test_instance(
-    test_feature_row: &Vec<f32>,
+    test_feature_row: &Vec<f64>,
     grad_boost_ensemble: &GradientBoostedEnsemble,
-) -> Vec<Vec<f32>> {
+) -> Vec<Vec<f64>> {
     let mut leaf_outputs = vec![];
     for i in 0..grad_boost_ensemble.trees.len() {
         let leaf = find_leaf_node_for_data(test_feature_row, &grad_boost_ensemble.trees[i]);

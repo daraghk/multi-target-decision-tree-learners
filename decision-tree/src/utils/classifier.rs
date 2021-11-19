@@ -2,7 +2,7 @@ use common::datasets::DataSet;
 
 use crate::{leaf::Leaf, node::TreeNode};
 
-pub fn calculate_accuracy(test_data: &DataSet, tree_root: &Box<TreeNode>) -> f32 {
+pub fn calculate_accuracy(test_data: &DataSet, tree_root: &Box<TreeNode>) -> f64 {
     let mut accuracy = 0.;
     for i in 0..test_data.features.len() {
         let prediction = predict_class(&test_data.features[i], tree_root);
@@ -14,10 +14,10 @@ pub fn calculate_accuracy(test_data: &DataSet, tree_root: &Box<TreeNode>) -> f32
             //println!("Prediction: {}, Actual: {}", prediction, actual);
         }
     }
-    accuracy / test_data.features.len() as f32
+    accuracy / test_data.features.len() as f64
 }
 
-pub fn predict_class(feature_row: &Vec<f32>, node: &Box<TreeNode>) -> f32 {
+pub fn predict_class(feature_row: &Vec<f64>, node: &Box<TreeNode>) -> f64 {
     let leaf = classify(feature_row, node);
     let mut max = 0;
     let mut max_class = 0.;
@@ -32,7 +32,7 @@ pub fn predict_class(feature_row: &Vec<f32>, node: &Box<TreeNode>) -> f32 {
     max_class
 }
 
-fn classify<'a>(feature_row: &Vec<f32>, node: &'a Box<TreeNode>) -> &'a Leaf {
+fn classify<'a>(feature_row: &Vec<f64>, node: &'a Box<TreeNode>) -> &'a Leaf {
     if !node.is_leaf_node() {
         if node.question.solve(feature_row) {
             return classify(feature_row, &node.true_branch.as_ref().unwrap());

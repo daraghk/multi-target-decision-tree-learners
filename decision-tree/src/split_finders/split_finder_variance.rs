@@ -15,7 +15,7 @@ pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResul
     let total_variance = get_total_variance(
         sum_of_labels,
         sum_of_squared_labels,
-        data.labels.len() as f32,
+        data.labels.len() as f64,
     );
 
     let number_of_features = data.features[0].len();
@@ -42,10 +42,10 @@ pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResul
 }
 
 fn get_total_variance(
-    sum_of_labels: f32,
-    sum_of_squared_labels: f32,
-    number_of_labels: f32,
-) -> f32 {
+    sum_of_labels: f64,
+    sum_of_squared_labels: f64,
+    number_of_labels: f64,
+) -> f64 {
     let mean_of_labels = sum_of_labels / number_of_labels;
     calculate_variance(sum_of_squared_labels, mean_of_labels, number_of_labels)
 }

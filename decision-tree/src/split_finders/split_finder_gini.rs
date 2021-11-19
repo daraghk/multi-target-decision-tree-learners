@@ -10,7 +10,7 @@ pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResul
     let mut best_question = Question::new(0, 0.);
 
     let class_counts_all = get_class_counts(&data.labels, number_of_classes);
-    let gini_all = calculate_gini(&class_counts_all, data.features.len() as f32);
+    let gini_all = calculate_gini(&class_counts_all, data.features.len() as f64);
 
     let number_of_features = data.features[0].len();
     for i in 0..number_of_features {

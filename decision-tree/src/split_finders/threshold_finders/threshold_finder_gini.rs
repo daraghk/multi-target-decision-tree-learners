@@ -7,7 +7,7 @@ use crate::feature_sorter::get_sorted_feature_tuple_vector;
 
 struct LastSeen {
     count: u32,
-    value: f32,
+    value: f64,
 }
 
 struct GiniValueTracker {
@@ -21,7 +21,7 @@ pub(super) fn determine_best_threshold(
     class_counts_all: &ClassCounter,
 ) -> BestThresholdResult {
     let mut best_result_container = BestThresholdResult {
-        loss: f32::INFINITY,
+        loss: f64::INFINITY,
         threshold_value: 0.0,
     };
     let total_number_of_rows = data.features.len() as u32;
@@ -58,8 +58,8 @@ pub(super) fn determine_best_threshold(
             );
 
             let loss = calculate_loss(
-                total_number_of_rows as f32,
-                right_value_tracker.number_of_rows as f32,
+                total_number_of_rows as f64,
+                right_value_tracker.number_of_rows as f64,
                 &left_value_tracker.class_counts,
                 &right_value_tracker.class_counts,
             );
@@ -90,7 +90,7 @@ fn update_class_counts_left(
 }
 
 fn update_class_counts_right(
-    tuple: &(f32, i32),
+    tuple: &(f64, i32),
     data: &DataSet,
     class_counts_right: &mut ClassCounter,
 ) {

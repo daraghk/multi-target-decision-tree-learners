@@ -59,18 +59,18 @@ fn get_header_record(file_path: &str) -> Result<StringRecord, Box<dyn Error>> {
 }
 
 //reading in data from csv, presume header included and label is at the end of each record
-fn read_data(file_path: &str) -> Result<Vec<Vec<f32>>, Box<dyn Error>> {
+fn read_data(file_path: &str) -> Result<Vec<Vec<f64>>, Box<dyn Error>> {
     let file = File::open(file_path)?;
     let mut data = vec![];
     let mut reader = csv::Reader::from_reader(file);
     for result in reader.deserialize() {
-        let record: Vec<f32> = result?;
+        let record: Vec<f64> = result?;
         data.push(record);
     }
     Ok(data)
 }
 
-fn parse_data_into_features_and_labels(data_set: Vec<Vec<f32>>) -> DataSet {
+fn parse_data_into_features_and_labels(data_set: Vec<Vec<f64>>) -> DataSet {
     let mut features = vec![];
     let mut labels = vec![];
     data_set.iter().for_each(|row| {
@@ -82,7 +82,7 @@ fn parse_data_into_features_and_labels(data_set: Vec<Vec<f32>>) -> DataSet {
     DataSet { features, labels }
 }
 
-fn create_multi_target_labels(labels: Vec<f32>, number_of_targets: usize) -> Vec<Vec<f32>> {
+fn create_multi_target_labels(labels: Vec<f64>, number_of_targets: usize) -> Vec<Vec<f64>> {
     let mut multi_target_labels = vec![];
     labels.iter().for_each(|label| {
         let mut multi_target = vec![0.; number_of_targets];

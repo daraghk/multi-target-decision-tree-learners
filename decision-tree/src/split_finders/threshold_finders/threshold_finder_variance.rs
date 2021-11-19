@@ -2,20 +2,20 @@ use crate::{calculations::variance::*, feature_sorter::get_sorted_feature_tuple_
 use common::{datasets::DataSet, results::BestThresholdResult};
 
 struct VarianceValueTracker {
-    number_of_labels: f32,
-    sum_of_squared_labels: f32,
-    sum_of_labels: f32,
-    mean_of_labels: f32,
+    number_of_labels: f64,
+    sum_of_squared_labels: f64,
+    sum_of_labels: f64,
+    mean_of_labels: f64,
 }
 
 pub(super) fn determine_best_threshold(
     data: &DataSet,
     column: u32,
-    total_sum_of_squared_labels: f32,
-    total_sum_of_labels: f32,
+    total_sum_of_squared_labels: f64,
+    total_sum_of_labels: f64,
 ) -> BestThresholdResult {
     let mut best_result_container = BestThresholdResult {
-        loss: f32::INFINITY,
+        loss: f64::INFINITY,
         threshold_value: 0.0,
     };
 
@@ -26,9 +26,9 @@ pub(super) fn determine_best_threshold(
         mean_of_labels: 0.0,
     };
 
-    let right_mean_of_labels = total_sum_of_labels / data.labels.len() as f32;
+    let right_mean_of_labels = total_sum_of_labels / data.labels.len() as f64;
     let mut right_value_tracker = VarianceValueTracker {
-        number_of_labels: data.labels.len() as f32,
+        number_of_labels: data.labels.len() as f64,
         sum_of_squared_labels: total_sum_of_squared_labels,
         sum_of_labels: total_sum_of_labels,
         mean_of_labels: right_mean_of_labels,
@@ -71,7 +71,7 @@ pub(super) fn determine_best_threshold(
     best_result_container
 }
 
-fn update_left_value_tracker(left_value_tracker: &mut VarianceValueTracker, label_value: f32) {
+fn update_left_value_tracker(left_value_tracker: &mut VarianceValueTracker, label_value: f64) {
     left_value_tracker.sum_of_squared_labels += label_value * label_value;
     left_value_tracker.number_of_labels += 1.0;
     left_value_tracker.sum_of_labels += label_value;
@@ -79,7 +79,7 @@ fn update_left_value_tracker(left_value_tracker: &mut VarianceValueTracker, labe
         left_value_tracker.sum_of_labels / left_value_tracker.number_of_labels;
 }
 
-fn update_right_value_tracker(right_value_tracker: &mut VarianceValueTracker, label_value: f32) {
+fn update_right_value_tracker(right_value_tracker: &mut VarianceValueTracker, label_value: f64) {
     right_value_tracker.sum_of_squared_labels -= label_value * label_value;
     right_value_tracker.number_of_labels -= 1.0;
     right_value_tracker.sum_of_labels -= label_value;

@@ -11,7 +11,7 @@ impl ClassCounter {
     }
 }
 
-pub fn get_class_counts(classes: &Vec<f32>, number_of_unique_classes: u32) -> ClassCounter {
+pub fn get_class_counts(classes: &Vec<f64>, number_of_unique_classes: u32) -> ClassCounter {
     let mut class_counter = ClassCounter::new(number_of_unique_classes);
     classes.iter().for_each(|class| {
         class_counter.counts[*class as usize] += 1;

@@ -1,15 +1,15 @@
 #[derive(Debug)]
 pub struct Question {
     pub column: u32,
-    pub value: f32,
+    pub value: f64,
 }
 
 impl Question {
-    pub fn new(column: u32, value: f32) -> Self {
+    pub fn new(column: u32, value: f64) -> Self {
         Self { column, value }
     }
 
-    pub fn solve(&self, row: &Vec<f32>) -> bool {
+    pub fn solve(&self, row: &Vec<f64>) -> bool {
         let val_to_check = row[self.column as usize];
         val_to_check >= self.value
     }

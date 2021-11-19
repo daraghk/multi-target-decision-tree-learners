@@ -1,18 +1,18 @@
 pub(super) fn calculate_loss(
-    left_variance: f32,
-    right_variance: f32,
-    left_size: f32,
-    right_size: f32,
-) -> f32 {
+    left_variance: f64,
+    right_variance: f64,
+    left_size: f64,
+    right_size: f64,
+) -> f64 {
     let total_size = left_size + right_size;
     ((left_size / total_size) * left_variance) + ((right_size / total_size) * right_variance)
 }
 
 pub(super) fn calculate_variance(
-    sum_of_squared_labels: f32,
-    mean_of_labels: f32,
-    number_of_labels: f32,
-) -> f32 {
+    sum_of_squared_labels: f64,
+    mean_of_labels: f64,
+    number_of_labels: f64,
+) -> f64 {
     if number_of_labels == 0.0 {
         return 0.0;
     }
@@ -22,7 +22,7 @@ pub(super) fn calculate_variance(
     variance
 }
 
-pub(super) fn get_label_sums(labels: &Vec<f32>) -> (f32, f32) {
+pub(super) fn get_label_sums(labels: &Vec<f64>) -> (f64, f64) {
     let mut sum_of_labels = 0.0;
     let mut sum_of_squared_labels = 0.0;
     labels.iter().for_each(|label| {
@@ -46,32 +46,32 @@ mod tests {
     }
 
     mod test_calculation_functions {
-        pub fn split_variance(left_data: &Vec<Vec<i32>>, right_data: &Vec<Vec<i32>>) -> f32 {
+        pub fn split_variance(left_data: &Vec<Vec<i32>>, right_data: &Vec<Vec<i32>>) -> f64 {
             let total_data_size = left_data.len() + right_data.len();
             let left_variance = variance(left_data);
             let right_variance = variance(right_data);
-            ((left_data.len() / total_data_size) as f32 * left_variance)
-                + ((right_data.len() / total_data_size) as f32 * right_variance)
+            ((left_data.len() / total_data_size) as f64 * left_variance)
+                + ((right_data.len() / total_data_size) as f64 * right_variance)
         }
 
-        pub fn variance(data: &Vec<Vec<i32>>) -> f32 {
+        pub fn variance(data: &Vec<Vec<i32>>) -> f64 {
             let mean = output_mean(data);
             let mut sum_differences_squared = 0.0;
             data.iter().for_each(|row| {
                 let output_value = row[row.len() - 1];
-                let difference = output_value as f32 - mean;
+                let difference = output_value as f64 - mean;
                 sum_differences_squared += difference * difference;
             });
-            sum_differences_squared / data.len() as f32
+            sum_differences_squared / data.len() as f64
         }
 
-        fn output_mean(data: &Vec<Vec<i32>>) -> f32 {
+        fn output_mean(data: &Vec<Vec<i32>>) -> f64 {
             let mut sum = 0.0;
             data.iter().for_each(|row| {
                 let output_value = row[row.len() - 1];
-                sum += output_value as f32;
+                sum += output_value as f64;
             });
-            sum / data.len() as f32
+            sum / data.len() as f64
         }
     }
 }
