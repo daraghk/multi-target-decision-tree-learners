@@ -11,9 +11,9 @@ pub(super) fn calculate_loss_vector(
     let total_size = left_size + right_size;
     let left_weight = left_size / total_size;
     let right_weight = right_size / total_size;
-    
+
     assert_eq!(left_variance_vector.len(), right_variance_vector.len());
-    for (i, left_variance_vector_value) in left_variance_vector.iter().enumerate(){
+    for (i, left_variance_vector_value) in left_variance_vector.iter().enumerate() {
         loss_vector[i] =
             (left_weight * left_variance_vector_value) + (right_weight * right_variance_vector[i]);
     }

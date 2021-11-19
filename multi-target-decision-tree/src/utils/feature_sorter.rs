@@ -1,6 +1,6 @@
 pub fn get_sorted_feature_tuple_vector(features: &Vec<Vec<f64>>, column: u32) -> Vec<(f64, usize)> {
     let mut feature_tuple_vector = vec![];
-    for (i, row) in features.iter().enumerate(){
+    for (i, row) in features.iter().enumerate() {
         let feature_value = row[column as usize];
         feature_tuple_vector.push((feature_value, i));
     }

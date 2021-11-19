@@ -25,8 +25,7 @@ fn benchmark_build_tree_single_threaded(c: &mut Criterion) {
 }
 
 fn benchmark_build_tree_multi_threaded(c: &mut Criterion) {
-    let data_set =
-        read_csv_data_one_hot_multi_target("./../common/data-files/digits_train.csv", 7);
+    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/digits_train.csv", 7);
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {

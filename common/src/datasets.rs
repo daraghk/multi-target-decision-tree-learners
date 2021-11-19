@@ -20,5 +20,5 @@ pub struct ChunkedMultiTargetDataSet {
     pub labels: Vec<f32>,
     pub indices: Vec<usize>,
     feature_chunk_size: u32,
-    label_chunk_size: u32
+    label_chunk_size: u32,
 }

@@ -8,8 +8,17 @@ use multi_target_decision_tree::{
     node::TreeNode,
 };
 
+use crate::{
+    grad_boost_executor::{
+        execute_gradient_boosting_loop, update_dataset_labels_with_initial_guess,
+    },
+    grad_boost_predict::{calculate_mean_squared_error, predict_instance},
+};
+
 pub struct GradientBoostedEnsemble {
     pub trees: Vec<Box<TreeNode<GradBoostLeaf>>>,
+    initial_guess: Vec<f64>,
+    learning_rate: f64,
 }
 
 impl GradientBoostedEnsemble {
@@ -17,6 +26,7 @@ impl GradientBoostedEnsemble {
         data: MultiTargetDataSet,
         tree_config: TreeConfig,
         number_of_iterations: u8,
+        learning_rate: f64,
     ) -> GradientBoostedEnsemble {
         let mut mutable_data = data.clone();
         let initial_guess = calculate_average_vector(&mutable_data.labels);
@@ -26,76 +36,40 @@ impl GradientBoostedEnsemble {
             &mut mutable_data,
             number_of_iterations,
             tree_config,
+            learning_rate
         );
-        Self { trees }
-    }
-
-    pub fn predict(feature_row: &Vec<f64>, trees: &Vec<Box<TreeNode<GradBoostLeaf>>>) {}
-
-    pub fn test() {}
-}
-
-fn execute_gradient_boosting_loop(
-    true_data: MultiTargetDataSet,
-    mutable_data: &mut MultiTargetDataSet,
-    number_of_iterations: u8,
-    tree_config: TreeConfig,
-) -> Vec<Box<TreeNode<GradBoostLeaf>>> {
-    let mut trees = vec![];
-    for _i in 0..number_of_iterations {
-        let dataset_to_grow_tree = mutable_data.clone();
-        let decision_tree =
-            GradBoostMultiTargetDecisionTree::new(&true_data, dataset_to_grow_tree, tree_config);
-        let boxed_tree = Box::new(decision_tree.root);
-        update_dataset_labels(&true_data, mutable_data, &boxed_tree);
-        println!("{:?}", mutable_data.labels[10]);
-        trees.push(boxed_tree);
-    }
-    trees
-}
-
-fn update_dataset_labels_with_initial_guess(
-    mutable_data: &mut MultiTargetDataSet,
-    initial_guess: &Vec<f64>,
-) {
-    for i in 0..mutable_data.labels.len() {
-        mutable_data.labels[i] = initial_guess.clone();
-    }
-}
-
-fn update_dataset_labels(
-    true_data: &MultiTargetDataSet,
-    mutable_data: &mut MultiTargetDataSet,
-    boxed_tree_ref: &Box<TreeNode<GradBoostLeaf>>,
-) {
-    for i in 0..mutable_data.labels.len() {
-        let leaf_data = find_leaf_node_for_data(&mutable_data.features[i], boxed_tree_ref);
-        let leaf_output = leaf_data.leaf_output.as_ref().unwrap();
-        let leaf_output = leaf_output.into_iter().map(|x| 0.1 * x).collect::<Vec<_>>();
-        mutable_data.labels[i] = add_vectors(&mutable_data.labels[i], &leaf_output);
-    }
-}
-
-pub fn find_leaf_node_for_data<'a>(
-    feature_row: &Vec<f64>,
-    node: &'a Box<TreeNode<GradBoostLeaf>>,
-) -> &'a GradBoostLeaf {
-    if !node.is_leaf_node() {
-        if node.question.solve(feature_row) {
-            return find_leaf_node_for_data(feature_row, &node.true_branch.as_ref().unwrap());
-        } else {
-            return find_leaf_node_for_data(feature_row, &node.false_branch.as_ref().unwrap());
+        Self {
+            trees,
+            initial_guess,
+            learning_rate,
         }
     }
-    node.leaf.as_ref().unwrap()
-}
 
-fn print_output_diff_between_true_and_final(
-    true_data: &Box<MultiTargetDataSet>,
-    mutable_data: &MultiTargetDataSet,
-) {
-    for i in 0..mutable_data.labels.len() {
-        let diff = subtract_vectors(&mutable_data.labels[i], &true_data.labels[i]);
-        println!("{:?}", diff);
+    pub fn predict(&self, feature_row: &Vec<f64>) -> Vec<f64> {
+        let result = predict_instance(feature_row, self, &self.initial_guess, self.learning_rate);
+        result
+    }
+
+    pub fn calculate_all_predictions(&self, test_set: &MultiTargetDataSet) -> Vec<Vec<f64>> {
+        let number_of_test_instances = test_set.features.len();
+        let mut predictions = vec![];
+        for i in 0..number_of_test_instances {
+            let test_feature_row = &test_set.features[i];
+            let test_label_original = &test_set.labels[i];
+            let prediction = self.predict(test_feature_row);
+            let difference = subtract_vectors(test_label_original, &prediction);
+            println!(
+                "{:?}: Original, {:?}: Result, {:?}: Difference",
+                test_label_original, prediction, difference
+            );
+            predictions.push(prediction);
+        }
+        predictions
+    }
+
+    pub fn calculate_error(&self, test_set: &MultiTargetDataSet) -> f64 {
+        let predictions = self.calculate_all_predictions(test_set);
+        let error = calculate_mean_squared_error(&test_set.labels, &predictions);
+        error
     }
 }

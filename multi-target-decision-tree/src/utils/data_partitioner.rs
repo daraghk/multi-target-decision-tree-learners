@@ -11,7 +11,7 @@ pub fn partition(
     let mut true_indices = vec![];
     let mut false_indices = vec![];
 
-    for (i, row) in data.features.iter().enumerate(){
+    for (i, row) in data.features.iter().enumerate() {
         let current_label_vector = &*data.labels.get(i).unwrap();
         let current_data_index = *data.indices.get(i).unwrap();
         if question.solve(row) {
