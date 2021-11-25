@@ -47,7 +47,9 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
         (tree_config.split_finder.find_best_split)(&data, tree_config.number_of_classes);
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf_output = calculate_average_leaf_residuals(&data);
-        let leaf = GradBoostLeaf { leaf_output: Some(leaf_output) };
+        let leaf = GradBoostLeaf {
+            leaf_output: Some(leaf_output),
+        };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
         let partitioned_data = partition(&data, &split_result.question);

@@ -26,7 +26,7 @@ pub fn execute_gradient_boosting_loop(
     tree_config: TreeConfig,
     learning_rate: f64,
 ) -> Vec<Box<TreeNode<GradBoostLeaf>>> {
-    let mut trees = vec![];
+    let mut trees = Vec::with_capacity(number_of_iterations as usize);
     for _i in 0..number_of_iterations {
         let residuals = calculate_residuals(&true_data, mutable_data);
         let mut learner_data = mutable_data.clone();

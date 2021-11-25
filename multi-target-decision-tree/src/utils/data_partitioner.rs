@@ -11,19 +11,20 @@ pub fn partition(
     let mut true_indices = vec![];
     let mut false_indices = vec![];
 
-    for (i, row) in data.features.iter().enumerate() {
-        let current_label_vector = &*data.labels.get(i).unwrap();
-        let current_data_index = *data.indices.get(i).unwrap();
-        if question.solve(row) {
-            true_rows.push(row.clone());
-            true_labels.push(current_label_vector.clone());
-            true_indices.push(current_data_index);
-        } else {
-            false_rows.push(row.clone());
-            false_labels.push(current_label_vector.clone());
-            false_indices.push(current_data_index);
-        }
-    }
+    &data.features.iter().zip(&data.labels).enumerate().for_each(
+        |(index, (feature_vector, label_vector))| {
+            let current_data_index = *data.indices.get(index).unwrap();
+            if question.solve(feature_vector) {
+                true_rows.push(feature_vector.clone());
+                true_labels.push(label_vector.clone());
+                true_indices.push(current_data_index);
+            } else {
+                false_rows.push(feature_vector.clone());
+                false_labels.push(label_vector.clone());
+                false_indices.push(current_data_index);
+            }
+        },
+    );
 
     let false_data = MultiTargetDataSet {
         features: false_rows,

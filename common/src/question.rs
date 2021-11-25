@@ -9,7 +9,7 @@ impl Question {
         Self { column, value }
     }
 
-    pub fn solve(&self, row: &Vec<f64>) -> bool {
+    pub fn solve(&self, row: &[f64]) -> bool {
         let val_to_check = row[self.column as usize];
         val_to_check >= self.value
     }

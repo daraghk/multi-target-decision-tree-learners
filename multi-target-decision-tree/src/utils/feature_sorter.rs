@@ -4,9 +4,7 @@ pub fn get_sorted_feature_tuple_vector(features: &Vec<Vec<f64>>, column: u32) ->
         let feature_value = row[column as usize];
         feature_tuple_vector.push((feature_value, i));
     }
-    //feature_tuple_vector.sort_by_key(|tuple| tuple.0);
-    feature_tuple_vector.sort_by(|a, b| a.partial_cmp(&b).unwrap()); // Panics on NaN
-
+    feature_tuple_vector.sort_by(|a, b| a.partial_cmp(&b).unwrap());
     feature_tuple_vector
 }
 

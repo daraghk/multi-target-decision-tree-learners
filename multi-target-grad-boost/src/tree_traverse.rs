@@ -1,7 +1,7 @@
 use multi_target_decision_tree::{leaf::GradBoostLeaf, node::TreeNode};
 
 pub fn find_leaf_node_for_data<'a>(
-    feature_row: &Vec<f64>,
+    feature_row: &[f64],
     node: &'a Box<TreeNode<GradBoostLeaf>>,
 ) -> &'a GradBoostLeaf {
     if !node.is_leaf_node() {

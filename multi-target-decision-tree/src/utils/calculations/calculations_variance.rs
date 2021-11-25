@@ -7,16 +7,18 @@ pub(super) fn calculate_loss_vector(
     right_size: f64,
     number_of_targets: usize,
 ) -> Vec<f64> {
-    let mut loss_vector = vec![0.0; number_of_targets];
     let total_size = left_size + right_size;
     let left_weight = left_size / total_size;
     let right_weight = right_size / total_size;
 
     assert_eq!(left_variance_vector.len(), right_variance_vector.len());
-    for (i, left_variance_vector_value) in left_variance_vector.iter().enumerate() {
-        loss_vector[i] =
-            (left_weight * left_variance_vector_value) + (right_weight * right_variance_vector[i]);
-    }
+    let loss_vector = left_variance_vector
+        .iter()
+        .zip(right_variance_vector)
+        .map(|(&left_element, right_element)| {
+            (left_weight * left_element) + (right_weight * right_element)
+        })
+        .collect();
     loss_vector
 }
 

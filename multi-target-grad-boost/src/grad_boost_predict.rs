@@ -21,9 +21,9 @@ pub fn calculate_mean_squared_error(
 }
 
 pub fn predict_instance(
-    test_feature_row: &Vec<f64>,
+    test_feature_row: &[f64],
     grad_boost_ensemble: &GradientBoostedEnsemble,
-    initial_guess: &Vec<f64>,
+    initial_guess: &[f64],
     learning_rate: f64,
 ) -> Vec<f64> {
     let test_instance_leaf_outputs = collect_leaf_outputs_for_test_instance(
@@ -31,7 +31,7 @@ pub fn predict_instance(
         grad_boost_ensemble,
         learning_rate,
     );
-    let mut sum_of_leaf_outputs = initial_guess.clone();
+    let mut sum_of_leaf_outputs = initial_guess.clone().to_owned();
     for leaf_output in test_instance_leaf_outputs {
         for i in 0..sum_of_leaf_outputs.len() {
             sum_of_leaf_outputs[i] += leaf_output[i];
@@ -41,7 +41,7 @@ pub fn predict_instance(
 }
 
 fn collect_leaf_outputs_for_test_instance(
-    test_feature_row: &Vec<f64>,
+    test_feature_row: &[f64],
     grad_boost_ensemble: &GradientBoostedEnsemble,
     learning_rate: f64,
 ) -> Vec<Vec<f64>> {

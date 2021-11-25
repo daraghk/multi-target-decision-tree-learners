@@ -20,6 +20,7 @@ pub fn read_csv_data_one_hot_multi_target(
     let dataset = parse_data_into_features_and_labels(data_set_read);
     let multi_target_labels = create_multi_target_labels(dataset.labels, number_of_targets);
     let data_indices = (0..multi_target_labels.len()).collect::<Vec<usize>>();
+
     MultiTargetDataSet {
         features: dataset.features,
         labels: multi_target_labels,

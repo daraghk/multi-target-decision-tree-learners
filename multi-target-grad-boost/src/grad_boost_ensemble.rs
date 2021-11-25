@@ -28,12 +28,12 @@ impl GradientBoostedEnsemble {
         number_of_iterations: u32,
         learning_rate: f64,
     ) -> GradientBoostedEnsemble {
-        let mut data_with_prev_output = data.clone();
-        let initial_guess = calculate_average_vector(&data_with_prev_output.labels);
-        update_dataset_labels_with_initial_guess(&mut data_with_prev_output, &initial_guess);
+        let mut mutable_data = data.clone();
+        let initial_guess = calculate_average_vector(&mutable_data.labels);
+        update_dataset_labels_with_initial_guess(&mut mutable_data, &initial_guess);
         let trees = execute_gradient_boosting_loop(
             data,
-            &mut data_with_prev_output,
+            &mut mutable_data,
             number_of_iterations,
             tree_config,
             learning_rate,
@@ -45,14 +45,14 @@ impl GradientBoostedEnsemble {
         }
     }
 
-    pub fn predict(&self, feature_row: &Vec<f64>) -> Vec<f64> {
+    pub fn predict(&self, feature_row: &[f64]) -> Vec<f64> {
         let result = predict_instance(feature_row, self, &self.initial_guess, self.learning_rate);
         result
     }
 
     pub fn calculate_all_predictions(&self, test_set: &MultiTargetDataSet) -> Vec<Vec<f64>> {
         let number_of_test_instances = test_set.features.len();
-        let mut predictions = vec![];
+        let mut predictions = Vec::with_capacity(number_of_test_instances);
         for i in 0..number_of_test_instances {
             let test_feature_row = &test_set.features[i];
             let test_label_original = &test_set.labels[i];

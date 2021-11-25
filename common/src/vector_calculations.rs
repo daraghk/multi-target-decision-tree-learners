@@ -1,19 +1,19 @@
-pub fn add_vectors(first: &Vec<f64>, second: &Vec<f64>) -> Vec<f64> {
+pub fn add_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
-    let mut result = vec![0.; first.len()];
-    for i in 0..first.len() {
-        result[i] = first[i] + second[i];
-    }
-    result
+    first
+        .iter()
+        .zip(second)
+        .map(|(&first_element, &second_element)| first_element + second_element)
+        .collect()
 }
 
-pub fn subtract_vectors(first: &Vec<f64>, second: &Vec<f64>) -> Vec<f64> {
+pub fn subtract_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
-    let mut result = vec![0.; first.len()];
-    for i in 0..first.len() {
-        result[i] = first[i] - second[i];
-    }
-    result
+    first
+        .iter()
+        .zip(second)
+        .map(|(&first_element, &second_element)| first_element - second_element)
+        .collect()
 }
 
 pub fn calculate_average_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
@@ -30,15 +30,17 @@ pub fn calculate_average_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
     average_vector
 }
 
-pub fn mean_sum_of_squared_differences_between_vectors(
-    prediction: &Vec<f64>,
-    actual: &Vec<f64>,
-) -> f64 {
-    let mut sum_of_squared_differences = 0.;
-    for i in 0..prediction.len() {
-        let error = prediction[i] - actual[i];
-        let error_squared = f64::powf(error, 2.);
-        sum_of_squared_differences += error_squared;
-    }
+pub fn mean_sum_of_squared_differences_between_vectors(prediction: &[f64], actual: &[f64]) -> f64 {
+    assert_eq!(prediction.len(), actual.len());
+    let squared_differences: Vec<f64> = prediction
+        .iter()
+        .zip(actual)
+        .map(|(&prediction_element, &actual_element)| {
+            let difference = prediction_element - actual_element;
+            f64::powf(difference, 2.)
+        })
+        .collect();
+
+    let sum_of_squared_differences: f64 = squared_differences.iter().sum();
     sum_of_squared_differences / prediction.len() as f64
 }

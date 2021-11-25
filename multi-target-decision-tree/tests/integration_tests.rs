@@ -148,8 +148,8 @@ fn test_decision_tree_for_regression() {
 
     let tree_config = TreeConfig {
         split_finder,
-        use_multi_threading: true,
-        number_of_classes: 4,
+        use_multi_threading: false,
+        number_of_classes: 5,
         max_levels: 0,
     };
 
