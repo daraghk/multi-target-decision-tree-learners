@@ -25,18 +25,18 @@ impl GradientBoostedEnsemble {
     pub fn train(
         data: MultiTargetDataSet,
         tree_config: TreeConfig,
-        number_of_iterations: u8,
+        number_of_iterations: u32,
         learning_rate: f64,
     ) -> GradientBoostedEnsemble {
-        let mut mutable_data = data.clone();
-        let initial_guess = calculate_average_vector(&mutable_data.labels);
-        update_dataset_labels_with_initial_guess(&mut mutable_data, &initial_guess);
+        let mut data_with_prev_output = data.clone();
+        let initial_guess = calculate_average_vector(&data_with_prev_output.labels);
+        update_dataset_labels_with_initial_guess(&mut data_with_prev_output, &initial_guess);
         let trees = execute_gradient_boosting_loop(
             data,
-            &mut mutable_data,
+            &mut data_with_prev_output,
             number_of_iterations,
             tree_config,
-            learning_rate
+            learning_rate,
         );
         Self {
             trees,
@@ -57,11 +57,11 @@ impl GradientBoostedEnsemble {
             let test_feature_row = &test_set.features[i];
             let test_label_original = &test_set.labels[i];
             let prediction = self.predict(test_feature_row);
-            let difference = subtract_vectors(test_label_original, &prediction);
-            println!(
-                "{:?}: Original, {:?}: Result, {:?}: Difference",
-                test_label_original, prediction, difference
-            );
+            //let difference = subtract_vectors(test_label_original, &prediction);
+            // println!(
+            //     "{:?}: Original, {:?}: Result, {:?}: Difference",
+            //     test_label_original, prediction, difference
+            // );
             predictions.push(prediction);
         }
         predictions

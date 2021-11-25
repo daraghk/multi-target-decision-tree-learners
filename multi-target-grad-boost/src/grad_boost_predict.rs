@@ -33,8 +33,9 @@ pub fn predict_instance(
     );
     let mut sum_of_leaf_outputs = initial_guess.clone();
     for leaf_output in test_instance_leaf_outputs {
-        let sum = add_vectors(&leaf_output, &sum_of_leaf_outputs);
-        sum_of_leaf_outputs = sum;
+        for i in 0..sum_of_leaf_outputs.len(){
+            sum_of_leaf_outputs[i] += leaf_output[i];
+        }
     }
     sum_of_leaf_outputs
 }
@@ -48,11 +49,11 @@ fn collect_leaf_outputs_for_test_instance(
     for i in 0..grad_boost_ensemble.trees.len() {
         let leaf = find_leaf_node_for_data(test_feature_row, &grad_boost_ensemble.trees[i]);
         let leaf_output = &*leaf.leaf_output.as_ref().unwrap();
-        let leaf_output = leaf_output
+        let weighted_leaf_output = leaf_output
             .into_iter()
             .map(|x| learning_rate * x)
             .collect::<Vec<_>>();
-        leaf_outputs.push(leaf_output);
+        leaf_outputs.push(weighted_leaf_output.clone());
     }
     leaf_outputs
 }

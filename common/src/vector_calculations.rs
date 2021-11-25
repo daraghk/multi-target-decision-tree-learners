@@ -37,7 +37,8 @@ pub fn mean_sum_of_squared_differences_between_vectors(
     let mut sum_of_squared_differences = 0.;
     for i in 0..prediction.len() {
         let error = prediction[i] - actual[i];
-        sum_of_squared_differences += f64::powf(error, 2.);
+        let error_squared = f64::powf(error, 2.);
+        sum_of_squared_differences += error_squared;
     }
     sum_of_squared_differences / prediction.len() as f64
 }

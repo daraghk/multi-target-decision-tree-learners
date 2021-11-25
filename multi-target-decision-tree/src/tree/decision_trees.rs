@@ -55,25 +55,21 @@ impl RegressionMultiTargetDecisionTree {
     }
 }
 
-pub struct GradBoostMultiTargetDecisionTree<'a> {
+pub struct GradBoostMultiTargetDecisionTree{
     pub root: TreeNode<GradBoostLeaf>,
-    pub true_data: &'a MultiTargetDataSet,
 }
 
-impl<'a> GradBoostMultiTargetDecisionTree<'a> {
+impl GradBoostMultiTargetDecisionTree {
     pub fn new(
-        true_data: &'a MultiTargetDataSet,
         learner_data: MultiTargetDataSet,
         tree_config: TreeConfig,
     ) -> Self {
         Self {
             root: grad_boost_tree_builder::build_grad_boost_regression_tree(
-                &true_data,
                 learner_data,
                 tree_config,
                 0,
             ),
-            true_data,
         }
     }
 }

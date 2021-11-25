@@ -1,6 +1,4 @@
-use common::{
-    data_reader::read_csv_data_multi_target, vector_calculations::calculate_average_vector,
-};
+use common::data_reader::read_csv_data_multi_target;
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
     split_finder::{SplitFinder, SplitMetric},
@@ -20,7 +18,7 @@ fn test_gradient_boosting() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 4,
+        number_of_classes: 5,
         max_levels: 8,
     };
 
@@ -36,4 +34,9 @@ fn test_gradient_boosting() {
     let root_mean_squared_error = f64::sqrt(mean_squared_error);
     println!("{:?}", mean_squared_error);
     println!("{:?}", root_mean_squared_error);
+
+    let prediction = grad_boost_ensemble.predict(&test_set.features[99]);
+    println!("{:?}", test_set.labels[99]);
+    println!("{:?}", prediction);
+
 }
