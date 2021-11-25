@@ -1,8 +1,7 @@
-pub fn get_sorted_feature_tuple_vector(features: &Vec<Vec<f64>>, column: u32) -> Vec<(f64, usize)> {
+pub fn get_sorted_feature_tuple_vector(feature_column: &[f64]) -> Vec<(f64, usize)> {
     let mut feature_tuple_vector = vec![];
-    for (i, row) in features.iter().enumerate() {
-        let feature_value = row[column as usize];
-        feature_tuple_vector.push((feature_value, i));
+    for (i, feature_value) in feature_column.iter().enumerate() {
+        feature_tuple_vector.push((*feature_value, i));
     }
     feature_tuple_vector.sort_by(|a, b| a.partial_cmp(&b).unwrap());
     feature_tuple_vector
@@ -10,7 +9,7 @@ pub fn get_sorted_feature_tuple_vector(features: &Vec<Vec<f64>>, column: u32) ->
 
 #[cfg(test)]
 mod tests {
-    use common::datasets::MultiTargetDataSet;
+    use common::{data_reader::create_feature_columns, datasets::MultiTargetDataSet};
 
     use super::*;
     #[test]
@@ -18,13 +17,17 @@ mod tests {
         let features = vec![vec![10., 2., 1.], vec![6., 2., 2.], vec![-1., 2., 3.]];
         let labels = vec![vec![0.], vec![0.], vec![0.]];
         let indices = (0..labels.len()).collect::<Vec<usize>>();
+
+        let columns = create_feature_columns(&features);
+
         let data = MultiTargetDataSet {
-            features,
+            feature_rows: features,
+            feature_columns: columns,
             labels,
             indices,
         };
         let column = 0;
-        let sorted_feature_tuple_vector = get_sorted_feature_tuple_vector(&data.features, column);
+        let sorted_feature_tuple_vector = get_sorted_feature_tuple_vector(&data.feature_columns[column]);
         println!("{:?}", sorted_feature_tuple_vector);
         assert_eq!(
             sorted_feature_tuple_vector,

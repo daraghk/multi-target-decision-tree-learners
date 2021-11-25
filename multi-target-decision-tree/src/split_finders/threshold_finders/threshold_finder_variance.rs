@@ -12,8 +12,9 @@ struct VarianceValueTrackerMultiTarget {
 }
 
 pub(super) fn determine_best_threshold(
-    data: &MultiTargetDataSet,
-    column: u32,
+    number_of_labels: usize,
+    labels: &Vec<Vec<f64>>,
+    feature_column: &[f64],
     total_multi_target_label_metrics: &MultiTargetLabelMetrics,
     number_of_targets: usize,
 ) -> BestThresholdResult {
@@ -32,7 +33,7 @@ pub(super) fn determine_best_threshold(
     };
 
     let mut right_value_tracker = VarianceValueTrackerMultiTarget {
-        number_of_labels: data.labels.len() as f64,
+        number_of_labels: number_of_labels as f64,
         multi_target_label_metrics: MultiTargetLabelMetrics {
             sum_of_squared_labels_vector: total_multi_target_label_metrics
                 .sum_of_squared_labels_vector
@@ -46,8 +47,8 @@ pub(super) fn determine_best_threshold(
         },
     };
 
-    let sorted_feature_data = get_sorted_feature_tuple_vector(&data.features, column);
-    let previous_feature_val = sorted_feature_data.get(0).unwrap().0;
+    let sorted_feature_data = get_sorted_feature_tuple_vector(feature_column);
+    let previous_feature_val = sorted_feature_data[0].0;
     sorted_feature_data.iter().for_each(|tuple| {
         let feature_value = tuple.0 as f64;
 
@@ -81,7 +82,7 @@ pub(super) fn determine_best_threshold(
         }
 
         let real_row_index = tuple.1;
-        let label_vector = data.labels.get(real_row_index).unwrap();
+        let label_vector = &labels[real_row_index];
         update_left_value_tracker(&mut left_value_tracker, label_vector, number_of_targets);
         update_right_value_tracker(&mut right_value_tracker, label_vector, number_of_targets);
     });
@@ -90,7 +91,7 @@ pub(super) fn determine_best_threshold(
 
 fn update_left_value_tracker(
     left_value_tracker: &mut VarianceValueTrackerMultiTarget,
-    label_vector: &Vec<f64>,
+    label_vector: &[f64],
     number_of_targets: usize,
 ) {
     left_value_tracker.number_of_labels += 1.0;
@@ -106,7 +107,7 @@ fn update_left_value_tracker(
 
 fn update_right_value_tracker(
     right_value_tracker: &mut VarianceValueTrackerMultiTarget,
-    label_vector: &Vec<f64>,
+    label_vector: &[f64],
     number_of_targets: usize,
 ) {
     right_value_tracker.number_of_labels -= 1.0;
@@ -122,7 +123,10 @@ fn update_right_value_tracker(
 }
 
 mod tests {
-    use common::{data_reader::read_csv_data_one_hot_multi_target, datasets::MultiTargetDataSet};
+    use common::{
+        data_reader::{create_feature_columns, read_csv_data_one_hot_multi_target},
+        datasets::MultiTargetDataSet,
+    };
 
     use crate::calculations::variance::get_multi_target_label_metrics;
 
@@ -132,13 +136,22 @@ mod tests {
         let labels = vec![vec![1., 0.], vec![1., 0.], vec![0., 1.]];
         let total_mt_label_metrics = get_multi_target_label_metrics(&labels, 2);
         let indices = (0..labels.len()).collect::<Vec<usize>>();
+        let columns = create_feature_columns(&features);
         let data = MultiTargetDataSet {
-            features,
+            feature_rows: features,
+            feature_columns: columns,
             labels,
             indices,
         };
         let column = 0;
-        let best = super::determine_best_threshold(&data, column, &total_mt_label_metrics, 2);
+        let number_labels = data.labels.len();
+        let best = super::determine_best_threshold(
+            number_labels,
+            &data.labels,
+            &data.feature_columns[column],
+            &total_mt_label_metrics,
+            2,
+        );
         assert_eq!(best.loss, 0.0);
         assert_eq!(best.threshold_value, 6.0);
         println!("{:?}", best);
@@ -149,7 +162,14 @@ mod tests {
         let iris = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let column = 2;
         let total_mt_label_metrics = get_multi_target_label_metrics(&iris.labels, 3);
-        let best = super::determine_best_threshold(&iris, column, &total_mt_label_metrics, 2);
+        let number_labels = iris.labels.len();
+        let best = super::determine_best_threshold(
+            number_labels,
+            &iris.labels,
+            &iris.feature_columns[column],
+            &total_mt_label_metrics,
+            2,
+        );
         println!("{:?}", best);
         assert_eq!(best.threshold_value, 30.0);
     }

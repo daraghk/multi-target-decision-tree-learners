@@ -1,6 +1,6 @@
 use crate::question::Question;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct BestThresholdResult {
     pub loss: f64,
     pub threshold_value: f64,

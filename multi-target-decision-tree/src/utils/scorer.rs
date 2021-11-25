@@ -10,9 +10,9 @@ pub fn calculate_accuracy(
     number_of_classes: u32,
 ) -> f64 {
     let mut accuracy = 0.;
-    for i in 0..test_data.features.len() {
+    for i in 0..test_data.feature_rows.len() {
         let prediction = predict_class(
-            &test_data.features[i],
+            &test_data.feature_rows[i],
             tree_root,
             number_of_classes as usize,
         );
@@ -24,7 +24,7 @@ pub fn calculate_accuracy(
             //println!("Prediction: {:?}, Actual: {:?}", prediction, actual);
         }
     }
-    accuracy / test_data.features.len() as f64
+    accuracy / test_data.feature_rows.len() as f64
 }
 
 pub fn predict_class(
@@ -58,13 +58,13 @@ pub fn calculate_overall_mean_squared_error(
     tree_root: &Box<TreeNode<RegressionLeaf>>,
 ) -> f64 {
     let mut total_error = 0.;
-    for i in 0..test_data.features.len() {
-        let leaf = find_leaf_node_for_data(&test_data.features[i], tree_root);
+    for i in 0..test_data.feature_rows.len() {
+        let leaf = find_leaf_node_for_data(&test_data.feature_rows[i], tree_root);
         let prediction = calculate_average_label_vector(leaf.data.as_ref().unwrap());
         let actual = &test_data.labels[i];
         total_error += mean_sum_of_squared_differences_between_vectors(&prediction, actual);
     }
-    total_error / test_data.features.len() as f64
+    total_error / test_data.feature_rows.len() as f64
 }
 
 fn calculate_average_label_vector(data: &MultiTargetDataSet) -> Vec<f64> {
@@ -180,7 +180,7 @@ mod tests {
             "./../common/data-files/multi-target/features_test_mt.csv",
             "./../common/data-files/multi-target/labels_test_mt.csv",
         );
-        let feature_row_test = &test_set.features[100].clone();
+        let feature_row_test = &test_set.feature_rows[100].clone();
         println!("{:?}", feature_row_test);
         let leaf = find_leaf_node_for_data(feature_row_test, &boxed_tree);
         println!("{:?}", leaf);

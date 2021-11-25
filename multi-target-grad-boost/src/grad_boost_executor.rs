@@ -61,7 +61,7 @@ fn update_dataset_labels(
     learning_rate: f64,
 ) {
     for i in 0..mutable_data.labels.len() {
-        let leaf_data = find_leaf_node_for_data(&mutable_data.features[i], boxed_tree_ref);
+        let leaf_data = find_leaf_node_for_data(&mutable_data.feature_rows[i], boxed_tree_ref);
         let leaf_output = leaf_data.leaf_output.as_ref().unwrap();
         let weighted_leaf_output = leaf_output
             .into_iter()

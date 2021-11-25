@@ -21,8 +21,18 @@ pub fn read_csv_data_one_hot_multi_target(
     let multi_target_labels = create_multi_target_labels(dataset.labels, number_of_targets);
     let data_indices = (0..multi_target_labels.len()).collect::<Vec<usize>>();
 
+    let mut columns = vec![];
+    for col in 0..dataset.features[0].len() {
+        let mut column = vec![];
+        for row in 0..dataset.features.len() {
+            column.push(dataset.features[row][col]);
+        }
+        columns.push(column);
+    }
+
     MultiTargetDataSet {
-        features: dataset.features,
+        feature_rows: dataset.features,
+        feature_columns: columns,
         labels: multi_target_labels,
         indices: data_indices,
     }
@@ -35,8 +45,12 @@ pub fn read_csv_data_multi_target(
     let data_set_features = read_data(file_path_to_features).unwrap();
     let data_set_labels = read_data(file_path_to_labels).unwrap();
     let data_indices = (0..data_set_labels.len()).collect::<Vec<usize>>();
+
+    let mut columns = create_feature_columns(&data_set_features);
+
     MultiTargetDataSet {
-        features: data_set_features,
+        feature_rows: data_set_features,
+        feature_columns: columns,
         labels: data_set_labels,
         indices: data_indices,
     }
@@ -93,6 +107,18 @@ fn create_multi_target_labels(labels: Vec<f64>, number_of_targets: usize) -> Vec
     multi_target_labels
 }
 
+pub fn create_feature_columns(data_set_features: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+    let mut columns = vec![];
+    for col in 0..data_set_features[0].len() {
+        let mut column = vec![];
+        for row in 0..data_set_features.len() {
+            column.push(data_set_features[row][col]);
+        }
+        columns.push(column);
+    }
+    columns
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -104,8 +130,12 @@ mod tests {
         let mt_labels = create_multi_target_labels(data_set.labels, 3);
         let data_indices = (0..mt_labels.len()).collect::<Vec<usize>>();
         assert_eq!(*mt_labels.get(0).unwrap(), vec![1., 0., 0.]);
+
+        let columns = create_feature_columns(&data_set.features);
+
         let multi_target_dataset = MultiTargetDataSet {
-            features: data_set.features.clone(),
+            feature_rows: data_set.features.clone(),
+            feature_columns: columns,
             labels: mt_labels,
             indices: data_indices,
         };

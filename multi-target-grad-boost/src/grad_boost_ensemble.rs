@@ -51,10 +51,10 @@ impl GradientBoostedEnsemble {
     }
 
     pub fn calculate_all_predictions(&self, test_set: &MultiTargetDataSet) -> Vec<Vec<f64>> {
-        let number_of_test_instances = test_set.features.len();
+        let number_of_test_instances = test_set.feature_rows.len();
         let mut predictions = Vec::with_capacity(number_of_test_instances);
         for i in 0..number_of_test_instances {
-            let test_feature_row = &test_set.features[i];
+            let test_feature_row = &test_set.feature_rows[i];
             let test_label_original = &test_set.labels[i];
             let prediction = self.predict(test_feature_row);
             predictions.push(prediction);

@@ -35,7 +35,7 @@ fn test_gradient_boosting() {
     println!("{:?}", mean_squared_error);
     println!("{:?}", root_mean_squared_error);
 
-    let prediction = grad_boost_ensemble.predict(&test_set.features[0]);
+    let prediction = grad_boost_ensemble.predict(&test_set.feature_rows[0]);
     println!("{:?}", test_set.labels[0]);
     println!("{:?}", prediction);
 }
@@ -70,7 +70,7 @@ fn test_gradient_boosting_multi_threaded_tree_building() {
     println!("{:?}", mean_squared_error);
     println!("{:?}", root_mean_squared_error);
 
-    let prediction = grad_boost_ensemble.predict(&test_set.features[0]);
+    let prediction = grad_boost_ensemble.predict(&test_set.feature_rows[0]);
     println!("{:?}", test_set.labels[0]);
     println!("{:?}", prediction);
 }
