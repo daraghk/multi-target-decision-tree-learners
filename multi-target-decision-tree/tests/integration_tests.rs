@@ -124,7 +124,7 @@ fn test_decision_tree_for_covtype_multi_threaded() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 3,
+        number_of_classes: 7,
         max_levels: 0,
     };
 

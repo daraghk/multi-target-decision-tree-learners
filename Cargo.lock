@@ -299,6 +299,7 @@ name = "multi-target-grad-boost"
 version = "0.1.0"
 dependencies = [
  "common",
+ "criterion",
  "multi-target-decision-tree",
 ]
 
