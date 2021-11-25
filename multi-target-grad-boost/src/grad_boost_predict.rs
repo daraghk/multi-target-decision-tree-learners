@@ -33,7 +33,7 @@ pub fn predict_instance(
     );
     let mut sum_of_leaf_outputs = initial_guess.clone();
     for leaf_output in test_instance_leaf_outputs {
-        for i in 0..sum_of_leaf_outputs.len(){
+        for i in 0..sum_of_leaf_outputs.len() {
             sum_of_leaf_outputs[i] += leaf_output[i];
         }
     }

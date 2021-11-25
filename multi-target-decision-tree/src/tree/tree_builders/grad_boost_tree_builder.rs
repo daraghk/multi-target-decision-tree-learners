@@ -28,10 +28,8 @@ pub(crate) fn build_grad_boost_regression_tree(
         let right_data = partitioned_data.0;
 
         let new_level = current_level + 1;
-        let left_tree =
-            build_grad_boost_regression_tree(left_data, tree_config, new_level);
-        let right_tree =
-            build_grad_boost_regression_tree(right_data, tree_config, new_level);
+        let left_tree = build_grad_boost_regression_tree(left_data, tree_config, new_level);
+        let right_tree = build_grad_boost_regression_tree(right_data, tree_config, new_level);
         TreeNode::new(
             split_result.question,
             Box::new(left_tree),
@@ -90,9 +88,7 @@ pub(crate) fn build_grad_boost_regression_tree(
 //     }
 // }
 
-fn calculate_average_leaf_residuals(
-    leaf_data: &MultiTargetDataSet,
-) -> Vec<f64> {
+fn calculate_average_leaf_residuals(leaf_data: &MultiTargetDataSet) -> Vec<f64> {
     let average_residuals = calculate_average_vector(&leaf_data.labels);
     average_residuals
 }

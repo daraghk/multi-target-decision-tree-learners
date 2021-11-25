@@ -31,14 +31,9 @@ pub fn execute_gradient_boosting_loop(
         let residuals = calculate_residuals(&true_data, mutable_data);
         let mut learner_data = mutable_data.clone();
         learner_data.labels = residuals;
-        let residual_tree =
-            GradBoostMultiTargetDecisionTree::new(learner_data, tree_config);
+        let residual_tree = GradBoostMultiTargetDecisionTree::new(learner_data, tree_config);
         let boxed_residual_tree = Box::new(residual_tree.root);
-        update_dataset_labels(
-            mutable_data,
-            &boxed_residual_tree,
-            learning_rate,
-        );
+        update_dataset_labels(mutable_data, &boxed_residual_tree, learning_rate);
         println!("{:?}", mutable_data.labels[10]);
         trees.push(boxed_residual_tree);
     }
@@ -73,7 +68,6 @@ fn update_dataset_labels(
             .into_iter()
             .map(|x| learning_rate * x)
             .collect::<Vec<_>>();
-        mutable_data.labels[i] =
-            add_vectors(&mutable_data.labels[i], &weighted_leaf_output);
+        mutable_data.labels[i] = add_vectors(&mutable_data.labels[i], &weighted_leaf_output);
     }
 }

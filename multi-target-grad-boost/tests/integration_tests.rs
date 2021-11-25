@@ -38,5 +38,4 @@ fn test_gradient_boosting() {
     let prediction = grad_boost_ensemble.predict(&test_set.features[99]);
     println!("{:?}", test_set.labels[99]);
     println!("{:?}", prediction);
-
 }
