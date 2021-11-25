@@ -57,11 +57,6 @@ impl GradientBoostedEnsemble {
             let test_feature_row = &test_set.features[i];
             let test_label_original = &test_set.labels[i];
             let prediction = self.predict(test_feature_row);
-            //let difference = subtract_vectors(test_label_original, &prediction);
-            // println!(
-            //     "{:?}: Original, {:?}: Result, {:?}: Difference",
-            //     test_label_original, prediction, difference
-            // );
             predictions.push(prediction);
         }
         predictions

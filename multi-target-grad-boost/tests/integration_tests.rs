@@ -17,7 +17,7 @@ fn test_gradient_boosting() {
 
     let tree_config = TreeConfig {
         split_finder,
-        use_multi_threading: false,
+        use_multi_threading: true,
         number_of_classes: 5,
         max_levels: 8,
     };
@@ -35,7 +35,7 @@ fn test_gradient_boosting() {
     println!("{:?}", mean_squared_error);
     println!("{:?}", root_mean_squared_error);
 
-    let prediction = grad_boost_ensemble.predict(&test_set.features[99]);
-    println!("{:?}", test_set.labels[99]);
+    let prediction = grad_boost_ensemble.predict(&test_set.features[0]);
+    println!("{:?}", test_set.labels[0]);
     println!("{:?}", prediction);
 }
