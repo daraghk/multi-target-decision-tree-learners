@@ -44,3 +44,34 @@ pub fn mean_sum_of_squared_differences_between_vectors(prediction: &[f64], actua
     let sum_of_squared_differences: f64 = squared_differences.iter().sum();
     sum_of_squared_differences / prediction.len() as f64
 }
+
+pub fn sum_of_vectors(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
+    let length_of_inner_vectors = vector_of_vectors[0].len();
+    let mut sum_vector = vec![0.; length_of_inner_vectors];
+    vector_of_vectors.iter().for_each(|inner_vector| {
+        sum_vector = add_vectors(&sum_vector, &inner_vector);
+    });
+    sum_vector
+}
+
+pub fn divide_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
+    assert_eq!(first.len(), second.len());
+    first
+        .iter()
+        .zip(second)
+        .map(|(&first_element, &second_element)| first_element / second_element)
+        .collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::sum_of_vectors;
+
+    #[test]
+    fn test_sum_of_vectors() {
+        let vector_of_vectors = vec![vec![1., 2., 3.], vec![1., 2., 3.]];
+        let result = sum_of_vectors(&vector_of_vectors);
+        println!("{:?}", result);
+        assert_eq!(result, vec![2., 4., 6.]);
+    }
+}

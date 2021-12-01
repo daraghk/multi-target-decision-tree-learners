@@ -1,4 +1,6 @@
-use common::{data_reader::create_feature_columns, datasets::MultiTargetDataSet, question::Question};
+use common::{
+    data_reader::create_feature_columns, datasets::MultiTargetDataSet, question::Question,
+};
 
 pub fn partition(
     data: &MultiTargetDataSet,
@@ -11,8 +13,12 @@ pub fn partition(
     let mut true_indices = vec![];
     let mut false_indices = vec![];
 
-    &data.feature_rows.iter().zip(&data.labels).enumerate().for_each(
-        |(index, (feature_vector, label_vector))| {
+    &data
+        .feature_rows
+        .iter()
+        .zip(&data.labels)
+        .enumerate()
+        .for_each(|(index, (feature_vector, label_vector))| {
             let current_data_index = *data.indices.get(index).unwrap();
             if question.solve(feature_vector) {
                 true_rows.push(feature_vector.clone());
@@ -23,8 +29,7 @@ pub fn partition(
                 false_labels.push(label_vector.clone());
                 false_indices.push(current_data_index);
             }
-        },
-    );
+        });
 
     let false_columns = create_feature_columns(&false_rows);
     let true_columns = create_feature_columns(&true_rows);

@@ -1,11 +1,12 @@
 use std::{sync::Arc, thread};
 
+use crate::{data_partitioner::partition, leaf::GradBoostLeaf, node::TreeNode};
 use common::{
     datasets::MultiTargetDataSet,
-    vector_calculations::{calculate_average_vector, subtract_vectors},
+    vector_calculations::{
+        add_vectors, calculate_average_vector, divide_vectors, subtract_vectors, sum_of_vectors,
+    },
 };
-
-use crate::{data_partitioner::partition, leaf::GradBoostLeaf, node::TreeNode};
 
 use super::TreeConfig;
 
@@ -17,7 +18,7 @@ pub(crate) fn build_grad_boost_regression_tree(
     let split_result =
         (tree_config.split_finder.find_best_split)(&data, tree_config.number_of_classes);
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
-        let leaf_output = calculate_average_leaf_residuals(&data);
+        let leaf_output = calculate_leaf_output_squared_loss(&data);
         let leaf = GradBoostLeaf {
             leaf_output: Some(leaf_output),
         };
@@ -46,7 +47,7 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
     let split_result =
         (tree_config.split_finder.find_best_split)(&data, tree_config.number_of_classes);
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
-        let leaf_output = calculate_average_leaf_residuals(&data);
+        let leaf_output = calculate_leaf_output_squared_loss(&data);
         let leaf = GradBoostLeaf {
             leaf_output: Some(leaf_output),
         };
@@ -84,7 +85,26 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
     }
 }
 
-fn calculate_average_leaf_residuals(leaf_data: &MultiTargetDataSet) -> Vec<f64> {
+fn calculate_leaf_output_squared_loss(leaf_data: &MultiTargetDataSet) -> Vec<f64> {
     let average_residuals = calculate_average_vector(&leaf_data.labels);
     average_residuals
+}
+
+fn calculate_leaf_output_multi_class_loss(leaf_data: &MultiTargetDataSet) -> Vec<f64> {
+    let numerator = sum_of_vectors(&leaf_data.labels);
+    let denominator = calculate_denominator_term_for_leaf_output(&leaf_data.labels);
+    divide_vectors(&numerator, &denominator)
+}
+
+fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
+    let length_of_inner_vectors = vector_of_vectors[0].len();
+    let mut sum_vector = vec![0.; length_of_inner_vectors];
+    vector_of_vectors.iter().for_each(|inner_vector| {
+        let term: Vec<f64> = inner_vector
+            .iter()
+            .map(|element| element.abs() * (2. - element.abs()))
+            .collect();
+        sum_vector = add_vectors(&sum_vector, &term);
+    });
+    sum_vector
 }

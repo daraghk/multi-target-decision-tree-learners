@@ -52,13 +52,13 @@ pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> Bes
     }
 
     assert_eq!(result_vector.len(), number_of_cols);
-    
-    for i in 0..number_of_cols{
+
+    for i in 0..number_of_cols {
         let feature_column_result = result_vector[i];
         let information_gain = total_variance_sum - feature_column_result.loss;
         if information_gain > best_gain {
             best_gain = information_gain;
-            best_question.column =  i as u32;
+            best_question.column = i as u32;
             best_question.value = feature_column_result.threshold_value;
         }
     }

@@ -27,7 +27,8 @@ mod tests {
             indices,
         };
         let column = 0;
-        let sorted_feature_tuple_vector = get_sorted_feature_tuple_vector(&data.feature_columns[column]);
+        let sorted_feature_tuple_vector =
+            get_sorted_feature_tuple_vector(&data.feature_columns[column]);
         println!("{:?}", sorted_feature_tuple_vector);
         assert_eq!(
             sorted_feature_tuple_vector,
