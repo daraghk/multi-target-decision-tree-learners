@@ -48,21 +48,22 @@ pub(crate) fn build_regression_tree_using_multiple_threads(
         let right_data = partitioned_data.0;
 
         let new_level = current_level + 1;
-        let left_tree_handle = thread::spawn(move || {
-            return build_regression_tree_using_multiple_threads(left_data, tree_config, new_level);
-        });
-
-        let right_tree_handle = thread::spawn(move || {
-            return build_regression_tree_using_multiple_threads(
-                right_data,
-                tree_config,
-                new_level,
-            );
-        });
-
-        let left_tree = left_tree_handle.join().unwrap();
-        let right_tree = right_tree_handle.join().unwrap();
-
+        let (left_tree, right_tree) = rayon::join(
+            || {
+                return build_regression_tree_using_multiple_threads(
+                    left_data,
+                    tree_config,
+                    new_level,
+                );
+            },
+            || {
+                return build_regression_tree_using_multiple_threads(
+                    right_data,
+                    tree_config,
+                    new_level,
+                );
+            },
+        );
         TreeNode::new(
             split_result.question,
             Box::new(left_tree),
