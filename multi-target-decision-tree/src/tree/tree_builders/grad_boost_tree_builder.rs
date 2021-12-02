@@ -102,9 +102,24 @@ fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>)
     vector_of_vectors.iter().for_each(|inner_vector| {
         let term: Vec<f64> = inner_vector
             .iter()
-            .map(|element| element.abs() * (2. - element.abs()))
+            .map(|element| {
+                let element_abs = element.abs();
+                element_abs * (2. - element_abs)
+            })
             .collect();
         sum_vector = add_vectors(&sum_vector, &term);
     });
     sum_vector
+}
+
+#[cfg(test)]
+mod tests {
+    use super::calculate_denominator_term_for_leaf_output;
+
+    #[test]
+    fn test_leaf_output_denominator_multi_class_loss() {
+        let vector_of_vectors = vec![vec![1., 2., 3.], vec![1., 2., 3.]];
+        let result = calculate_denominator_term_for_leaf_output(&vector_of_vectors);
+        println!("{:?}", result);
+    }
 }

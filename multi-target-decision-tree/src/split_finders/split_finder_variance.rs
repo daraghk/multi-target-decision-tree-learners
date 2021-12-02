@@ -1,5 +1,6 @@
 #[path = "threshold_finders/threshold_finder_variance.rs"]
 mod threshold_finder_variance;
+use rayon::prelude::*;
 use std::{sync::Arc, thread};
 
 use common::{
@@ -25,31 +26,21 @@ pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> Bes
     );
 
     let number_of_cols = data.feature_rows[0].len();
-    let mut result_vector: Vec<BestThresholdResult> = Vec::with_capacity(number_of_cols);
-
-    let mut thread_handles = vec![];
-    let arc_data = Arc::new(data.to_owned());
     let arc_total_metrics = Arc::new(total_multi_target_label_metrics);
-
-    for i in 0..number_of_cols {
-        let arc_data_clone = arc_data.clone();
-        let arc_total_metrics_clone = arc_total_metrics.clone();
-        thread_handles.push(thread::spawn(move || {
+    let result_vector: Vec<BestThresholdResult> = data
+        .feature_columns
+        .par_iter()
+        .map(|feature_column| {
             let best_threshold_for_feature = threshold_finder_variance::determine_best_threshold(
                 number_of_labels,
-                &arc_data_clone.labels,
-                &arc_data_clone.feature_columns[i],
-                &arc_total_metrics_clone,
+                &data.labels,
+                feature_column,
+                &arc_total_metrics,
                 number_of_targets,
             );
             return best_threshold_for_feature;
-        }));
-    }
-
-    for thread in thread_handles {
-        let result = thread.join().unwrap();
-        result_vector.push(result);
-    }
+        })
+        .collect();
 
     assert_eq!(result_vector.len(), number_of_cols);
 
