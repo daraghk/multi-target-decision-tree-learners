@@ -1,7 +1,7 @@
 #[path = "threshold_finders/threshold_finder_variance.rs"]
 mod threshold_finder_variance;
 use rayon::prelude::*;
-use std::{sync::Arc, thread};
+use std::sync::Arc;
 
 use common::{
     question::Question,
@@ -26,19 +26,18 @@ pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> Bes
     );
 
     let number_of_cols = data.feature_rows[0].len();
-    let arc_total_metrics = Arc::new(total_multi_target_label_metrics);
+    let total_multi_target_label_metrics = Arc::new(total_multi_target_label_metrics);
     let result_vector: Vec<BestThresholdResult> = data
         .feature_columns
         .par_iter()
         .map(|feature_column| {
-            let best_threshold_for_feature = threshold_finder_variance::determine_best_threshold(
+            threshold_finder_variance::determine_best_threshold(
                 number_of_labels,
                 &data.labels,
                 feature_column,
-                &arc_total_metrics,
+                &total_multi_target_label_metrics,
                 number_of_targets,
-            );
-            return best_threshold_for_feature;
+            )
         })
         .collect();
 

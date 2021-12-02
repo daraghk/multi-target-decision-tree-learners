@@ -117,6 +117,7 @@ fn test_decision_tree_for_covtype() {
 
 #[test]
 fn test_decision_tree_for_covtype_multi_threaded() {
+    rayon::ThreadPoolBuilder::new().num_threads(4).build_global().unwrap();
     let data_set =
         read_csv_data_one_hot_multi_target("./../common/data-files/covtype_train.csv", 7);
     let split_finder = SplitFinder::new(SplitMetric::Variance);
