@@ -55,17 +55,14 @@ pub(crate) fn build_tree_using_multiple_threads(
         let left_data = partitioned_data.1;
         let right_data = partitioned_data.0;
 
-        let left_tree_handle = thread::spawn(move || {
-            return build_tree_using_multiple_threads(left_data, tree_config);
-        });
-
-        let right_tree_handle = thread::spawn(move || {
-            return build_tree_using_multiple_threads(right_data, tree_config);
-        });
-
-        let left_tree = left_tree_handle.join().unwrap();
-        let right_tree = right_tree_handle.join().unwrap();
-
+        let (left_tree, right_tree) = rayon::join(
+            || {
+                return build_tree_using_multiple_threads(left_data, tree_config);
+            },
+            || {
+                return build_tree_using_multiple_threads(right_data, tree_config);
+            },
+        );
         TreeNode::new(
             split_result.question,
             Box::new(left_tree),

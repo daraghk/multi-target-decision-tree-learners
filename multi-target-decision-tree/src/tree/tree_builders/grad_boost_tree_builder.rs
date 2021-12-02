@@ -68,14 +68,12 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
                 );
             },
             || {
-                return build_grad_boost_regression_tree_using_multiple_threads(
-                    right_data,
-                    tree_config,
-                    new_level,
-                );
-            },
+            return build_grad_boost_regression_tree_using_multiple_threads(
+                right_data,
+                tree_config,
+                new_level,
+            )}
         );
-
         TreeNode::new(
             split_result.question,
             Box::new(left_tree),
