@@ -54,6 +54,15 @@ pub fn sum_of_vectors(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
     sum_vector
 }
 
+pub fn multiply_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
+    assert_eq!(first.len(), second.len());
+    first
+        .iter()
+        .zip(second)
+        .map(|(&first_element, &second_element)| first_element * second_element)
+        .collect()
+}
+
 pub fn divide_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
     first
@@ -61,6 +70,10 @@ pub fn divide_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
         .zip(second)
         .map(|(&first_element, &second_element)| first_element / second_element)
         .collect()
+}
+
+pub fn multiply_vector_by_scalar(scalar: f64, vector: &[f64]) -> Vec<f64> {
+    vector.iter().map(|element| element * scalar).collect()
 }
 
 #[cfg(test)]

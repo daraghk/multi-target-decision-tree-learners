@@ -92,7 +92,7 @@ mod tests {
         let tree_config = TreeConfig {
             split_finder,
             use_multi_threading: true,
-            number_of_classes: 4,
+            number_of_classes: 10,
             max_levels: 8,
         };
 

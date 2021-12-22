@@ -21,3 +21,5 @@ Cargo.lock
 
 .DS_Store
 
+/common/data-files/mnist_test.csv
+/common/data-files/mnist_train.csv
