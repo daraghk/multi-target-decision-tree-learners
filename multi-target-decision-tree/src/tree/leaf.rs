@@ -10,6 +10,7 @@ impl Leaf for RegressionLeaf {}
 
 impl Leaf for GradBoostLeaf {}
 
+impl Leaf for AMGBoostLeaf {}
 #[derive(Debug, Clone)]
 pub struct OneHotMultiClassLeaf {
     pub class_counts: Option<ClassCounter>,
@@ -23,4 +24,10 @@ pub struct RegressionLeaf {
 #[derive(Debug, Clone)]
 pub struct GradBoostLeaf {
     pub leaf_output: Option<Vec<f64>>,
+}
+
+#[derive(Debug, Clone)]
+pub struct AMGBoostLeaf {
+    pub max_value: Option<f64>,
+    pub class: Option<usize>,
 }

@@ -83,13 +83,13 @@ mod tests {
     fn test_find_best_split_dummy() {
         let features = vec![vec![10., 2., 0.], vec![6., 2., 0.], vec![1., 2., 1.]];
         let labels = vec![vec![1., 0.], vec![1., 0.], vec![1., 1.]];
-        let indices = (0..labels.len()).collect::<Vec<usize>>();
+        // let indices = (0..labels.len()).collect::<Vec<usize>>();
         let columns = create_feature_columns(&features);
         let data = MultiTargetDataSet {
             feature_rows: features,
             feature_columns: columns,
             labels,
-            indices,
+            // indices,
         };
         let result = super::find_best_split(&data, 2);
         assert_eq!(result.question.value, 6.);

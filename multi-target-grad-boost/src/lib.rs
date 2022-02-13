@@ -1,4 +1,3 @@
-#![allow(unused)]
-#[path = "ensembles/grad_boost_ensemble.rs"]
-pub mod grad_boost_ensemble;
+#[path = "ensembles/boosting_ensemble.rs"]
+pub mod boosting_ensemble;
 mod tree_traverse;

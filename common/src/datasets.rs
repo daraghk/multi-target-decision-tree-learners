@@ -11,7 +11,7 @@ pub struct MultiTargetDataSet {
     pub feature_rows: Vec<Vec<f64>>,
     pub labels: Vec<Vec<f64>>,
     pub feature_columns: Vec<Vec<f64>>,
-    pub indices: Vec<usize>,
+    // pub indices: Vec<usize>,
 }
 
 pub struct ChunkedMultiTargetDataSet {

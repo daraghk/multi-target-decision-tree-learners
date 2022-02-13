@@ -302,6 +302,7 @@ dependencies = [
  "common",
  "criterion",
  "multi-target-decision-tree",
+ "rayon",
 ]
 
 [[package]]

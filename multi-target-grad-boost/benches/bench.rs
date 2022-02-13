@@ -7,7 +7,9 @@ use multi_target_decision_tree::{
     },
     split_finder::{SplitFinder, SplitMetric},
 };
-use multi_target_grad_boost::grad_boost_ensemble::{GradientBoostedEnsemble, ensemble_regression::GradientBoostedEnsembleRegression};
+use multi_target_grad_boost::boosting_ensemble::{
+    boosting_types::RegressionBoostModel, GradientBoostedEnsemble,
+};
 
 fn perform_gradient_boosting_single_threaded(c: &mut Criterion) {
     let data_set = read_csv_data_multi_target(
@@ -19,18 +21,18 @@ fn perform_gradient_boosting_single_threaded(c: &mut Criterion) {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 5,
-        max_levels: 8,
+        number_of_classes: 10,
+        max_levels: 3,
     };
 
     let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
     c.bench_function("multi target grad boost tree build - single thread", |b| {
         b.iter(|| {
-            return GradientBoostedEnsembleRegression::train(
+            return RegressionBoostModel::train(
                 data_set.clone(),
                 tree_config,
                 leaf_output_calculator,
-                100,
+                300,
                 0.1,
             );
         })
@@ -47,18 +49,18 @@ fn perform_gradient_boosting_multi_threaded(c: &mut Criterion) {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 5,
-        max_levels: 8,
+        number_of_classes: 10,
+        max_levels: 3,
     };
 
     let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
-    c.bench_function("multi target grad boost tree build - single thread", |b| {
+    c.bench_function("multi target grad boost tree build - multi threaded", |b| {
         b.iter(|| {
-            return GradientBoostedEnsembleRegression::train(
+            return RegressionBoostModel::train(
                 data_set.clone(),
                 tree_config,
                 leaf_output_calculator,
-                100,
+                300,
                 0.1,
             );
         })

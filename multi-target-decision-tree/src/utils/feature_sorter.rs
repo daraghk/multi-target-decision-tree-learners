@@ -16,7 +16,7 @@ mod tests {
     fn test_get_sorted_feature_tuple_vector() {
         let features = vec![vec![10., 2., 1.], vec![6., 2., 2.], vec![-1., 2., 3.]];
         let labels = vec![vec![0.], vec![0.], vec![0.]];
-        let indices = (0..labels.len()).collect::<Vec<usize>>();
+        // let indices = (0..labels.len()).collect::<Vec<usize>>();
 
         let columns = create_feature_columns(&features);
 
@@ -24,7 +24,7 @@ mod tests {
             feature_rows: features,
             feature_columns: columns,
             labels,
-            indices,
+            // indices,
         };
         let column = 0;
         let sorted_feature_tuple_vector =
