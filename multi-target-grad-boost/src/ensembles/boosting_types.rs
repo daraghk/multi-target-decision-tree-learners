@@ -1,6 +1,6 @@
 use common::datasets::MultiTargetDataSet;
 use multi_target_decision_tree::{
-    decision_trees::{grad_boost_leaf_output::LeafOutputCalculator, TreeConfig},
+    decision_trees::TreeConfig,
     leaf::{AMGBoostLeaf, GradBoostLeaf, Leaf},
     node::TreeNode,
 };
@@ -41,7 +41,6 @@ pub struct BoostingExecutor<T: Leaf> {
         training_data: &mut GradBoostTrainingData,
         number_of_iterations: u32,
         tree_config: TreeConfig,
-        leaf_output_calculator: LeafOutputCalculator,
         learning_rate: f64,
     ) -> Vec<Box<TreeNode<T>>>,
 }

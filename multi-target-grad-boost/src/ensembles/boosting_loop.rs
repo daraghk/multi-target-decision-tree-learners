@@ -1,8 +1,5 @@
 use common::{datasets::MultiTargetDataSet, vector_calculations::calculate_average_vector};
-use multi_target_decision_tree::{
-    decision_trees::{grad_boost_leaf_output::LeafOutputCalculator, TreeConfig},
-    leaf::Leaf,
-};
+use multi_target_decision_tree::{decision_trees::TreeConfig, leaf::Leaf};
 
 use super::{
     boosting_types::{
@@ -14,7 +11,6 @@ use super::{
 pub fn boosting_loop<T: Leaf>(
     data: MultiTargetDataSet,
     tree_config: TreeConfig,
-    leaf_output_calculator: LeafOutputCalculator,
     number_of_iterations: u32,
     learning_rate: f64,
     boosting_executor: BoostingExecutor<T>,
@@ -32,7 +28,6 @@ pub fn boosting_loop<T: Leaf>(
         &mut training_data,
         number_of_iterations,
         tree_config,
-        leaf_output_calculator,
         learning_rate,
     );
     BoostingResult {

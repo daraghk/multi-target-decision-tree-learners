@@ -10,3 +10,4 @@ edition = "2018"
 common = { path = "../common/" }
 decision-tree = { path = "../decision-tree/" }
 multi-target-decision-tree = { path = "../multi-target-decision-tree/" }
+multi-target-grad-boost = { path = "../multi-target-grad-boost/" }

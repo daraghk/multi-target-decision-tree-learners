@@ -2,10 +2,7 @@ use std::time::Instant;
 
 use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
 use multi_target_decision_tree::{
-    decision_trees::{
-        grad_boost_leaf_output::{LeafOutputCalculator, LeafOutputType},
-        TreeConfig,
-    },
+    decision_trees::TreeConfig,
     split_finder::{SplitFinder, SplitMetric},
 };
 use multi_target_grad_boost::boosting_ensemble::{
@@ -30,10 +27,8 @@ fn test_mtgbdt_single_threaded() {
         max_levels: 8,
     };
 
-    let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
     let before = Instant::now();
-    let grad_boost_ensemble =
-        RegressionBoostModel::train(true_data, tree_config, leaf_output_calculator, 100, 0.1);
+    let grad_boost_ensemble = RegressionBoostModel::train(true_data, tree_config, 100, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_multi_target(
@@ -68,10 +63,8 @@ fn test_mtgbdt_multi_threaded() {
         max_levels: 3,
     };
 
-    let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
     let before = Instant::now();
-    let grad_boost_ensemble =
-        RegressionBoostModel::train(true_data, tree_config, leaf_output_calculator, 300, 0.1);
+    let grad_boost_ensemble = RegressionBoostModel::train(true_data, tree_config, 300, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_multi_target(
@@ -104,11 +97,8 @@ fn test_mtgbdt_multi_threaded_for_mcc() {
         max_levels: 12,
     };
 
-    let leaf_output_calculator =
-        LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let before = Instant::now();
-    let grad_boost_ensemble =
-        MultiClassBoostModel::train(true_data, tree_config, leaf_output_calculator, 50, 0.1);
+    let grad_boost_ensemble = MultiClassBoostModel::train(true_data, tree_config, 50, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/digits_test.csv", 10);
@@ -135,11 +125,8 @@ fn test_mtgbdt_multi_threaded_for_mcc_mnist() {
         max_levels: 3,
     };
 
-    let leaf_output_calculator =
-        LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let before = Instant::now();
-    let grad_boost_ensemble =
-        MultiClassBoostModel::train(true_data, tree_config, leaf_output_calculator, 50, 0.1);
+    let grad_boost_ensemble = MultiClassBoostModel::train(true_data, tree_config, 50, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/mnist_test.csv", 10);
@@ -166,11 +153,8 @@ fn test_amgboost_multi_threaded_for_mcc() {
         max_levels: 12,
     };
 
-    let leaf_output_calculator =
-        LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let before = Instant::now();
-    let grad_boost_ensemble =
-        AMGBoostModel::train(true_data, tree_config, leaf_output_calculator, 50, 0.1);
+    let grad_boost_ensemble = AMGBoostModel::train(true_data, tree_config, 50, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/digits_test.csv", 10);
@@ -197,11 +181,8 @@ fn test_amgboost_multi_threaded_for_mcc_mnist() {
         max_levels: 3,
     };
 
-    let leaf_output_calculator =
-        LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let before = Instant::now();
-    let grad_boost_ensemble =
-        AMGBoostModel::train(true_data, tree_config, leaf_output_calculator, 20, 0.1);
+    let grad_boost_ensemble = AMGBoostModel::train(true_data, tree_config, 20, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/mnist_test.csv", 10);

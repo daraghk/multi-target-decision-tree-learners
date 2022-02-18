@@ -1,6 +1,7 @@
 use multi_target_decision_tree::{
     decision_trees::{
-        grad_boost_leaf_output::LeafOutputCalculator, GradBoostMultiTargetDecisionTree, TreeConfig,
+        grad_boost_leaf_output::{LeafOutputCalculator, LeafOutputType},
+        GradBoostMultiTargetDecisionTree, TreeConfig,
     },
     leaf::GradBoostLeaf,
     node::TreeNode,
@@ -16,10 +17,11 @@ pub(crate) fn execute_gradient_boosting_loop(
     training_data: &mut GradBoostTrainingData,
     number_of_iterations: u32,
     tree_config: TreeConfig,
-    leaf_output_calculator: LeafOutputCalculator,
     learning_rate: f64,
 ) -> Vec<Box<TreeNode<GradBoostLeaf>>> {
     let mut trees = Vec::with_capacity(number_of_iterations as usize);
+    let leaf_output_calculator =
+        LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     for _i in 0..number_of_iterations {
         let residuals = calculate_residuals(training_data);
         let mut learner_data = training_data.data.clone();

@@ -2,9 +2,7 @@ use common::{
     datasets::MultiTargetDataSet,
     vector_calculations::mean_sum_of_squared_differences_between_vectors,
 };
-use multi_target_decision_tree::decision_trees::{
-    grad_boost_leaf_output::LeafOutputCalculator, TreeConfig,
-};
+use multi_target_decision_tree::decision_trees::TreeConfig;
 
 use self::regression_boost_executor_functions::execute_gradient_boosting_loop;
 
@@ -21,7 +19,6 @@ impl GradientBoostedEnsemble for RegressionBoostModel {
     fn train(
         data: MultiTargetDataSet,
         tree_config: TreeConfig,
-        leaf_output_calculator: LeafOutputCalculator,
         number_of_iterations: u32,
         learning_rate: f64,
     ) -> Self {
@@ -32,7 +29,6 @@ impl GradientBoostedEnsemble for RegressionBoostModel {
         let boosting_model = boosting_loop(
             data,
             tree_config,
-            leaf_output_calculator,
             number_of_iterations,
             learning_rate,
             boosting_executor,

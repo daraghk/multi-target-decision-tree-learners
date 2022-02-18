@@ -1,10 +1,7 @@
 use common::data_reader::read_csv_data_multi_target;
 use criterion::{criterion_group, criterion_main, Criterion};
 use multi_target_decision_tree::{
-    decision_trees::{
-        grad_boost_leaf_output::{LeafOutputCalculator, LeafOutputType},
-        TreeConfig,
-    },
+    decision_trees::TreeConfig,
     split_finder::{SplitFinder, SplitMetric},
 };
 use multi_target_grad_boost::boosting_ensemble::{
@@ -25,16 +22,9 @@ fn perform_gradient_boosting_single_threaded(c: &mut Criterion) {
         max_levels: 3,
     };
 
-    let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
     c.bench_function("multi target grad boost tree build - single thread", |b| {
         b.iter(|| {
-            return RegressionBoostModel::train(
-                data_set.clone(),
-                tree_config,
-                leaf_output_calculator,
-                300,
-                0.1,
-            );
+            return RegressionBoostModel::train(data_set.clone(), tree_config, 300, 0.1);
         })
     });
 }
@@ -53,16 +43,9 @@ fn perform_gradient_boosting_multi_threaded(c: &mut Criterion) {
         max_levels: 3,
     };
 
-    let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
     c.bench_function("multi target grad boost tree build - multi threaded", |b| {
         b.iter(|| {
-            return RegressionBoostModel::train(
-                data_set.clone(),
-                tree_config,
-                leaf_output_calculator,
-                300,
-                0.1,
-            );
+            return RegressionBoostModel::train(data_set.clone(), tree_config, 300, 0.1);
         })
     });
 }

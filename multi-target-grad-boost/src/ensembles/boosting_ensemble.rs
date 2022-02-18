@@ -1,7 +1,5 @@
 use common::datasets::MultiTargetDataSet;
-use multi_target_decision_tree::decision_trees::{
-    grad_boost_leaf_output::LeafOutputCalculator, TreeConfig,
-};
+use multi_target_decision_tree::decision_trees::TreeConfig;
 
 #[path = "./MultiClassBoosting/AMGBoost/amg_boost_ensemble.rs"]
 pub mod amg_boost_ensemble;
@@ -20,7 +18,6 @@ pub trait GradientBoostedEnsemble {
     fn train(
         data: MultiTargetDataSet,
         tree_config: TreeConfig,
-        leaf_output_calculator: LeafOutputCalculator,
         number_of_iterations: u32,
         learning_rate: f64,
     ) -> Self;
