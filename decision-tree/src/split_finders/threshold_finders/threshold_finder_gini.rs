@@ -1,7 +1,7 @@
 use common::datasets::DataSet;
 use common::results::BestThresholdResult;
 
-use crate::calculations::gini::*;
+use crate::calculations_gini::calculate_loss;
 use crate::class_counter::ClassCounter;
 use crate::feature_sorter::get_sorted_feature_tuple_vector;
 

@@ -3,7 +3,7 @@ mod threshold_finder_gini;
 use common::question::Question;
 
 use super::*;
-use crate::{calculations::gini::calculate_gini, class_counter::get_class_counts};
+use crate::{class_counter::get_class_counts, calculations_gini::calculate_gini};
 
 pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;

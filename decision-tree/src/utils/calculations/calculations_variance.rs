@@ -1,4 +1,4 @@
-pub(super) fn calculate_loss(
+pub fn calculate_loss(
     left_variance: f64,
     right_variance: f64,
     left_size: f64,
@@ -8,7 +8,7 @@ pub(super) fn calculate_loss(
     ((left_size / total_size) * left_variance) + ((right_size / total_size) * right_variance)
 }
 
-pub(super) fn calculate_variance(
+pub fn calculate_variance(
     sum_of_squared_labels: f64,
     mean_of_labels: f64,
     number_of_labels: f64,

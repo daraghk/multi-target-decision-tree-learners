@@ -1,6 +1,6 @@
 use crate::class_counter::ClassCounter;
 
-pub(super) fn calculate_loss(
+pub fn calculate_loss(
     number_of_rows: f64,
     true_rows_count: f64,
     class_counts_left: &ClassCounter,
@@ -14,7 +14,7 @@ pub(super) fn calculate_loss(
     result
 }
 
-pub(super) fn calculate_gini(class_counts: &ClassCounter, number_of_rows: f64) -> f64 {
+pub fn calculate_gini(class_counts: &ClassCounter, number_of_rows: f64) -> f64 {
     let impurity: f64 = 1.0;
     let mut reduction: f64 = 0.0;
     class_counts.counts.iter().for_each(|class_count| {
