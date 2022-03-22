@@ -63,7 +63,6 @@ mod tests {
         assert_eq!(predicted_class, 2.);
     }
 
-    use super::*;
     #[test]
     fn test_print_classifier_result_unknown_data() {
         let data_set = read_csv_data("./../common/data-files/iris.csv");

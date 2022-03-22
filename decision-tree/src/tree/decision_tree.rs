@@ -7,7 +7,7 @@ use crate::{
     data_partitioner::partition,
     leaf::Leaf,
     node::TreeNode,
-    split_finder::{self, SplitFinder},
+    split_finder::{SplitFinder},
 };
 
 pub struct DecisionTree {

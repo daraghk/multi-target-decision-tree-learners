@@ -88,8 +88,7 @@ fn update_right_value_tracker(right_value_tracker: &mut VarianceValueTracker, la
 }
 
 mod tests {
-    use common::{data_reader::read_csv_data, datasets::DataSet};
-
+    use common::{datasets::DataSet, data_reader::read_csv_data};
     use crate::calculations::variance::get_label_sums;
 
     #[test]
