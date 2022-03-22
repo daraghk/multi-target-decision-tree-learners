@@ -34,13 +34,14 @@ pub mod variance {
         number_of_labels: f64,
         number_of_targets: usize,
     ) -> Vec<f64> {
-        let mut variance_result_vector = vec![0.0; number_of_targets];
+        let mut variance_result_vector = Vec::with_capacity(number_of_targets);
         for i in 0..number_of_targets {
             let mean = multi_target_label_metrics.mean_of_labels_vector[i];
             let left = multi_target_label_metrics.sum_of_squared_labels_vector[i];
-            let right = number_of_labels * (mean * mean);
+            let mean_squared = mean * mean;
+            let right = number_of_labels * mean_squared;
             let variance = (left - right) / number_of_labels;
-            variance_result_vector[i] = variance;
+            variance_result_vector.push(variance)
         }
         variance_result_vector
     }

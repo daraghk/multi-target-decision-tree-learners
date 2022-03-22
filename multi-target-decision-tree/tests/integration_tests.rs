@@ -149,8 +149,8 @@ fn test_decision_tree_for_regression() {
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 10,
-        max_levels: 0,
+        number_of_classes: 5,
+        max_levels: 10,
     };
 
     let before = Instant::now();
