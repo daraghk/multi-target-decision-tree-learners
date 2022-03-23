@@ -1,7 +1,7 @@
 use common::datasets::DataSet;
 use common::results::BestThresholdResult;
 
-use crate::calculations_gini::calculate_loss;
+use crate::calculations_gini::weighted_sum_of_ginis_for_split_subsets;
 use crate::class_counter::ClassCounter;
 use crate::feature_sorter::get_sorted_feature_tuple_vector;
 
@@ -57,7 +57,7 @@ pub(super) fn determine_best_threshold(
                 &class_counts_all,
             );
 
-            let loss = calculate_loss(
+            let loss = weighted_sum_of_ginis_for_split_subsets(
                 total_number_of_rows as f64,
                 right_value_tracker.number_of_rows as f64,
                 &left_value_tracker.class_counts,

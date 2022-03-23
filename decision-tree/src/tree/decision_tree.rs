@@ -3,11 +3,8 @@ use std::thread;
 use common::datasets::DataSet;
 
 use crate::{
-    class_counter::get_class_counts,
-    data_partitioner::partition,
-    leaf::Leaf,
-    node::TreeNode,
-    split_finder::{SplitFinder},
+    class_counter::get_class_counts, data_partitioner::partition, leaf::Leaf, node::TreeNode,
+    split_finder::SplitFinder,
 };
 
 pub struct DecisionTree {

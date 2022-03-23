@@ -2,7 +2,7 @@
 mod threshold_finder_variance;
 use common::question::Question;
 
-use crate::calculations_variance::{get_label_sums, calculate_variance};
+use crate::calculations_variance::{calculate_variance, get_label_sums};
 
 use super::*;
 

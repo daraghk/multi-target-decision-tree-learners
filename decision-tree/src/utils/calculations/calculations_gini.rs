@@ -1,6 +1,9 @@
 use crate::class_counter::ClassCounter;
 
-pub fn calculate_loss(
+// Weighted sum of ginis for S1 and S2, i.e left and right subsets
+// Used as information loss for split determination
+// Higher values => more impurity, more info loss and vice versa
+pub fn weighted_sum_of_ginis_for_split_subsets(
     number_of_rows: f64,
     true_rows_count: f64,
     class_counts_left: &ClassCounter,
@@ -14,6 +17,8 @@ pub fn calculate_loss(
     result
 }
 
+// Gini(S) = 1 - Sum(Relative Frequency of each class in S)
+// Measure of 'impurity' in S
 pub fn calculate_gini(class_counts: &ClassCounter, number_of_rows: f64) -> f64 {
     let impurity: f64 = 1.0;
     let mut reduction: f64 = 0.0;

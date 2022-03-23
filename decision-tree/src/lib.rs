@@ -1,3 +1,7 @@
+#[path = "utils/calculations/calculations_gini.rs"]
+mod calculations_gini;
+#[path = "utils/calculations/calculations_variance.rs"]
+mod calculations_variance;
 #[path = "utils/class_counter.rs"]
 mod class_counter;
 #[path = "utils/classifier.rs"]
@@ -14,8 +18,3 @@ mod leaf;
 mod node;
 #[path = "split_finders/split_finder.rs"]
 pub mod split_finder;
-#[path = "utils/calculations/calculations_gini.rs"]
-mod calculations_gini;
-#[path = "utils/calculations/calculations_variance.rs"]
-mod calculations_variance;
-

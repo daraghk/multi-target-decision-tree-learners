@@ -3,7 +3,7 @@ mod threshold_finder_gini;
 use common::question::Question;
 
 use super::*;
-use crate::{class_counter::get_class_counts, calculations_gini::calculate_gini};
+use crate::{calculations_gini::calculate_gini, class_counter::get_class_counts};
 
 pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResult {
     let mut best_gain = 0.0;
@@ -17,6 +17,8 @@ pub fn find_best_split(data: &DataSet, number_of_classes: u32) -> BestSplitResul
         let best_threshold_for_feature =
             threshold_finder_gini::determine_best_threshold(data, i as u32, &class_counts_all);
 
+        // Information gain from splitting S into S1 and S2
+        // IG(S) = Gini(S) - (|S1|/|S|)*Gini(S1) - (|S2|/|S|)*Gini(S2)
         let information_gain = gini_all - best_threshold_for_feature.loss;
         if information_gain > best_gain {
             best_gain = information_gain;
