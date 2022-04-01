@@ -71,7 +71,6 @@ pub(super) fn determine_best_threshold(
                 right_variance_vector,
                 left_value_tracker.number_of_labels,
                 right_value_tracker.number_of_labels,
-                number_of_targets,
             );
 
             let split_variance_sum = split_variance.iter().sum();

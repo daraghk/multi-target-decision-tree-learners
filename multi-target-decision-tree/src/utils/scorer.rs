@@ -112,12 +112,10 @@ fn find_leaf_node_for_data<'a, L: Leaf>(
 mod tests {
     use super::*;
     use crate::{
-        decision_trees::{
-            OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig,
-        },
+        decision_trees::{OneHotMultiTargetDecisionTree, TreeConfig},
         split_finder::{SplitFinder, SplitMetric},
     };
-    use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
+    use common::data_reader::read_csv_data_one_hot_multi_target;
 
     #[test]
     fn test_classifier_known_data() {

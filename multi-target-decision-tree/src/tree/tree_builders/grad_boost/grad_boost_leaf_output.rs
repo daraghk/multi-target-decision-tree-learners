@@ -12,6 +12,7 @@ pub enum LeafOutputType {
     MultiClassClassification,
 }
 
+#[allow(unused)]
 #[derive(Clone, Copy)]
 pub struct LeafOutputCalculator {
     leaf_output_type: LeafOutputType,

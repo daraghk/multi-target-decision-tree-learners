@@ -1,3 +1,4 @@
+// #![allow(unused_imports)]
 #[path = "utils/calculations/calculations.rs"]
 mod calculations;
 #[path = "utils/class_counter.rs"]
@@ -8,6 +9,8 @@ mod data_partitioner;
 pub mod decision_trees;
 #[path = "utils/feature_sorter.rs"]
 mod feature_sorter;
+#[path = "tree/grad_boost_decision_trees.rs"]
+pub mod grad_boost_decision_trees;
 #[path = "tree/leaf.rs"]
 pub mod leaf;
 #[path = "tree/node.rs"]

@@ -1,8 +1,9 @@
 use common::vector_calculations::subtract_vectors;
 use multi_target_decision_tree::{
-    decision_trees::{
+    decision_trees::TreeConfig,
+    grad_boost_decision_trees::{
         grad_boost_leaf_output::{LeafOutputCalculator, LeafOutputType},
-        GradBoostMultiTargetDecisionTree, TreeConfig,
+        GradBoostMultiTargetDecisionTree,
     },
     leaf::GradBoostLeaf,
     node::TreeNode,

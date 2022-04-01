@@ -10,7 +10,6 @@ pub fn calculate_loss_vector(
     right_variance_vector: Vec<f64>,
     left_size: f64,
     right_size: f64,
-    number_of_targets: usize,
 ) -> Vec<f64> {
     let total_size = left_size + right_size;
     let left_weight = left_size / total_size;

@@ -11,12 +11,12 @@ pub fn partition(
     let mut true_labels = vec![];
     let mut false_labels = vec![];
 
-    &data
+    let _ = &data
         .feature_rows
         .iter()
         .zip(&data.labels)
         .enumerate()
-        .for_each(|(index, (feature_vector, label_vector))| {
+        .for_each(|(_index, (feature_vector, label_vector))| {
             if question.solve(feature_vector) {
                 true_rows.push(feature_vector.clone());
                 true_labels.push(label_vector.clone());

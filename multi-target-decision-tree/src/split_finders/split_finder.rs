@@ -6,6 +6,7 @@ pub enum SplitMetric {
     Variance,
 }
 
+#[allow(unused)]
 #[derive(Clone, Copy)]
 pub struct SplitFinder {
     split_metric: SplitMetric,

@@ -3,9 +3,10 @@ use crate::{
     tree_traverse::find_leaf_node_for_data,
 };
 use multi_target_decision_tree::{
-    decision_trees::{
+    decision_trees::TreeConfig,
+    grad_boost_decision_trees::{
         grad_boost_leaf_output::{LeafOutputCalculator, LeafOutputType},
-        AMGBoostTree, TreeConfig,
+        AMGBoostTree,
     },
     leaf::AMGBoostLeaf,
     node::TreeNode,
