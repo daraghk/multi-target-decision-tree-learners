@@ -1,5 +1,3 @@
-use std::thread;
-
 use common::datasets::MultiTargetDataSet;
 
 use crate::{

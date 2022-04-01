@@ -1,4 +1,3 @@
-#![allow(unused)]
 #[path = "utils/calculations/calculations.rs"]
 mod calculations;
 #[path = "utils/class_counter.rs"]

@@ -158,35 +158,4 @@ mod tests {
         let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
         assert_eq!(accuracy, 1.0);
     }
-
-    #[test]
-    fn print_results_from_building_regression_tree() {
-        let data_set = read_csv_data_multi_target(
-            "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/features_train_mt.csv",
-            "/Users/daraghking/Documents/Thesis/Code/Rust/grad_boost_mcc/tree_learner/common/data-files/multi-target/labels_train_mt.csv",
-        );
-        let split_finder = SplitFinder::new(SplitMetric::Variance);
-
-        let tree_config = TreeConfig {
-            split_finder,
-            use_multi_threading: false,
-            number_of_classes: 4,
-            max_levels: 0,
-        };
-
-        let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
-        let boxed_tree = Box::new(tree.root);
-        let test_set = read_csv_data_multi_target(
-            "./../common/data-files/multi-target/features_test_mt.csv",
-            "./../common/data-files/multi-target/labels_test_mt.csv",
-        );
-        let feature_row_test = &test_set.feature_rows[100].clone();
-        println!("{:?}", feature_row_test);
-        let leaf = find_leaf_node_for_data(feature_row_test, &boxed_tree);
-        println!("{:?}", leaf);
-        let score = calculate_overall_mean_squared_error(&test_set, &boxed_tree);
-        let rmse = f64::sqrt(score);
-        println!("{}", score);
-        println!("{}", rmse);
-    }
 }

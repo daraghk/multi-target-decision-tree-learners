@@ -3,13 +3,10 @@ mod threshold_finder_variance;
 use rayon::prelude::*;
 use std::sync::Arc;
 
-use common::{
-    question::Question,
-    results::{self, BestThresholdResult},
-};
+use common::{question::Question, results::BestThresholdResult};
 
 use super::*;
-use crate::calculations::variance::*;
+use crate::calculations::*;
 
 pub fn find_best_split(data: &MultiTargetDataSet, number_of_targets: u32) -> BestSplitResult {
     let mut best_gain = 0.0;

@@ -1,19 +1,8 @@
 use rayon::prelude::*;
-use std::{sync::Arc, thread};
 
 use super::{LeafOutputCalculator, TreeConfig};
-use crate::{
-    data_partitioner::partition,
-    leaf::{AMGBoostLeaf, GradBoostLeaf},
-    node::TreeNode,
-};
-use common::{
-    datasets::MultiTargetDataSet,
-    vector_calculations::{
-        add_vectors, calculate_average_vector, divide_vectors, multiply_vector_by_scalar,
-        subtract_vectors, sum_of_vectors,
-    },
-};
+use crate::{data_partitioner::partition, leaf::AMGBoostLeaf, node::TreeNode};
+use common::datasets::MultiTargetDataSet;
 
 pub(crate) fn build_approximate_grad_boost_regression_tree(
     data: MultiTargetDataSet,

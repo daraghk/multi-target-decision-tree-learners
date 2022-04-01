@@ -14,12 +14,14 @@ use std::time::Instant;
 #[test]
 fn test_decision_tree_for_iris() {
     let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 3,
+        number_of_classes,
         max_levels: 0,
     };
 
@@ -34,12 +36,14 @@ fn test_decision_tree_for_iris() {
 #[test]
 fn test_decision_tree_for_synthetic() {
     let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 2,
+        number_of_classes,
         max_levels: 0,
     };
 
@@ -55,12 +59,14 @@ fn test_decision_tree_for_synthetic() {
 fn test_decision_tree_for_digits() {
     let data_set =
         read_csv_data_one_hot_multi_target("./../common/data-files/digits_train.csv", 10);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 10,
+        number_of_classes,
         max_levels: 0,
     };
 
@@ -74,17 +80,19 @@ fn test_decision_tree_for_digits() {
 
 #[test]
 fn test_decision_tree_for_wine() {
-    let train_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
+    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 3,
+        number_of_classes,
         max_levels: 0,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(train_set, tree_config);
+    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_test.csv", 3);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
@@ -96,12 +104,14 @@ fn test_decision_tree_for_wine() {
 fn test_decision_tree_for_covtype() {
     let data_set =
         read_csv_data_one_hot_multi_target("./../common/data-files/covtype_train.csv", 7);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 7,
+        number_of_classes,
         max_levels: 0,
     };
 
@@ -119,12 +129,13 @@ fn test_decision_tree_for_covtype() {
 fn test_decision_tree_for_covtype_multi_threaded() {
     let data_set =
         read_csv_data_one_hot_multi_target("./../common/data-files/covtype_train.csv", 7);
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 7,
+        number_of_classes,
         max_levels: 0,
     };
 
@@ -144,12 +155,14 @@ fn test_decision_tree_for_regression() {
         "./../common/data-files/multi-target/features_train_mt.csv",
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 5,
+        number_of_classes,
         max_levels: 10,
     };
 
@@ -171,12 +184,14 @@ fn test_decision_tree_for_regression() {
 #[test]
 fn print_tree_for_wine() {
     let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 3,
+        number_of_classes,
         max_levels: 0,
     };
 
@@ -188,12 +203,14 @@ fn print_tree_for_wine() {
 #[test]
 fn print_tree_for_synthetic() {
     let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
+
+    let number_of_classes = data_set.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 2,
+        number_of_classes,
         max_levels: 0,
     };
 

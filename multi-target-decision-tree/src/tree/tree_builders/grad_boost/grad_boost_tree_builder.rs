@@ -1,14 +1,7 @@
 use rayon::prelude::*;
-use std::{sync::Arc, thread};
 
 use crate::{data_partitioner::partition, leaf::GradBoostLeaf, node::TreeNode};
-use common::{
-    datasets::MultiTargetDataSet,
-    vector_calculations::{
-        add_vectors, calculate_average_vector, divide_vectors, multiply_vector_by_scalar,
-        subtract_vectors, sum_of_vectors,
-    },
-};
+use common::datasets::MultiTargetDataSet;
 
 use super::{LeafOutputCalculator, TreeConfig};
 

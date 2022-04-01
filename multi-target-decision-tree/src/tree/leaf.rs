@@ -11,6 +11,7 @@ impl Leaf for RegressionLeaf {}
 impl Leaf for GradBoostLeaf {}
 
 impl Leaf for AMGBoostLeaf {}
+
 #[derive(Debug, Clone)]
 pub struct OneHotMultiClassLeaf {
     pub class_counts: Option<ClassCounter>,

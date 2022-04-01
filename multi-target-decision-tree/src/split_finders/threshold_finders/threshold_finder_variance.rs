@@ -1,8 +1,8 @@
-use common::{datasets::MultiTargetDataSet, results::BestThresholdResult};
+use common::results::BestThresholdResult;
 
-use crate::calculations::variance::MultiTargetLabelMetrics;
+use crate::calculations::MultiTargetLabelMetrics;
 use crate::{
-    calculations::variance::{calculate_loss_vector, calculate_variance_vector},
+    calculations::{calculate_loss_vector, calculate_variance_vector},
     feature_sorter::get_sorted_feature_tuple_vector,
 };
 
@@ -128,20 +128,18 @@ mod tests {
         datasets::MultiTargetDataSet,
     };
 
-    use crate::calculations::variance::get_multi_target_label_metrics;
+    use crate::calculations::get_multi_target_label_metrics;
 
     #[test]
     fn test_best_threshold_for_particular_feature() {
         let features = vec![vec![10., 2., 0.], vec![6., 2., 0.], vec![1., 2., 1.]];
         let labels = vec![vec![1., 0.], vec![1., 0.], vec![0., 1.]];
         let total_mt_label_metrics = get_multi_target_label_metrics(&labels, 2);
-        // let indices = (0..labels.len()).collect::<Vec<usize>>();
         let columns = create_feature_columns(&features);
         let data = MultiTargetDataSet {
             feature_rows: features,
             feature_columns: columns,
             labels,
-            // indices,
         };
         let column = 0;
         let number_labels = data.labels.len();
