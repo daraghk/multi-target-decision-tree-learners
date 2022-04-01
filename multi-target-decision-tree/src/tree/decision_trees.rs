@@ -19,6 +19,8 @@ pub struct TreeConfig {
     pub max_levels: u32,
 }
 
+// Multi target decision tree where each label is a vector, and each label-vector
+// is of the form e.g [0, 0 , 1, 0, 0], i.e the label vectors are 'one-hot' encoded.
 pub struct OneHotMultiTargetDecisionTree {
     pub root: TreeNode<OneHotMultiClassLeaf>,
 }
@@ -34,6 +36,8 @@ impl OneHotMultiTargetDecisionTree {
     }
 }
 
+// Multi target decision tree where each label vector, and each label-vector
+// is of the form e.g [1.90, 2.56, 828.1, 0.2828], i.e label vectors contain floating numbers, not disrete labellings
 pub struct RegressionMultiTargetDecisionTree {
     pub root: TreeNode<RegressionLeaf>,
 }

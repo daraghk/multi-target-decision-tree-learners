@@ -3,7 +3,7 @@ use crate::{
     node::TreeNode,
 };
 
-pub fn print_tree(
+pub fn print_tree_one_hot(
     root: Box<TreeNode<OneHotMultiClassLeaf>>,
     spacing: String,
     feature_names: &Vec<String>,
@@ -23,14 +23,14 @@ pub fn print_tree(
         )
     );
     println!("{}", spacing.clone() + "--> True: ");
-    print_tree(
+    print_tree_one_hot(
         root.true_branch.unwrap(),
         spacing.clone() + "    ",
         feature_names,
     );
 
     println!("{}", spacing.clone() + "--> False: ");
-    print_tree(
+    print_tree_one_hot(
         root.false_branch.unwrap(),
         spacing.clone() + "    ",
         feature_names,

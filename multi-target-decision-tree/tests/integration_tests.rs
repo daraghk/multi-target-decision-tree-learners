@@ -5,7 +5,7 @@ use multi_target_decision_tree::{
     decision_trees::{
         OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig,
     },
-    printer::print_tree,
+    printer::print_tree_one_hot,
     scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
     split_finder::{SplitFinder, SplitMetric},
 };
@@ -197,7 +197,7 @@ fn print_tree_for_wine() {
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let feature_names = get_feature_names("./../common/data-files/wine_train.csv");
-    print_tree(Box::new(tree.root), "".to_string(), &feature_names);
+    print_tree_one_hot(Box::new(tree.root), "".to_string(), &feature_names);
 }
 
 #[test]
@@ -216,5 +216,5 @@ fn print_tree_for_synthetic() {
 
     let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
     let feature_names = get_feature_names("./../common/data-files/synthetic_1.csv");
-    print_tree(Box::new(tree.root), "".to_string(), &feature_names);
+    print_tree_one_hot(Box::new(tree.root), "".to_string(), &feature_names);
 }

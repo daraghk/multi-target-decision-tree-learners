@@ -73,7 +73,7 @@ pub(crate) fn build_tree_using_multiple_threads(
 mod tests {
     use crate::{
         decision_trees::OneHotMultiTargetDecisionTree,
-        printer::print_tree,
+        printer::print_tree_one_hot,
         split_finder::{SplitFinder, SplitMetric},
     };
     use common::data_reader::{get_feature_names, read_csv_data_one_hot_multi_target};
@@ -94,6 +94,6 @@ mod tests {
         let tree = OneHotMultiTargetDecisionTree::new(data_set.clone(), tree_config);
         let feature_names = get_feature_names("./../common/data-files/iris.csv");
         println!("{:?}", feature_names);
-        print_tree(Box::new(tree.root), "".to_string(), &feature_names);
+        print_tree_one_hot(Box::new(tree.root), "".to_string(), &feature_names);
     }
 }

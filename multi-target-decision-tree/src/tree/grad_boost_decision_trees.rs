@@ -14,6 +14,8 @@ pub mod grad_boost_leaf_output;
 #[path = "tree_builders/grad_boost/grad_boost_tree_builder.rs"]
 mod grad_boost_tree_builder;
 
+// Multi target decision tree where each label is a vector, and each label-vector
+// contains floating values. These are used to build a multi-target gradient boosting ensemble.
 pub struct GradBoostMultiTargetDecisionTree {
     pub root: TreeNode<GradBoostLeaf>,
 }
@@ -45,6 +47,8 @@ impl GradBoostMultiTargetDecisionTree {
     }
 }
 
+// Multi target decision tree where each label is a vector, and each label-vector
+// contains floating values. These are used to build an approximate multi-target gradient boosting ensemble. (AMGBoost)
 pub struct AMGBoostTree {
     pub root: TreeNode<AMGBoostLeaf>,
 }
