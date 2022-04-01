@@ -1,3 +1,5 @@
+// Question struct purpose:
+// Given a data row, is this rows value at question.column >= question.value?
 #[derive(Debug)]
 pub struct Question {
     pub column: u32,

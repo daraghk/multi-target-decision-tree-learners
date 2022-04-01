@@ -34,7 +34,7 @@ pub mod predict_helper_functions {
 }
 
 pub mod executor_helper_functions {
-    use common::vector_calculations::{multiply_vector_by_scalar, subtract_vectors};
+    use common::numerical_calculations::{multiply_f64_slice_by_f64_scalar, subtract_f64_slices_as_vector};
     use rayon::prelude::*;
 
     use crate::boosting_ensemble::boosting_types::GradBoostTrainingData;
@@ -48,7 +48,7 @@ pub mod executor_helper_functions {
                 let true_label = &training_data.data.labels[*i];
                 let current_label = &training_data.mutable_labels[*i];
                 let probabilities = calculate_probabilities_of_predictions(current_label);
-                let residual = subtract_vectors(true_label, &probabilities);
+                let residual = subtract_f64_slices_as_vector(true_label, &probabilities);
                 residual
             })
             .collect::<Vec<_>>();
@@ -61,7 +61,7 @@ pub mod executor_helper_functions {
             current_label.iter().map(|element| element.exp()).collect();
         let sum_of_exponentials_of_predictions: f64 =
             exponential_of_current_data_label.iter().sum();
-        let probabilties = multiply_vector_by_scalar(
+        let probabilties = multiply_f64_slice_by_f64_scalar(
             1. / sum_of_exponentials_of_predictions,
             &exponential_of_current_data_label,
         );

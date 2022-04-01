@@ -1,4 +1,4 @@
-use common::vector_calculations::subtract_vectors;
+use common::numerical_calculations::subtract_f64_slices_as_vector;
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
     grad_boost_decision_trees::{
@@ -46,7 +46,7 @@ fn calculate_residuals(training_data: &GradBoostTrainingData) -> Vec<Vec<f64>> {
         .map(|i| {
             let true_data_label = &training_data.data.labels[*i];
             let current_data_label = &training_data.mutable_labels[*i];
-            let residual = subtract_vectors(true_data_label, current_data_label);
+            let residual = subtract_f64_slices_as_vector(true_data_label, current_data_label);
             residual
         })
         .collect::<Vec<_>>();

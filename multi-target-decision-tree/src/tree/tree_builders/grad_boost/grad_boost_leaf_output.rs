@@ -1,8 +1,8 @@
 use common::{
     datasets::MultiTargetDataSet,
-    vector_calculations::{
-        add_vectors, calculate_average_vector, divide_vectors, multiply_vector_by_scalar,
-        sum_of_vectors,
+    numerical_calculations::{
+        add_f64_slices_as_vector, calculate_average_f64_vector, divide_f64_slices_as_vector, multiply_f64_slice_by_f64_scalar,
+        sum_of_f64_vectors,
     },
 };
 
@@ -32,17 +32,17 @@ impl LeafOutputCalculator {
 }
 
 pub fn calculate_leaf_output_squared_loss(leaf_data: &MultiTargetDataSet) -> Vec<f64> {
-    let average_residuals = calculate_average_vector(&leaf_data.labels);
+    let average_residuals = calculate_average_f64_vector(&leaf_data.labels);
     average_residuals
 }
 
 pub fn calculate_leaf_output_multi_class_loss(leaf_data: &MultiTargetDataSet) -> Vec<f64> {
-    let numerator = sum_of_vectors(&leaf_data.labels);
+    let numerator = sum_of_f64_vectors(&leaf_data.labels);
     let denominator = calculate_denominator_term_for_leaf_output(&leaf_data.labels);
-    let numerator_over_denominator = divide_vectors(&numerator, &denominator);
+    let numerator_over_denominator = divide_f64_slices_as_vector(&numerator, &denominator);
     let number_of_classes = leaf_data.labels[0].len() as f64;
     let scalar = (number_of_classes - 1.) / number_of_classes;
-    let result = multiply_vector_by_scalar(scalar, &numerator_over_denominator);
+    let result = multiply_f64_slice_by_f64_scalar(scalar, &numerator_over_denominator);
     result
 }
 
@@ -57,7 +57,7 @@ fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>)
                 element_abs * (1. - element_abs)
             })
             .collect();
-        sum_vector = add_vectors(&sum_vector, &term);
+        sum_vector = add_f64_slices_as_vector(&sum_vector, &term);
     });
     sum_vector
 }
@@ -66,7 +66,7 @@ fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>)
 mod tests {
     use common::{
         data_reader::read_csv_data_one_hot_multi_target,
-        vector_calculations::{divide_vectors, multiply_vector_by_scalar, sum_of_vectors},
+        numerical_calculations::{divide_f64_slices_as_vector, multiply_f64_slice_by_f64_scalar, sum_of_f64_vectors},
     };
 
     use super::{
@@ -76,11 +76,11 @@ mod tests {
     #[test]
     fn test_leaf_output_multi_class_loss() {
         let vector_of_vectors = vec![vec![0.333, 0.333, 0.333], vec![0.333, 0.333, 0.333]];
-        let numerator = sum_of_vectors(&vector_of_vectors);
+        let numerator = sum_of_f64_vectors(&vector_of_vectors);
         let denominator = calculate_denominator_term_for_leaf_output(&vector_of_vectors);
         let scalar = 2. / 3.;
-        let division = divide_vectors(&numerator, &denominator);
-        let result = multiply_vector_by_scalar(scalar, &division);
+        let division = divide_f64_slices_as_vector(&numerator, &denominator);
+        let result = multiply_f64_slice_by_f64_scalar(scalar, &division);
         println!("{:?}", result);
     }
 }

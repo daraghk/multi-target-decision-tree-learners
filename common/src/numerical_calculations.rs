@@ -1,4 +1,4 @@
-pub fn add_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
+pub fn add_f64_slices_as_vector(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
     first
         .iter()
@@ -7,7 +7,7 @@ pub fn add_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
         .collect()
 }
 
-pub fn subtract_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
+pub fn subtract_f64_slices_as_vector(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
     first
         .iter()
@@ -16,7 +16,7 @@ pub fn subtract_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
         .collect()
 }
 
-pub fn calculate_average_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
+pub fn calculate_average_f64_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
     let inner_vector_length = vector_of_vectors[0].len();
     let mut average_vector = vec![0.; inner_vector_length];
     for i in 0..vector_of_vectors.len() {
@@ -30,7 +30,7 @@ pub fn calculate_average_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
     average_vector
 }
 
-pub fn mean_sum_of_squared_differences_between_vectors(first: &[f64], second: &[f64]) -> f64 {
+pub fn mean_sum_of_squared_differences_between_f64_slices(first: &[f64], second: &[f64]) -> f64 {
     assert_eq!(first.len(), second.len());
     let squared_differences: Vec<f64> = first
         .iter()
@@ -45,16 +45,16 @@ pub fn mean_sum_of_squared_differences_between_vectors(first: &[f64], second: &[
     sum_of_squared_differences / first.len() as f64
 }
 
-pub fn sum_of_vectors(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
+pub fn sum_of_f64_vectors(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
     let length_of_inner_vectors = vector_of_vectors[0].len();
     let mut sum_vector = vec![0.; length_of_inner_vectors];
     vector_of_vectors.iter().for_each(|inner_vector| {
-        sum_vector = add_vectors(&sum_vector, &inner_vector);
+        sum_vector = add_f64_slices_as_vector(&sum_vector, &inner_vector);
     });
     sum_vector
 }
 
-pub fn multiply_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
+pub fn multiply_f64_slices_as_vector(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
     first
         .iter()
@@ -63,7 +63,7 @@ pub fn multiply_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
         .collect()
 }
 
-pub fn divide_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
+pub fn divide_f64_slices_as_vector(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
     first
         .iter()
@@ -72,7 +72,7 @@ pub fn divide_vectors(first: &[f64], second: &[f64]) -> Vec<f64> {
         .collect()
 }
 
-pub fn multiply_vector_by_scalar(scalar: f64, vector: &[f64]) -> Vec<f64> {
+pub fn multiply_f64_slice_by_f64_scalar(scalar: f64, vector: &[f64]) -> Vec<f64> {
     vector.iter().map(|element| element * scalar).collect()
 }
 
@@ -84,18 +84,18 @@ mod tests {
     fn test_vector_math_functions() {
         let vec_one = vec![1., 2., 3.];
         let vec_two = vec![1., 2., 3.];
-        let sum_of_vecs = add_vectors(&vec_one, &vec_two);
+        let sum_of_vecs = add_f64_slices_as_vector(&vec_one, &vec_two);
         assert_eq!(sum_of_vecs, [2., 4., 6.]);
-        assert_eq!(sum_of_vecs, multiply_vector_by_scalar(2., &vec_one));
-        assert_eq!(divide_vectors(&vec_one, &vec_two), vec![1., 1., 1.]);
-        assert_eq!(multiply_vectors(&vec_one, &vec_two), vec![1., 4., 9.]);
+        assert_eq!(sum_of_vecs, multiply_f64_slice_by_f64_scalar(2., &vec_one));
+        assert_eq!(divide_f64_slices_as_vector(&vec_one, &vec_two), vec![1., 1., 1.]);
+        assert_eq!(multiply_f64_slices_as_vector(&vec_one, &vec_two), vec![1., 4., 9.]);
 
         let vector_of_vectors = vec![vec_one.clone(), vec_two.clone()];
-        assert_eq!(calculate_average_vector(&vector_of_vectors), vec_one);
+        assert_eq!(calculate_average_f64_vector(&vector_of_vectors), vec_one);
         assert_eq!(
-            mean_sum_of_squared_differences_between_vectors(&vec_one, &vec_two),
+            mean_sum_of_squared_differences_between_f64_slices(&vec_one, &vec_two),
             0.
         );
-        assert_eq!(sum_of_vectors(&vector_of_vectors), vec![2., 4., 6.]);
+        assert_eq!(sum_of_f64_vectors(&vector_of_vectors), vec![2., 4., 6.]);
     }
 }

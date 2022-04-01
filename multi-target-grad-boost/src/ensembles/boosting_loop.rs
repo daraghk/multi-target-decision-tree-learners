@@ -1,4 +1,4 @@
-use common::{datasets::MultiTargetDataSet, vector_calculations::calculate_average_vector};
+use common::{datasets::MultiTargetDataSet, numerical_calculations::calculate_average_f64_vector};
 use multi_target_decision_tree::{decision_trees::TreeConfig, leaf::Leaf};
 
 use super::{
@@ -48,7 +48,7 @@ fn determine_initial_guess(
             vec![1. / number_of_classes; number_of_classes as usize]
         }
         BoostingEnsembleType::RegressionBoost => {
-            calculate_average_vector(&training_data.data.labels)
+            calculate_average_f64_vector(&training_data.data.labels)
         }
     };
     initial_guess

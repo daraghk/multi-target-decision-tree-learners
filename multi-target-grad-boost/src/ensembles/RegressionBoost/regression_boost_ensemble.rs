@@ -1,6 +1,6 @@
 use common::{
     datasets::MultiTargetDataSet,
-    vector_calculations::mean_sum_of_squared_differences_between_vectors,
+    numerical_calculations::mean_sum_of_squared_differences_between_f64_slices,
 };
 use multi_target_decision_tree::decision_trees::TreeConfig;
 
@@ -76,7 +76,7 @@ fn calculate_mean_squared_error(
     let number_of_labels = test_data_labels.len();
     for i in 0..number_of_labels {
         total_error +=
-            mean_sum_of_squared_differences_between_vectors(&test_data_labels[i], &predictions[i]);
+            mean_sum_of_squared_differences_between_f64_slices(&test_data_labels[i], &predictions[i]);
     }
     total_error / number_of_labels as f64
 }

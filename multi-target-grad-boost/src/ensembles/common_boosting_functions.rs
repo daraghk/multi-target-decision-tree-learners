@@ -1,5 +1,5 @@
 pub mod update_common {
-    use common::vector_calculations::add_vectors;
+    use common::numerical_calculations::add_f64_slices_as_vector;
     use multi_target_decision_tree::{leaf::GradBoostLeaf, node::TreeNode};
 
     use crate::{
@@ -32,7 +32,7 @@ pub mod update_common {
                 .map(|x| learning_rate * x)
                 .collect::<Vec<_>>();
             training_data.mutable_labels[i] =
-                add_vectors(&training_data.mutable_labels[i], &weighted_leaf_output);
+                add_f64_slices_as_vector(&training_data.mutable_labels[i], &weighted_leaf_output);
         }
     }
 }
