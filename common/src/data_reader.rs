@@ -1,13 +1,12 @@
 use std::error::Error;
 use std::fs::File;
-use std::os::unix::prelude::OsStringExt;
 
 use csv::StringRecord;
 
-use crate::datasets::DataSet;
 use crate::datasets::MultiTargetDataSet;
+use crate::datasets::SingleTargetDataSet;
 
-pub fn read_csv_data(file_path: &str) -> DataSet {
+pub fn read_csv_data(file_path: &str) -> SingleTargetDataSet {
     let data_set_read = read_data(file_path).unwrap();
     parse_data_into_features_and_labels(data_set_read)
 }
@@ -43,7 +42,7 @@ pub fn read_csv_data_multi_target(
     let data_set_features = read_data(file_path_to_features).unwrap();
     let data_set_labels = read_data(file_path_to_labels).unwrap();
 
-    let mut columns = create_feature_columns(&data_set_features);
+    let columns = create_feature_columns(&data_set_features);
 
     MultiTargetDataSet {
         feature_rows: data_set_features,
@@ -81,7 +80,7 @@ fn read_data(file_path: &str) -> Result<Vec<Vec<f64>>, Box<dyn Error>> {
     Ok(data)
 }
 
-fn parse_data_into_features_and_labels(data_set: Vec<Vec<f64>>) -> DataSet {
+fn parse_data_into_features_and_labels(data_set: Vec<Vec<f64>>) -> SingleTargetDataSet {
     let mut features = vec![];
     let mut labels = vec![];
     data_set.iter().for_each(|row| {
@@ -90,7 +89,7 @@ fn parse_data_into_features_and_labels(data_set: Vec<Vec<f64>>) -> DataSet {
         labels.push(label);
         features.push(copy);
     });
-    DataSet { features, labels }
+    SingleTargetDataSet { features, labels }
 }
 
 fn create_multi_target_labels(labels: Vec<f64>, number_of_targets: usize) -> Vec<Vec<f64>> {
@@ -118,7 +117,6 @@ pub fn create_feature_columns(data_set_features: &Vec<Vec<f64>>) -> Vec<Vec<f64>
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs;
 
     #[test]
     fn print_csv_reading_and_mt_one_hot_labels() {

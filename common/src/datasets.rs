@@ -1,7 +1,6 @@
-use std::u32;
-
+// Used to read in single-target datasets that are to have their labels one-hot encoded
 #[derive(Debug, Clone)]
-pub struct DataSet {
+pub struct SingleTargetDataSet {
     pub features: Vec<Vec<f64>>,
     pub labels: Vec<f64>,
 }

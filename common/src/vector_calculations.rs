@@ -30,11 +30,11 @@ pub fn calculate_average_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
     average_vector
 }
 
-pub fn mean_sum_of_squared_differences_between_vectors(prediction: &[f64], actual: &[f64]) -> f64 {
-    assert_eq!(prediction.len(), actual.len());
-    let squared_differences: Vec<f64> = prediction
+pub fn mean_sum_of_squared_differences_between_vectors(first: &[f64], second: &[f64]) -> f64 {
+    assert_eq!(first.len(), second.len());
+    let squared_differences: Vec<f64> = first
         .iter()
-        .zip(actual)
+        .zip(second)
         .map(|(&prediction_element, &actual_element)| {
             let difference = prediction_element - actual_element;
             f64::powf(difference, 2.)
@@ -42,7 +42,7 @@ pub fn mean_sum_of_squared_differences_between_vectors(prediction: &[f64], actua
         .collect();
 
     let sum_of_squared_differences: f64 = squared_differences.iter().sum();
-    sum_of_squared_differences / prediction.len() as f64
+    sum_of_squared_differences / first.len() as f64
 }
 
 pub fn sum_of_vectors(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
@@ -78,13 +78,24 @@ pub fn multiply_vector_by_scalar(scalar: f64, vector: &[f64]) -> Vec<f64> {
 
 #[cfg(test)]
 mod tests {
-    use super::sum_of_vectors;
+    use super::*;
 
     #[test]
-    fn test_sum_of_vectors() {
-        let vector_of_vectors = vec![vec![1., 2., 3.], vec![1., 2., 3.]];
-        let result = sum_of_vectors(&vector_of_vectors);
-        println!("{:?}", result);
-        assert_eq!(result, vec![2., 4., 6.]);
+    fn test_vector_math_functions() {
+        let vec_one = vec![1., 2., 3.];
+        let vec_two = vec![1., 2., 3.];
+        let sum_of_vecs = add_vectors(&vec_one, &vec_two);
+        assert_eq!(sum_of_vecs, [2., 4., 6.]);
+        assert_eq!(sum_of_vecs, multiply_vector_by_scalar(2., &vec_one));
+        assert_eq!(divide_vectors(&vec_one, &vec_two), vec![1., 1., 1.]);
+        assert_eq!(multiply_vectors(&vec_one, &vec_two), vec![1., 4., 9.]);
+
+        let vector_of_vectors = vec![vec_one.clone(), vec_two.clone()];
+        assert_eq!(calculate_average_vector(&vector_of_vectors), vec_one);
+        assert_eq!(
+            mean_sum_of_squared_differences_between_vectors(&vec_one, &vec_two),
+            0.
+        );
+        assert_eq!(sum_of_vectors(&vector_of_vectors), vec![2., 4., 6.]);
     }
 }

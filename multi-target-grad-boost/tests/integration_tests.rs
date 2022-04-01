@@ -17,13 +17,14 @@ fn test_mtgbdt_single_threaded() {
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
 
+    let number_of_classes = true_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     println!("{:?}", true_data.labels[10]);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: false,
-        number_of_classes: 5,
+        number_of_classes,
         max_levels: 8,
     };
 
@@ -53,13 +54,14 @@ fn test_mtgbdt_multi_threaded() {
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
 
+    let number_of_classes = true_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     println!("{:?}", true_data.labels[10]);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 10,
+        number_of_classes,
         max_levels: 3,
     };
 
@@ -87,13 +89,14 @@ fn test_mtgbdt_multi_threaded_for_mcc() {
     let true_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/digits_train.csv", 10);
 
+    let number_of_classes = true_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     println!("{:?}", true_data.labels[10]);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 10,
+        number_of_classes,
         max_levels: 12,
     };
 
@@ -115,13 +118,14 @@ fn test_mtgbdt_multi_threaded_for_mcc_mnist() {
     let true_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/mnist_train.csv", 10);
 
+    let number_of_classes = true_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     println!("{:?}", true_data.labels[10]);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 10,
+        number_of_classes,
         max_levels: 3,
     };
 
@@ -143,13 +147,14 @@ fn test_amgboost_multi_threaded_for_mcc() {
     let true_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/digits_train.csv", 10);
 
+    let number_of_classes = true_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     println!("{:?}", true_data.labels[10]);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 10,
+        number_of_classes,
         max_levels: 12,
     };
 
@@ -171,13 +176,14 @@ fn test_amgboost_multi_threaded_for_mcc_mnist() {
     let true_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/mnist_train.csv", 10);
 
+    let number_of_classes = true_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
     println!("{:?}", true_data.labels[10]);
 
     let tree_config = TreeConfig {
         split_finder,
         use_multi_threading: true,
-        number_of_classes: 10,
+        number_of_classes,
         max_levels: 3,
     };
 

@@ -191,14 +191,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "decision-tree"
-version = "0.1.0"
-dependencies = [
- "common",
- "criterion",
-]
-
-[[package]]
 name = "either"
 version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -269,7 +261,6 @@ name = "main"
 version = "0.1.0"
 dependencies = [
  "common",
- "decision-tree",
  "multi-target-decision-tree",
  "multi-target-grad-boost",
 ]
