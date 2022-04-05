@@ -87,8 +87,14 @@ mod tests {
         let sum_of_vecs = add_f64_slices_as_vector(&vec_one, &vec_two);
         assert_eq!(sum_of_vecs, [2., 4., 6.]);
         assert_eq!(sum_of_vecs, multiply_f64_slice_by_f64_scalar(2., &vec_one));
-        assert_eq!(divide_f64_slices_as_vector(&vec_one, &vec_two), vec![1., 1., 1.]);
-        assert_eq!(multiply_f64_slices_as_vector(&vec_one, &vec_two), vec![1., 4., 9.]);
+        assert_eq!(
+            divide_f64_slices_as_vector(&vec_one, &vec_two),
+            vec![1., 1., 1.]
+        );
+        assert_eq!(
+            multiply_f64_slices_as_vector(&vec_one, &vec_two),
+            vec![1., 4., 9.]
+        );
 
         let vector_of_vectors = vec![vec_one.clone(), vec_two.clone()];
         assert_eq!(calculate_average_f64_vector(&vector_of_vectors), vec_one);

@@ -1,13 +1,10 @@
-use common::data_reader::{
-    get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
-};
+use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target, get_feature_names};
 use multi_target_decision_tree::{
-    decision_trees::{
-        OneHotMultiTargetDecisionTree, RegressionMultiTargetDecisionTree, TreeConfig,
+    decision_trees::{RegressionMultiTargetDecisionTree, TreeConfig},
+    scorer::{
+        classification::calculate_accuracy, regression::calculate_overall_mean_squared_error,
     },
-    printer::print_tree_one_hot,
-    scorer::{calculate_accuracy, calculate_overall_mean_squared_error},
-    split_finder::{SplitFinder, SplitMetric},
+    split_finder::{SplitFinder, SplitMetric}, printer::print_tree_regression,
 };
 use std::time::Instant;
 
@@ -22,13 +19,13 @@ fn test_decision_tree_for_iris() {
         split_finder,
         use_multi_threading: false,
         number_of_classes,
-        max_levels: 0,
+        max_levels: 8,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris_test.csv", 3);
-    let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     println!("{}", accuracy);
     assert_eq!(accuracy, 1.0);
 }
@@ -44,13 +41,13 @@ fn test_decision_tree_for_synthetic() {
         split_finder,
         use_multi_threading: false,
         number_of_classes,
-        max_levels: 0,
+        max_levels: 8,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
-    let accuracy = calculate_accuracy(&test_set, &boxed_tree, 2);
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     println!("{}", accuracy);
     assert_eq!(accuracy, 1.0);
 }
@@ -67,13 +64,13 @@ fn test_decision_tree_for_digits() {
         split_finder,
         use_multi_threading: false,
         number_of_classes,
-        max_levels: 0,
+        max_levels: 12,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/digits_test.csv", 10);
-    let accuracy = calculate_accuracy(&test_set, &boxed_tree, 10);
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     println!("{}", accuracy);
     assert!(accuracy > 0.80)
 }
@@ -89,13 +86,13 @@ fn test_decision_tree_for_wine() {
         split_finder,
         use_multi_threading: false,
         number_of_classes,
-        max_levels: 0,
+        max_levels: 8,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_test.csv", 3);
-    let accuracy = calculate_accuracy(&test_set, &boxed_tree, 3);
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     println!("{}", accuracy);
     assert!(accuracy > 0.80)
 }
@@ -116,11 +113,11 @@ fn test_decision_tree_for_covtype() {
     };
 
     let before = Instant::now();
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/covtype_test.csv", 7);
-    let accuracy = calculate_accuracy(&test_set, &boxed_tree, 7);
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     println!("{}", accuracy);
     assert!(accuracy > 0.90)
 }
@@ -136,15 +133,15 @@ fn test_decision_tree_for_covtype_multi_threaded() {
         split_finder,
         use_multi_threading: true,
         number_of_classes,
-        max_levels: 0,
+        max_levels: 24,
     };
 
     let before = Instant::now();
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/covtype_test.csv", 7);
-    let accuracy = calculate_accuracy(&test_set, &boxed_tree, 7);
+    let accuracy = calculate_accuracy(&test_set, &boxed_tree);
     println!("{}", accuracy);
     assert!(accuracy > 0.90)
 }
@@ -195,9 +192,9 @@ fn print_tree_for_wine() {
         max_levels: 0,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     let feature_names = get_feature_names("./../common/data-files/wine_train.csv");
-    print_tree_one_hot(Box::new(tree.root), "".to_string(), &feature_names);
+    print_tree_regression(&Box::new(tree.root), "".to_string(), &feature_names);
 }
 
 #[test]
@@ -214,7 +211,7 @@ fn print_tree_for_synthetic() {
         max_levels: 0,
     };
 
-    let tree = OneHotMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
     let feature_names = get_feature_names("./../common/data-files/synthetic_1.csv");
-    print_tree_one_hot(Box::new(tree.root), "".to_string(), &feature_names);
+    print_tree_regression(&Box::new(tree.root), "".to_string(), &feature_names);
 }

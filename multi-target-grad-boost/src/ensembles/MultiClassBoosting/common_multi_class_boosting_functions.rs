@@ -34,7 +34,9 @@ pub mod predict_helper_functions {
 }
 
 pub mod executor_helper_functions {
-    use common::numerical_calculations::{multiply_f64_slice_by_f64_scalar, subtract_f64_slices_as_vector};
+    use common::numerical_calculations::{
+        multiply_f64_slice_by_f64_scalar, subtract_f64_slices_as_vector,
+    };
     use rayon::prelude::*;
 
     use crate::boosting_ensemble::boosting_types::GradBoostTrainingData;

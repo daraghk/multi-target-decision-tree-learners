@@ -4,18 +4,11 @@ use crate::class_counter::ClassCounter;
 
 pub trait Leaf {}
 
-impl Leaf for OneHotMultiClassLeaf {}
-
 impl Leaf for RegressionLeaf {}
 
 impl Leaf for GradBoostLeaf {}
 
 impl Leaf for AMGBoostLeaf {}
-
-#[derive(Debug, Clone)]
-pub struct OneHotMultiClassLeaf {
-    pub class_counts: Option<ClassCounter>,
-}
 
 #[derive(Debug, Clone)]
 pub struct RegressionLeaf {

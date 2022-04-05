@@ -1,8 +1,8 @@
 use common::{
     datasets::MultiTargetDataSet,
     numerical_calculations::{
-        add_f64_slices_as_vector, calculate_average_f64_vector, divide_f64_slices_as_vector, multiply_f64_slice_by_f64_scalar,
-        sum_of_f64_vectors,
+        add_f64_slices_as_vector, calculate_average_f64_vector, divide_f64_slices_as_vector,
+        multiply_f64_slice_by_f64_scalar, sum_of_f64_vectors,
     },
 };
 
@@ -66,7 +66,9 @@ fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>)
 mod tests {
     use common::{
         data_reader::read_csv_data_one_hot_multi_target,
-        numerical_calculations::{divide_f64_slices_as_vector, multiply_f64_slice_by_f64_scalar, sum_of_f64_vectors},
+        numerical_calculations::{
+            divide_f64_slices_as_vector, multiply_f64_slice_by_f64_scalar, sum_of_f64_vectors,
+        },
     };
 
     use super::{

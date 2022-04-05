@@ -1,7 +1,7 @@
 use common::data_reader::read_csv_data_one_hot_multi_target;
 use criterion::{criterion_group, criterion_main, Criterion};
 use multi_target_decision_tree::{
-    decision_trees::{OneHotMultiTargetDecisionTree, TreeConfig},
+    decision_trees::{RegressionMultiTargetDecisionTree, TreeConfig},
     split_finder::{SplitFinder, SplitMetric},
 };
 
@@ -14,12 +14,12 @@ fn benchmark_build_tree_single_threaded(c: &mut Criterion) {
         split_finder,
         use_multi_threading: false,
         number_of_classes: 10,
-        max_levels: 0,
+        max_levels: 10,
     };
 
     c.bench_function("multi target tree build - single thread", |b| {
         b.iter(|| {
-            return OneHotMultiTargetDecisionTree::new(data_set.clone(), tree_config);
+            return RegressionMultiTargetDecisionTree::new(data_set.clone(), tree_config);
         })
     });
 }
@@ -33,12 +33,12 @@ fn benchmark_build_tree_multi_threaded(c: &mut Criterion) {
         split_finder,
         use_multi_threading: true,
         number_of_classes: 10,
-        max_levels: 0,
+        max_levels: 10,
     };
 
     c.bench_function("multi target tree build - multi thread", |b| {
         b.iter(|| {
-            return OneHotMultiTargetDecisionTree::new(data_set.clone(), tree_config);
+            return RegressionMultiTargetDecisionTree::new(data_set.clone(), tree_config);
         })
     });
 }
