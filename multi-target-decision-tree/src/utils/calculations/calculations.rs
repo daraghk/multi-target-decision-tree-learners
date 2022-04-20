@@ -31,16 +31,21 @@ pub fn calculate_variance_vector(
     number_of_labels: f64,
     number_of_targets: usize,
 ) -> Vec<f64> {
-    let mut variance_result_vector = Vec::with_capacity(number_of_targets);
-    for i in 0..number_of_targets {
+    let mut variance_result_vector = vec![0.; number_of_targets];
+    (0..number_of_targets).into_iter().for_each(|i| {
+        // calculate variance of ith target
         let mean = multi_target_label_metrics.mean_of_labels_vector[i];
-        let left = multi_target_label_metrics.sum_of_squared_labels_vector[i];
+        let square_sum = multi_target_label_metrics.sum_of_squared_labels_vector[i];
         let mean_squared = mean * mean;
-        let right = number_of_labels * mean_squared;
-        let variance = (left - right) / number_of_labels;
-        variance_result_vector.push(variance)
-    }
+        let variance = calculate_variance(mean_squared, square_sum, number_of_labels);
+        variance_result_vector[i] = variance;
+    });
     variance_result_vector
+}
+
+fn calculate_variance(mean_squared: f64, square_sum: f64, number_of_labels: f64) -> f64 {
+    let numerator = square_sum - (number_of_labels * mean_squared);
+    numerator / number_of_labels
 }
 
 pub fn get_multi_target_label_metrics(

@@ -1,10 +1,8 @@
 use common::results::BestThresholdResult;
 
 use crate::calculations::MultiTargetLabelMetrics;
-use crate::{
-    calculations::{calculate_loss_vector, calculate_variance_vector},
-    feature_sorter::get_sorted_feature_tuple_vector,
-};
+use crate::calculations::{calculate_loss_vector, calculate_variance_vector};
+use common::feature_sorter::get_sorted_feature_tuple_vector;
 
 struct VarianceValueTrackerMultiTarget {
     number_of_labels: f64,

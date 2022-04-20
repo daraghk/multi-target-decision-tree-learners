@@ -9,10 +9,11 @@ use multi_target_grad_boost::boosting_ensemble::{
     boosting_types::RegressionBoostModel, GradientBoostedEnsemble,
 };
 
+// Execute cargo run from base dir
 fn main() {
     let true_data = read_csv_data_multi_target(
-        "./../common/data-files/multi-target/features_train_mt.csv",
-        "./../common/data-files/multi-target/labels_train_mt.csv",
+        "./common/data-files/multi-target/features_train_mt.csv",
+        "./common/data-files/multi-target/labels_train_mt.csv",
     );
 
     let split_finder = SplitFinder::new(SplitMetric::Variance);
@@ -30,8 +31,8 @@ fn main() {
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_multi_target(
-        "./../common/data-files/multi-target/features_test_mt.csv",
-        "./../common/data-files/multi-target/labels_test_mt.csv",
+        "./common/data-files/multi-target/features_test_mt.csv",
+        "./common/data-files/multi-target/labels_test_mt.csv",
     );
 
     let mean_squared_error = grad_boost_ensemble.calculate_score(&test_set);

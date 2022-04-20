@@ -9,9 +9,10 @@ pub fn get_sorted_feature_tuple_vector(feature_column: &[f64]) -> Vec<(f64, usiz
 
 #[cfg(test)]
 mod tests {
-    use common::{data_reader::create_feature_columns, datasets::MultiTargetDataSet};
+    use crate::{data_reader::create_feature_columns, datasets::MultiTargetDataSet};
 
     use super::*;
+
     #[test]
     fn test_get_sorted_feature_tuple_vector() {
         let features = vec![vec![10., 2., 1.], vec![6., 2., 2.], vec![-1., 2., 3.]];

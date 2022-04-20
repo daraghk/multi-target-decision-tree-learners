@@ -3,11 +3,7 @@ use common::datasets::MultiTargetDataSet;
 #[path = "tree_builders/regression_tree_builder.rs"]
 mod regression_tree_builder;
 
-use crate::{
-    leaf::{RegressionLeaf},
-    node::TreeNode,
-    split_finder::SplitFinder,
-};
+use crate::{leaf::RegressionLeaf, node::TreeNode, split_finder::SplitFinder};
 
 #[derive(Copy, Clone)]
 pub struct TreeConfig {

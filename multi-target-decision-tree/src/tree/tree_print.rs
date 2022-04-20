@@ -1,7 +1,4 @@
-use crate::{
-    leaf::{RegressionLeaf},
-    node::TreeNode,
-};
+use crate::{leaf::RegressionLeaf, node::TreeNode};
 
 pub fn print_tree_regression(
     root: &Box<TreeNode<RegressionLeaf>>,

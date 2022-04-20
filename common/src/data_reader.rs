@@ -70,7 +70,8 @@ fn get_header_record(file_path: &str) -> Result<StringRecord, Box<dyn Error>> {
 
 //reading in data from csv, presume header included and label is at the end of each record
 fn read_data(file_path: &str) -> Result<Vec<Vec<f64>>, Box<dyn Error>> {
-    let file = File::open(file_path)?;
+    let error_msg = "Failed to open ".to_owned() + file_path;
+    let file = File::open(file_path).expect(&error_msg);
     let mut data = vec![];
     let mut reader = csv::Reader::from_reader(file);
     for result in reader.deserialize() {

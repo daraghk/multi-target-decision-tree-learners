@@ -4,11 +4,9 @@ mod calculations;
 #[path = "utils/class_counter.rs"]
 mod class_counter;
 #[path = "utils/data_partitioner.rs"]
-mod data_partitioner;
+pub mod data_partitioner;
 #[path = "tree/decision_trees.rs"]
 pub mod decision_trees;
-#[path = "utils/feature_sorter.rs"]
-mod feature_sorter;
 #[path = "tree/grad_boost_decision_trees.rs"]
 pub mod grad_boost_decision_trees;
 #[path = "tree/leaf.rs"]
