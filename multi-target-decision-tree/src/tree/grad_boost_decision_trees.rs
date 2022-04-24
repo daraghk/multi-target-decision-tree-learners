@@ -1,4 +1,4 @@
-use common::datasets::MultiTargetDataSet;
+use common::{data_processor::create_dataset_with_sorted_features, datasets::MultiTargetDataSet};
 
 use crate::{
     decision_trees::TreeConfig,
@@ -26,18 +26,22 @@ impl GradBoostMultiTargetDecisionTree {
         tree_config: TreeConfig,
         leaf_output_calculator: LeafOutputCalculator,
     ) -> Self {
+        let processed_data = create_dataset_with_sorted_features(&data);
+        let all_labels = &processed_data.labels.clone();
         Self {
             root: match tree_config.use_multi_threading {
                 true => {
                     grad_boost_tree_builder::build_grad_boost_regression_tree_using_multiple_threads(
-                        data,
+                        processed_data,
+                        all_labels,
                         tree_config,
                         leaf_output_calculator,
                         0,
                     )
                 }
                 false => grad_boost_tree_builder::build_grad_boost_regression_tree(
-                    data,
+                    processed_data,
+                    all_labels,
                     tree_config,
                     leaf_output_calculator,
                     0,
@@ -59,18 +63,22 @@ impl AMGBoostTree {
         tree_config: TreeConfig,
         leaf_output_calculator: LeafOutputCalculator,
     ) -> Self {
+        let processed_data = create_dataset_with_sorted_features(&data);
+        let all_labels = &processed_data.labels.clone();
         Self {
             root: match tree_config.use_multi_threading {
                 true => {
                     approximate_grad_boost_tree_builder::build_approximate_grad_boost_regression_tree_using_multiple_threads(
-                        data,
+                        processed_data,
+                        all_labels,
                         tree_config,
                         leaf_output_calculator,
                         0,
                     )
                 }
                 false => approximate_grad_boost_tree_builder::build_approximate_grad_boost_regression_tree(
-                    data,
+                    processed_data,
+                    all_labels,
                     tree_config,
                     leaf_output_calculator,
                     0,

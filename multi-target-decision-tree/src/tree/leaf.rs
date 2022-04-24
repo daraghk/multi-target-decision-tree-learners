@@ -2,21 +2,14 @@ use common::datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures};
 
 pub trait Leaf {}
 
-impl Leaf for RegressionLeaf {}
-
-impl Leaf for RegressionLeafNewPartition<'_> {}
+impl Leaf for RegressionLeaf<'_> {}
 
 impl Leaf for GradBoostLeaf {}
 
 impl Leaf for AMGBoostLeaf {}
 
 #[derive(Debug, Clone)]
-pub struct RegressionLeaf {
-    pub data: Option<MultiTargetDataSet>,
-}
-
-#[derive(Debug, Clone)]
-pub struct RegressionLeafNewPartition<'a> {
+pub struct RegressionLeaf<'a> {
     pub data: Option<MultiTargetDataSetSortedFeatures<'a>>,
 }
 

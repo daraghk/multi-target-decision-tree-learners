@@ -1,4 +1,7 @@
-use common::{datasets::MultiTargetDataSet, results::BestSplitResult};
+use common::{
+    datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures},
+    results::BestSplitResult,
+};
 pub mod split_finder_variance;
 
 #[derive(Clone, Copy)]
@@ -10,7 +13,7 @@ pub enum SplitMetric {
 #[derive(Clone, Copy)]
 pub struct SplitFinder {
     split_metric: SplitMetric,
-    pub find_best_split: fn(&MultiTargetDataSet, u32) -> BestSplitResult,
+    pub find_best_split: fn(&MultiTargetDataSetSortedFeatures, &Vec<&Vec<f64>>, u32, usize) -> BestSplitResult,
 }
 
 impl SplitFinder {

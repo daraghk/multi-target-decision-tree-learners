@@ -10,83 +10,6 @@ struct VarianceValueTrackerMultiTarget {
 }
 
 pub(super) fn determine_best_threshold(
-    number_of_labels: usize,
-    labels: &Vec<Vec<f64>>,
-    feature_column: &[f64],
-    total_multi_target_label_metrics: &MultiTargetLabelMetrics,
-    number_of_targets: usize,
-) -> BestThresholdResult {
-    let mut best_result_container = BestThresholdResult {
-        loss: f64::INFINITY,
-        threshold_value: 0.0,
-    };
-
-    let mut left_value_tracker = VarianceValueTrackerMultiTarget {
-        number_of_labels: 0.0,
-        multi_target_label_metrics: MultiTargetLabelMetrics {
-            sum_of_squared_labels_vector: vec![0.0; number_of_targets],
-            sum_of_labels_vector: vec![0.0; number_of_targets],
-            mean_of_labels_vector: vec![0.0; number_of_targets],
-        },
-    };
-
-    let mut right_value_tracker = VarianceValueTrackerMultiTarget {
-        number_of_labels: number_of_labels as f64,
-        multi_target_label_metrics: MultiTargetLabelMetrics {
-            sum_of_squared_labels_vector: total_multi_target_label_metrics
-                .sum_of_squared_labels_vector
-                .clone(),
-            sum_of_labels_vector: total_multi_target_label_metrics
-                .sum_of_labels_vector
-                .clone(),
-            mean_of_labels_vector: total_multi_target_label_metrics
-                .mean_of_labels_vector
-                .clone(),
-        },
-    };
-
-    let sorted_feature_data = get_sorted_feature_tuple_vector(feature_column);
-    let previous_feature_val = sorted_feature_data[0].0;
-    sorted_feature_data.iter().for_each(|tuple| {
-        let feature_value = tuple.0 as f64;
-
-        //only calculate 'loss' on first encounter of a feature value
-        if feature_value != previous_feature_val {
-            let left_variance_vector = calculate_variance_vector(
-                &left_value_tracker.multi_target_label_metrics,
-                left_value_tracker.number_of_labels,
-                number_of_targets,
-            );
-
-            let right_variance_vector = calculate_variance_vector(
-                &right_value_tracker.multi_target_label_metrics,
-                right_value_tracker.number_of_labels,
-                number_of_targets,
-            );
-
-            let split_variance = calculate_loss_vector(
-                left_variance_vector,
-                right_variance_vector,
-                left_value_tracker.number_of_labels,
-                right_value_tracker.number_of_labels,
-            );
-
-            let split_variance_sum = split_variance.iter().sum();
-            if split_variance_sum < best_result_container.loss {
-                best_result_container.loss = split_variance_sum;
-                best_result_container.threshold_value = feature_value;
-            }
-        }
-
-        let real_row_index = tuple.1;
-        let label_vector = &labels[real_row_index];
-        update_left_value_tracker(&mut left_value_tracker, label_vector, number_of_targets);
-        update_right_value_tracker(&mut right_value_tracker, label_vector, number_of_targets);
-    });
-    best_result_container
-}
-
-pub(super) fn determine_best_threshold_new(
     number_of_labels_in_subset: usize,
     all_labels: &Vec<&Vec<f64>>,
     feature_column: &[(f64, usize)],
@@ -199,7 +122,7 @@ fn update_right_value_tracker(
 mod tests {
     use common::{
         data_reader::{create_feature_columns, read_csv_data_one_hot_multi_target},
-        datasets::MultiTargetDataSet,
+        datasets::MultiTargetDataSet, data_processor::create_dataset_with_sorted_features,
     };
 
     use crate::calculations::get_multi_target_label_metrics;
@@ -215,12 +138,14 @@ mod tests {
             feature_columns: columns,
             labels,
         };
+        let processed_data = create_dataset_with_sorted_features(&data);
+        let all_labels = processed_data.labels.clone();
         let column = 0;
         let number_labels = data.labels.len();
         let best = super::determine_best_threshold(
             number_labels,
-            &data.labels,
-            &data.feature_columns[column],
+            &all_labels,
+            &processed_data.sorted_feature_columns[column],
             &total_mt_label_metrics,
             2,
         );
@@ -235,10 +160,12 @@ mod tests {
         let column = 2;
         let total_mt_label_metrics = get_multi_target_label_metrics(&iris.labels, 3);
         let number_labels = iris.labels.len();
+        let processed_data = create_dataset_with_sorted_features(&iris);
+        let all_labels = processed_data.labels.clone();
         let best = super::determine_best_threshold(
             number_labels,
-            &iris.labels,
-            &iris.feature_columns[column],
+            &all_labels,
+            &processed_data.sorted_feature_columns[column],
             &total_mt_label_metrics,
             2,
         );

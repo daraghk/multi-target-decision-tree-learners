@@ -1,5 +1,8 @@
-use common::data_reader::{
-    get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
+use common::{
+    data_processor::{self},
+    data_reader::{
+        get_feature_names, read_csv_data_multi_target, read_csv_data_one_hot_multi_target,
+    },
 };
 use multi_target_decision_tree::{
     decision_trees::{RegressionMultiTargetDecisionTree, TreeConfig},
@@ -13,9 +16,9 @@ use std::time::Instant;
 
 #[test]
 fn test_decision_tree_for_iris() {
-    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let original_data = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -25,7 +28,7 @@ fn test_decision_tree_for_iris() {
         max_levels: 8,
     };
 
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/iris_test.csv", 3);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree);
@@ -35,9 +38,10 @@ fn test_decision_tree_for_iris() {
 
 #[test]
 fn test_decision_tree_for_synthetic() {
-    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let original_data =
+        read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -47,7 +51,7 @@ fn test_decision_tree_for_synthetic() {
         max_levels: 8,
     };
 
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree);
@@ -57,10 +61,10 @@ fn test_decision_tree_for_synthetic() {
 
 #[test]
 fn test_decision_tree_for_digits() {
-    let data_set =
+    let original_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/digits_train.csv", 10);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -70,7 +74,7 @@ fn test_decision_tree_for_digits() {
         max_levels: 12,
     };
 
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/digits_test.csv", 10);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree);
@@ -80,9 +84,10 @@ fn test_decision_tree_for_digits() {
 
 #[test]
 fn test_decision_tree_for_wine() {
-    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let original_data =
+        read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -92,7 +97,7 @@ fn test_decision_tree_for_wine() {
         max_levels: 8,
     };
 
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_test.csv", 3);
     let accuracy = calculate_accuracy(&test_set, &boxed_tree);
@@ -102,10 +107,10 @@ fn test_decision_tree_for_wine() {
 
 #[test]
 fn test_decision_tree_for_covtype() {
-    let data_set =
+    let original_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/covtype_train.csv", 7);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -116,7 +121,7 @@ fn test_decision_tree_for_covtype() {
     };
 
     let before = Instant::now();
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/covtype_test.csv", 7);
@@ -127,9 +132,10 @@ fn test_decision_tree_for_covtype() {
 
 #[test]
 fn test_decision_tree_for_covtype_multi_threaded() {
-    let data_set =
+    let original_data =
         read_csv_data_one_hot_multi_target("./../common/data-files/covtype_train.csv", 7);
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -140,7 +146,7 @@ fn test_decision_tree_for_covtype_multi_threaded() {
     };
 
     let before = Instant::now();
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/covtype_test.csv", 7);
@@ -150,13 +156,13 @@ fn test_decision_tree_for_covtype_multi_threaded() {
 }
 
 #[test]
-fn test_decision_tree_for_regression() {
-    let data_set = read_csv_data_multi_target(
+fn test_decision_tree_for_regression_dataset() {
+    let original_data = read_csv_data_multi_target(
         "./../common/data-files/multi-target/features_train_mt.csv",
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -167,7 +173,7 @@ fn test_decision_tree_for_regression() {
     };
 
     let before = Instant::now();
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
 
     println!("Elapsed time: {:.2?}", before.elapsed());
     let boxed_tree = Box::new(tree.root);
@@ -183,9 +189,10 @@ fn test_decision_tree_for_regression() {
 
 #[test]
 fn print_tree_for_wine() {
-    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let original_data =
+        read_csv_data_one_hot_multi_target("./../common/data-files/wine_train.csv", 3);
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -195,16 +202,17 @@ fn print_tree_for_wine() {
         max_levels: 0,
     };
 
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     let feature_names = get_feature_names("./../common/data-files/wine_train.csv");
     print_tree_regression(&Box::new(tree.root), "".to_string(), &feature_names);
 }
 
 #[test]
 fn print_tree_for_synthetic() {
-    let data_set = read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
-
-    let number_of_classes = data_set.labels[0].len() as u32;
+    let original_data =
+        read_csv_data_one_hot_multi_target("./../common/data-files/synthetic_1.csv", 2);
+    let data = data_processor::create_dataset_with_sorted_features(&original_data);
+    let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);
 
     let tree_config = TreeConfig {
@@ -214,7 +222,7 @@ fn print_tree_for_synthetic() {
         max_levels: 0,
     };
 
-    let tree = RegressionMultiTargetDecisionTree::new(data_set, tree_config);
+    let tree = RegressionMultiTargetDecisionTree::new(data, tree_config);
     let feature_names = get_feature_names("./../common/data-files/synthetic_1.csv");
     print_tree_regression(&Box::new(tree.root), "".to_string(), &feature_names);
 }
