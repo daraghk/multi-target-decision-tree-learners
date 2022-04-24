@@ -22,7 +22,7 @@ pub(crate) fn find_best_split(
     let number_of_targets = number_of_targets as usize;
 
     let total_multi_target_label_metrics =
-        get_multi_target_label_metrics_new_partition(&data.labels, number_of_targets);
+        get_multi_target_label_metrics(&data.labels, number_of_targets);
     let total_variance_sum = get_total_variance_sum(
         &total_multi_target_label_metrics,
         number_of_labels_in_subset as f64,

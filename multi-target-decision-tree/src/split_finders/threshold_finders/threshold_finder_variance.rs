@@ -121,8 +121,9 @@ fn update_right_value_tracker(
 
 mod tests {
     use common::{
+        data_processor::create_dataset_with_sorted_features,
         data_reader::{create_feature_columns, read_csv_data_one_hot_multi_target},
-        datasets::MultiTargetDataSet, data_processor::create_dataset_with_sorted_features,
+        datasets::MultiTargetDataSet,
     };
 
     use crate::calculations::get_multi_target_label_metrics;
@@ -130,8 +131,13 @@ mod tests {
     #[test]
     fn test_best_threshold_for_particular_feature() {
         let features = vec![vec![10., 2., 0.], vec![6., 2., 0.], vec![1., 2., 1.]];
+        let label0 = vec![1., 0.];
+        let label1 = vec![1., 0.];
+        let label2 = vec![0., 1.];
+        let all_labels = vec![&label0, &label1, &label2];
         let labels = vec![vec![1., 0.], vec![1., 0.], vec![0., 1.]];
-        let total_mt_label_metrics = get_multi_target_label_metrics(&labels, 2);
+
+        let total_mt_label_metrics = get_multi_target_label_metrics(&all_labels, 2);
         let columns = create_feature_columns(&features);
         let data = MultiTargetDataSet {
             feature_rows: features,
@@ -158,10 +164,11 @@ mod tests {
     fn test_best_threshold_for_particular_feature_in_iris() {
         let iris = read_csv_data_one_hot_multi_target("./../common/data-files/iris.csv", 3);
         let column = 2;
-        let total_mt_label_metrics = get_multi_target_label_metrics(&iris.labels, 3);
         let number_labels = iris.labels.len();
         let processed_data = create_dataset_with_sorted_features(&iris);
         let all_labels = processed_data.labels.clone();
+        let total_mt_label_metrics = get_multi_target_label_metrics(&all_labels, 3);
+
         let best = super::determine_best_threshold(
             number_labels,
             &all_labels,
