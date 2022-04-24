@@ -65,6 +65,38 @@ pub fn get_multi_target_label_metrics(
     }
 }
 
+pub fn get_multi_target_label_metrics_new_partition(
+    labels: &Vec<&Vec<f64>>,
+    number_of_targets: usize,
+) -> MultiTargetLabelMetrics {
+    let label_sum_vectors = get_label_sum_vectors_new_partition(labels, number_of_targets);
+    let sum_of_labels_vector = label_sum_vectors.0;
+    let sum_of_squared_labels_vector = label_sum_vectors.1;
+    let number_of_labels = labels.len() as f64;
+    let mean_of_labels_vector =
+        get_mean_of_labels_vector(number_of_labels, number_of_targets, &sum_of_labels_vector);
+    MultiTargetLabelMetrics {
+        sum_of_labels_vector,
+        sum_of_squared_labels_vector,
+        mean_of_labels_vector,
+    }
+}
+
+fn get_label_sum_vectors_new_partition(
+    labels: &Vec<&Vec<f64>>,
+    number_of_targets: usize,
+) -> (Vec<f64>, Vec<f64>) {
+    let mut sum_of_labels_vector = vec![0.0; number_of_targets];
+    let mut sum_of_squared_labels_vector = vec![0.0; number_of_targets];
+    labels.iter().for_each(|label_vector| {
+        for (i, label_value) in label_vector.iter().enumerate() {
+            sum_of_labels_vector[i] += label_value;
+            sum_of_squared_labels_vector[i] += label_value * label_value;
+        }
+    });
+    (sum_of_labels_vector, sum_of_squared_labels_vector)
+}
+
 fn get_label_sum_vectors(labels: &Vec<Vec<f64>>, number_of_targets: usize) -> (Vec<f64>, Vec<f64>) {
     let mut sum_of_labels_vector = vec![0.0; number_of_targets];
     let mut sum_of_squared_labels_vector = vec![0.0; number_of_targets];

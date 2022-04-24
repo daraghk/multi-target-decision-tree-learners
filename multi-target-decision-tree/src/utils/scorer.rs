@@ -1,5 +1,3 @@
-use core::num;
-
 use crate::{
     class_counter::ClassCounter,
     leaf::{Leaf, RegressionLeaf},
@@ -65,6 +63,8 @@ pub mod classification {
 }
 
 pub mod regression {
+    use crate::leaf::RegressionLeafNewPartition;
+
     use super::*;
 
     pub fn calculate_overall_mean_squared_error(
@@ -75,6 +75,34 @@ pub mod regression {
         for i in 0..test_data.feature_rows.len() {
             let leaf = find_leaf_node_for_data(&test_data.feature_rows[i], tree_root);
             let prediction = calculate_average_label_vector(leaf.data.as_ref().unwrap());
+            let actual = &test_data.labels[i];
+            total_error += mean_sum_of_squared_differences_between_vectors(&prediction, actual);
+        }
+        total_error / test_data.feature_rows.len() as f64
+    }
+
+    pub fn calculate_overall_mean_squared_error_new_partition(
+        test_data: &MultiTargetDataSet,
+        tree_root: &Box<TreeNode<RegressionLeafNewPartition>>,
+    ) -> f64 {
+        let mut total_error = 0.;
+        for i in 0..test_data.feature_rows.len() {
+            let leaf = find_leaf_node_for_data(&test_data.feature_rows[i], tree_root);
+            let prediction = {
+                let data = leaf.data.as_ref().unwrap();
+                let labels = &data.labels;
+                let label_length = data.labels[0].len();
+                let mut average_vector = vec![0.; label_length];
+                for i in 0..data.labels.len() {
+                    for j in 0..label_length {
+                        average_vector[j] += labels[i][j];
+                    }
+                }
+                for j in 0..label_length {
+                    average_vector[j] /= labels.len() as f64;
+                }
+                average_vector
+            };
             let actual = &test_data.labels[i];
             total_error += mean_sum_of_squared_differences_between_vectors(&prediction, actual);
         }

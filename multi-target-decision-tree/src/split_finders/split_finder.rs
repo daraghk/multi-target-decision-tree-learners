@@ -1,5 +1,5 @@
 use common::{datasets::MultiTargetDataSet, results::BestSplitResult};
-mod split_finder_variance;
+pub mod split_finder_variance;
 
 #[derive(Clone, Copy)]
 pub enum SplitMetric {

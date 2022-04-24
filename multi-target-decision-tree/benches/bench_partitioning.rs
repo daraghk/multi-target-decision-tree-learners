@@ -1,5 +1,5 @@
 use common::{
-    data_processor::{self, process_dataset},
+    data_processor::{self, create_dataset_with_sorted_features},
     data_reader::read_csv_data_multi_target,
     question::Question,
 };
@@ -23,10 +23,13 @@ fn bench_partition_new(c: &mut Criterion) {
         "./../common/data-files/multi-target/features_train_mt.csv",
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
-    let processed_dataset = process_dataset(data.clone());
-
+    let processed_dataset = create_dataset_with_sorted_features(&data);
+    let mut label_refs = vec![];
+    for label in processed_dataset.labels.iter() {
+        label_refs.push(*label);
+    }
     c.bench_function("new partitioning", |b| {
-        b.iter(|| data_processor::new_partition(&processed_dataset, 0, 1., &data.labels))
+        b.iter(|| data_processor::new_partition(&processed_dataset, 0, 1., &label_refs))
     });
 }
 

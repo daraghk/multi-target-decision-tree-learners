@@ -1,9 +1,13 @@
-use common::datasets::MultiTargetDataSet;
+use common::datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures};
 
 #[path = "tree_builders/regression_tree_builder.rs"]
 mod regression_tree_builder;
 
-use crate::{leaf::RegressionLeaf, node::TreeNode, split_finder::SplitFinder};
+use crate::{
+    leaf::{RegressionLeaf, RegressionLeafNewPartition},
+    node::TreeNode,
+    split_finder::SplitFinder,
+};
 
 #[derive(Copy, Clone)]
 pub struct TreeConfig {
@@ -19,6 +23,10 @@ pub struct RegressionMultiTargetDecisionTree {
     pub root: TreeNode<RegressionLeaf>,
 }
 
+pub struct RegressionMultiTargetDecisionTreeNewPartition<'a> {
+    pub root: TreeNode<RegressionLeafNewPartition<'a>>,
+}
+
 impl RegressionMultiTargetDecisionTree {
     pub fn new(data: MultiTargetDataSet, tree_config: TreeConfig) -> Self {
         Self {
@@ -30,6 +38,20 @@ impl RegressionMultiTargetDecisionTree {
                 ),
                 false => regression_tree_builder::build_regression_tree(data, tree_config, 0),
             },
+        }
+    }
+}
+
+impl<'a> RegressionMultiTargetDecisionTreeNewPartition<'a>{
+    pub fn new(data: MultiTargetDataSetSortedFeatures<'a>, tree_config: TreeConfig) -> Self {
+        let all_labels = &data.labels.clone();
+        Self {
+            root: regression_tree_builder::build_regression_tree_new_partition(
+                data,
+                all_labels,
+                tree_config,
+                0,
+            ),
         }
     }
 }
