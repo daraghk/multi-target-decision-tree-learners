@@ -62,7 +62,7 @@ fn test_mtgbdt_multi_threaded() {
         split_finder,
         use_multi_threading: true,
         number_of_classes,
-        max_levels: 3,
+        max_levels: 8,
     };
 
     let before = Instant::now();
