@@ -30,6 +30,20 @@ pub fn calculate_average_f64_vector(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f6
     average_vector
 }
 
+pub fn calculate_average_f64_vector_from_refs(vector_of_vectors: &Vec<&Vec<f64>>) -> Vec<f64> {
+    let inner_vector_length = vector_of_vectors[0].len();
+    let mut average_vector = vec![0.; inner_vector_length];
+    for i in 0..vector_of_vectors.len() {
+        for j in 0..inner_vector_length {
+            average_vector[j] += vector_of_vectors[i][j];
+        }
+    }
+    for j in 0..inner_vector_length {
+        average_vector[j] /= vector_of_vectors.len() as f64;
+    }
+    average_vector
+}
+
 pub fn mean_sum_of_squared_differences_between_f64_slices(first: &[f64], second: &[f64]) -> f64 {
     assert_eq!(first.len(), second.len());
     let squared_differences: Vec<f64> = first
@@ -46,6 +60,15 @@ pub fn mean_sum_of_squared_differences_between_f64_slices(first: &[f64], second:
 }
 
 pub fn sum_of_f64_vectors(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
+    let length_of_inner_vectors = vector_of_vectors[0].len();
+    let mut sum_vector = vec![0.; length_of_inner_vectors];
+    vector_of_vectors.iter().for_each(|inner_vector| {
+        sum_vector = add_f64_slices_as_vector(&sum_vector, &inner_vector);
+    });
+    sum_vector
+}
+
+pub fn sum_of_f64_vectors_from_refs(vector_of_vectors: &Vec<&Vec<f64>>) -> Vec<f64> {
     let length_of_inner_vectors = vector_of_vectors[0].len();
     let mut sum_vector = vec![0.; length_of_inner_vectors];
     vector_of_vectors.iter().for_each(|inner_vector| {
