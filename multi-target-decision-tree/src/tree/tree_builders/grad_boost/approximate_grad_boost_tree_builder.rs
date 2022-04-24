@@ -1,7 +1,7 @@
 use rayon::prelude::*;
 
 use super::{LeafOutputCalculator, TreeConfig};
-use crate::{data_partitioner::partition, leaf::AMGBoostLeaf, node::TreeNode, split_finder};
+use crate::{leaf::AMGBoostLeaf, node::TreeNode, split_finder};
 use common::{
     data_processor,
     datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures},
@@ -34,7 +34,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree<'a>(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::new_partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(&data, split_column, split_value, all_labels);
         let left_data = partitioned_data.1;
         let right_data = partitioned_data.0;
 
@@ -88,7 +88,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::new_partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(&data, split_column, split_value, all_labels);
         let left_data = partitioned_data.1;
         let right_data = partitioned_data.0;
 

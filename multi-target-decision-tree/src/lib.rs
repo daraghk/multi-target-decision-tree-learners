@@ -3,8 +3,6 @@
 mod calculations;
 #[path = "utils/class_counter.rs"]
 mod class_counter;
-#[path = "utils/data_partitioner.rs"]
-pub mod data_partitioner;
 #[path = "tree/decision_trees.rs"]
 pub mod decision_trees;
 #[path = "tree/grad_boost_decision_trees.rs"]

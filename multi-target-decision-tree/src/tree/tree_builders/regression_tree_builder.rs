@@ -3,7 +3,7 @@ use common::{
     datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures},
 };
 
-use crate::{data_partitioner::partition, leaf::RegressionLeaf, node::TreeNode, split_finder};
+use crate::{ leaf::RegressionLeaf, node::TreeNode, split_finder};
 
 use super::TreeConfig;
 
@@ -28,7 +28,7 @@ pub(crate) fn build_regression_tree<'a>(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::new_partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(&data, split_column, split_value, all_labels);
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 
@@ -64,7 +64,7 @@ pub(crate) fn build_regression_tree_using_multiple_threads<'a>(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::new_partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(&data, split_column, split_value, all_labels);
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 

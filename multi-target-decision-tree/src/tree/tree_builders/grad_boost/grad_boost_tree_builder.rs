@@ -1,7 +1,6 @@
 use rayon::prelude::*;
 
 use crate::{
-    data_partitioner::partition,
     leaf::{GradBoostLeaf, RegressionLeaf},
     node::TreeNode,
     split_finder,
@@ -12,47 +11,6 @@ use common::{
 };
 
 use super::{LeafOutputCalculator, TreeConfig};
-
-// pub(crate) fn build_grad_boost_regression_tree(
-//     data: MultiTargetDataSet,
-//     tree_config: TreeConfig,
-//     leaf_output_calculator: LeafOutputCalculator,
-//     current_level: u32,
-// ) -> TreeNode<GradBoostLeaf> {
-//     let split_result =
-//         (tree_config.split_finder.find_best_split)(&data, tree_config.number_of_classes);
-//     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
-//         let leaf_output = (leaf_output_calculator.calculate_leaf_output)(&data);
-//         let leaf = GradBoostLeaf {
-//             leaf_output: Some(leaf_output),
-//         };
-//         return TreeNode::leaf_node(split_result.question, leaf);
-//     } else {
-//         let partitioned_data = partition(&data, &split_result.question);
-//         let left_data = partitioned_data.1;
-//         let right_data = partitioned_data.0;
-
-//         let new_level = current_level + 1;
-//         let left_tree = build_grad_boost_regression_tree(
-//             left_data,
-//             tree_config,
-//             leaf_output_calculator,
-//             new_level,
-//         );
-//         let right_tree = build_grad_boost_regression_tree(
-//             right_data,
-//             tree_config,
-//             leaf_output_calculator,
-//             new_level,
-//         );
-//         TreeNode::new(
-//             split_result.question,
-//             Box::new(left_tree),
-//             Box::new(right_tree),
-//         )
-//     }
-// }
-
 pub(crate) fn build_grad_boost_regression_tree<'a>(
     data: MultiTargetDataSetSortedFeatures<'a>,
     all_labels: &Vec<&'a Vec<f64>>,
@@ -78,7 +36,7 @@ pub(crate) fn build_grad_boost_regression_tree<'a>(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::new_partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(&data, split_column, split_value, all_labels);
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 
@@ -130,7 +88,7 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads<'a>(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::new_partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(&data, split_column, split_value, all_labels);
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 
