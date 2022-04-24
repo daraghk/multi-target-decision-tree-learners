@@ -25,7 +25,7 @@ fn test_mtgbdt_single_threaded() {
         split_finder,
         use_multi_threading: false,
         number_of_classes,
-        max_levels: 8,
+        max_levels: 3,
     };
 
     let before = Instant::now();
@@ -62,11 +62,11 @@ fn test_mtgbdt_multi_threaded() {
         split_finder,
         use_multi_threading: true,
         number_of_classes,
-        max_levels: 8,
+        max_levels: 3,
     };
 
     let before = Instant::now();
-    let grad_boost_ensemble = RegressionBoostModel::train(true_data, tree_config, 300, 0.1);
+    let grad_boost_ensemble = RegressionBoostModel::train(true_data, tree_config, 4, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_multi_target(

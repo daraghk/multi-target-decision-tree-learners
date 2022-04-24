@@ -23,7 +23,7 @@ pub fn create_dataset_with_sorted_features<'a>(
     }
 }
 
-pub fn new_partition<'a>(
+pub fn partition<'a>(
     dataset: &MultiTargetDataSetSortedFeatures,
     split_column: usize,
     split_value: f64,
@@ -108,10 +108,6 @@ fn collect_partitioned_feature_columns(
     dataset: &MultiTargetDataSetSortedFeatures,
     true_indices: &Vec<u8>,
 ) -> (Vec<Vec<(f64, usize)>>, Vec<Vec<(f64, usize)>>) {
-    // let number_of_feature_columns = dataset.sorted_feature_columns.len();
-    // let mut true_feature_columns = Vec::with_capacity(number_of_feature_columns);
-    // let mut false_feature_columns = Vec::with_capacity(number_of_feature_columns);
-
     let (true_feature_columns, false_feature_columns): (
         Vec<Vec<(f64, usize)>>,
         Vec<Vec<(f64, usize)>>,
@@ -134,21 +130,6 @@ fn collect_partitioned_feature_columns(
         })
         .collect();
 
-    // for sorted_feature_column in dataset.sorted_feature_columns.iter() {
-    //     let total_column_length = sorted_feature_column.len();
-    //     let mut true_feature_values = Vec::with_capacity(total_column_length);
-    //     let mut false_feature_values = Vec::with_capacity(total_column_length);
-    //     for feature_value_index_pair in sorted_feature_column {
-    //         let index = feature_value_index_pair.1;
-    //         if true_indices[index] == 1 {
-    //             true_feature_values.push(*feature_value_index_pair);
-    //         } else {
-    //             false_feature_values.push(*feature_value_index_pair);
-    //         }
-    //     }
-    //     true_feature_columns.push(true_feature_values);
-    //     false_feature_columns.push(false_feature_values);
-    // }
     (true_feature_columns, false_feature_columns)
 }
 
