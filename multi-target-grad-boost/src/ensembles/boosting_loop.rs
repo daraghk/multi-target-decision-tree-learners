@@ -24,12 +24,18 @@ pub fn boosting_loop<T: Leaf>(
     };
     let initial_guess = determine_initial_guess(&training_data, boosting_executor.ensemble_type);
     update_dataset_labels_with_initial_guess(&mut training_data.mutable_labels, &initial_guess);
-    let trees = (boosting_executor.loop_executor_function)(
+    let trees_and_residuals = (boosting_executor.loop_executor_function)(
         &mut training_data,
         number_of_iterations,
         tree_config,
         learning_rate,
     );
+    let mut trees = vec![];
+    let mut residuals = vec![];
+    trees_and_residuals.into_iter().for_each(|pair|{
+        trees.push(pair.0);
+        residuals.push(pair.1);
+    });
     BoostingResult {
         trees,
         initial_guess,

@@ -3,7 +3,7 @@ use common::{
     datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures},
 };
 
-use crate::{ leaf::RegressionLeaf, node::TreeNode, split_finder};
+use crate::{leaf::RegressionLeaf, node::TreeNode, split_finder};
 
 use super::TreeConfig;
 

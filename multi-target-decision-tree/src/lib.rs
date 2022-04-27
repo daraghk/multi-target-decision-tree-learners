@@ -1,5 +1,5 @@
 #![allow(unused_imports)]
-#[path = "utils/calculations/calculations.rs"]
+#[path = "utils/calculations.rs"]
 mod calculations;
 #[path = "utils/class_counter.rs"]
 mod class_counter;

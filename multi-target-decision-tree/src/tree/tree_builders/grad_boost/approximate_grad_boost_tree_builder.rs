@@ -13,7 +13,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree<'a>(
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
     current_level: u32,
-) -> TreeNode<AMGBoostLeaf> {
+) -> TreeNode<AMGBoostLeaf<'a>> {
     let number_of_cols = data.sorted_feature_columns.len();
     let number_of_targets = data.labels[0].len() as u32;
     let split_result = split_finder::split_finder_variance::find_best_split(
@@ -28,6 +28,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree<'a>(
         let leaf = AMGBoostLeaf {
             max_value: Some(max_value),
             class: Some(class),
+            data: Some(data),
         };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {
@@ -67,7 +68,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
     current_level: u32,
-) -> TreeNode<AMGBoostLeaf> {
+) -> TreeNode<AMGBoostLeaf<'a>> {
     let number_of_cols = data.sorted_feature_columns.len();
     let number_of_targets = data.labels[0].len() as u32;
     let split_result = split_finder::split_finder_variance::find_best_split(
@@ -82,6 +83,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
         let leaf = AMGBoostLeaf {
             max_value: Some(max_value),
             class: Some(class),
+            data: Some(data),
         };
         return TreeNode::leaf_node(split_result.question, leaf);
     } else {

@@ -15,7 +15,7 @@ use super::{
 
 pub mod multi_class_boost_executor_functions;
 
-impl GradientBoostedEnsemble for MultiClassBoostModel {
+impl GradientBoostedEnsemble for MultiClassBoostModel<'_> {
     fn train(
         data: MultiTargetDataSet,
         tree_config: TreeConfig,

@@ -161,6 +161,7 @@ fn test_decision_tree_for_regression_dataset() {
         "./../common/data-files/multi-target/features_train_mt.csv",
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
+    // let data = data_processor::create_dataset_with_binned_sorted_features(&original_data, 1000);
     let data = data_processor::create_dataset_with_sorted_features(&original_data);
     let number_of_classes = original_data.labels[0].len() as u32;
     let split_finder = SplitFinder::new(SplitMetric::Variance);

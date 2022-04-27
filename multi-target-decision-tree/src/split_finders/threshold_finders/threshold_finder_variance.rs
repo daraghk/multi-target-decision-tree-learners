@@ -47,42 +47,58 @@ pub(super) fn determine_best_threshold(
 
     let sorted_feature_data = feature_column;
     let previous_feature_val = sorted_feature_data[0].0;
-    sorted_feature_data.iter().for_each(|tuple| {
-        let feature_value = tuple.0 as f64;
+    let mod_number = calculate_mod_value_for_split_checking(number_of_labels_in_subset);
+    sorted_feature_data
+        .iter()
+        .enumerate()
+        .for_each(|(index, tuple)| {
+            let feature_value = tuple.0 as f64;
+            // let new_mod = match mod_number {
+            //     1 => {
+            //         if index > 0{
+            //             index
+            //         }
+            //         else{
+            //             1
+            //         }
+            //     },
+            //     _ => mod_number
+            // };
+            if index % mod_number == 0 {
+                //only calculate 'loss' on first encounter of a feature value
+                if feature_value != previous_feature_val {
+                    let left_variance_vector = calculate_variance_vector(
+                        &left_value_tracker.multi_target_label_metrics,
+                        left_value_tracker.number_of_labels,
+                        number_of_targets,
+                    );
 
-        //only calculate 'loss' on first encounter of a feature value
-        if feature_value != previous_feature_val {
-            let left_variance_vector = calculate_variance_vector(
-                &left_value_tracker.multi_target_label_metrics,
-                left_value_tracker.number_of_labels,
-                number_of_targets,
-            );
+                    let right_variance_vector = calculate_variance_vector(
+                        &right_value_tracker.multi_target_label_metrics,
+                        right_value_tracker.number_of_labels,
+                        number_of_targets,
+                    );
 
-            let right_variance_vector = calculate_variance_vector(
-                &right_value_tracker.multi_target_label_metrics,
-                right_value_tracker.number_of_labels,
-                number_of_targets,
-            );
+                    let split_variance = calculate_loss_vector(
+                        left_variance_vector,
+                        right_variance_vector,
+                        left_value_tracker.number_of_labels,
+                        right_value_tracker.number_of_labels,
+                    );
 
-            let split_variance = calculate_loss_vector(
-                left_variance_vector,
-                right_variance_vector,
-                left_value_tracker.number_of_labels,
-                right_value_tracker.number_of_labels,
-            );
-
-            let split_variance_sum = split_variance.iter().sum();
-            if split_variance_sum < best_result_container.loss {
-                best_result_container.loss = split_variance_sum;
-                best_result_container.threshold_value = feature_value;
+                    let split_variance_sum = split_variance.iter().sum();
+                    if split_variance_sum < best_result_container.loss {
+                        best_result_container.loss = split_variance_sum;
+                        best_result_container.threshold_value = feature_value;
+                    }
+                }
             }
-        }
 
-        let real_row_index = tuple.1;
-        let label_vector = &all_labels[real_row_index];
-        update_left_value_tracker(&mut left_value_tracker, label_vector, number_of_targets);
-        update_right_value_tracker(&mut right_value_tracker, label_vector, number_of_targets);
-    });
+            let real_row_index = tuple.1;
+            let label_vector = &all_labels[real_row_index];
+            update_left_value_tracker(&mut left_value_tracker, label_vector, number_of_targets);
+            update_right_value_tracker(&mut right_value_tracker, label_vector, number_of_targets);
+        });
     best_result_container
 }
 
@@ -117,6 +133,16 @@ fn update_right_value_tracker(
         right_multi_label_metrics.mean_of_labels_vector[i] =
             right_multi_label_metrics.sum_of_labels_vector[i] / right_value_tracker.number_of_labels
     }
+}
+
+fn calculate_mod_value_for_split_checking(number_of_labels_in_subset: usize) -> usize {
+    let dataset_size = number_of_labels_in_subset as u64;
+    let mod_number_init = dataset_size / 64;
+    let modulo_number = match mod_number_init {
+        0 => 1,
+        _ => mod_number_init,
+    };
+    modulo_number as usize
 }
 
 mod tests {

@@ -18,7 +18,7 @@ use super::{
 pub mod amg_boost_executor_functions;
 mod amg_boost_predict_functions;
 
-impl GradientBoostedEnsemble for AMGBoostModel {
+impl GradientBoostedEnsemble for AMGBoostModel<'_> {
     fn train(
         data: MultiTargetDataSet,
         tree_config: TreeConfig,

@@ -11,20 +11,20 @@ pub struct BoostingResult<T: Leaf> {
     pub learning_rate: f64,
 }
 
-pub struct AMGBoostModel {
-    pub trees: Vec<Box<TreeNode<AMGBoostLeaf>>>,
+pub struct AMGBoostModel<'a> {
+    pub trees: Vec<Box<TreeNode<AMGBoostLeaf<'a>>>>,
     pub initial_guess: Vec<f64>,
     pub learning_rate: f64,
 }
 
-pub struct MultiClassBoostModel {
-    pub trees: Vec<Box<TreeNode<GradBoostLeaf>>>,
+pub struct MultiClassBoostModel<'a> {
+    pub trees: Vec<Box<TreeNode<GradBoostLeaf<'a>>>>,
     pub initial_guess: Vec<f64>,
     pub learning_rate: f64,
 }
 
-pub struct RegressionBoostModel {
-    pub trees: Vec<Box<TreeNode<GradBoostLeaf>>>,
+pub struct RegressionBoostModel<'a> {
+    pub trees: Vec<Box<TreeNode<GradBoostLeaf<'a>>>>,
     pub initial_guess: Vec<f64>,
     pub learning_rate: f64,
 }
@@ -35,14 +35,14 @@ pub enum BoostingEnsembleType {
     RegressionBoost,
 }
 
-pub struct BoostingExecutor<T: Leaf> {
+pub struct BoostingExecutor<'a, T: Leaf> {
     pub ensemble_type: BoostingEnsembleType,
     pub loop_executor_function: fn(
-        training_data: &mut GradBoostTrainingData,
+        training_data: &'a mut GradBoostTrainingData,
         number_of_iterations: u32,
         tree_config: TreeConfig,
         learning_rate: f64,
-    ) -> Vec<Box<TreeNode<T>>>,
+    ) -> Vec<(Box<TreeNode<T>>, Vec<Vec<f64>>)>,
 }
 
 pub struct GradBoostTrainingData {
