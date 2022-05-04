@@ -7,13 +7,13 @@ use common::{
     datasets::{MultiTargetDataSet, MultiTargetDataSetSortedFeatures},
 };
 
-pub(crate) fn build_approximate_grad_boost_regression_tree<'a>(
-    data: MultiTargetDataSetSortedFeatures<'a>,
-    all_labels: &Vec<&'a Vec<f64>>,
+pub(crate) fn build_approximate_grad_boost_regression_tree(
+    data: MultiTargetDataSetSortedFeatures,
+    all_labels: &Vec<Vec<f64>>,
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
     current_level: u32,
-) -> TreeNode<AMGBoostLeaf<'a>> {
+) -> TreeNode<AMGBoostLeaf> {
     let number_of_cols = data.sorted_feature_columns.len();
     let number_of_targets = data.labels[0].len() as u32;
     let split_result = split_finder::split_finder_variance::find_best_split(
@@ -62,13 +62,13 @@ pub(crate) fn build_approximate_grad_boost_regression_tree<'a>(
     }
 }
 
-pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_threads<'a>(
-    data: MultiTargetDataSetSortedFeatures<'a>,
-    all_labels: &Vec<&'a Vec<f64>>,
+pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_threads(
+    data: MultiTargetDataSetSortedFeatures,
+    all_labels: &Vec<Vec<f64>>,
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
     current_level: u32,
-) -> TreeNode<AMGBoostLeaf<'a>> {
+) -> TreeNode<AMGBoostLeaf> {
     let number_of_cols = data.sorted_feature_columns.len();
     let number_of_targets = data.labels[0].len() as u32;
     let split_result = split_finder::split_finder_variance::find_best_split(

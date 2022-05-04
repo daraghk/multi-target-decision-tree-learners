@@ -49,7 +49,7 @@ pub mod classification {
     }
 
     fn get_class_counts_multi_target(
-        labels: &Vec<&Vec<f64>>,
+        labels: &Vec<Vec<f64>>,
         number_of_classes: usize,
     ) -> ClassCounter {
         let mut class_counter = ClassCounter::new(number_of_classes);
@@ -83,7 +83,7 @@ pub mod regression {
         total_error / test_data.feature_rows.len() as f64
     }
 
-    fn calculate_average_label_vector(leaf_labels: &Vec<&Vec<f64>>) -> Vec<f64> {
+    fn calculate_average_label_vector(leaf_labels: &Vec<Vec<f64>>) -> Vec<f64> {
         let label_length = leaf_labels[0].len();
         let mut average_vector = vec![0.; label_length];
         for i in 0..leaf_labels.len() {

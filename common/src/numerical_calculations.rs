@@ -7,6 +7,14 @@ pub fn add_f64_slices_as_vector(first: &[f64], second: &[f64]) -> Vec<f64> {
         .collect()
 }
 
+pub fn add_f64_slices_mutating(first: &mut [f64], second: &[f64]){
+    assert_eq!(first.len(), second.len());
+    first.iter_mut().enumerate().for_each(|(index, value)|{
+        let prev = *value;
+        *value = prev + second[index];
+    });
+}
+
 pub fn subtract_f64_slices_as_vector(first: &[f64], second: &[f64]) -> Vec<f64> {
     assert_eq!(first.len(), second.len());
     first

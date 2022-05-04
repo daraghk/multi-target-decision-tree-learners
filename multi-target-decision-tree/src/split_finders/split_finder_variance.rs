@@ -12,7 +12,7 @@ use crate::calculations::*;
 
 pub(crate) fn find_best_split(
     data: &MultiTargetDataSetSortedFeatures,
-    all_labels: &Vec<&Vec<f64>>,
+    all_labels: &Vec<Vec<f64>>,
     number_of_targets: u32,
     number_of_cols: usize,
 ) -> BestSplitResult {

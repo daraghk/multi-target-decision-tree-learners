@@ -13,7 +13,7 @@ pub struct MultiTargetDataSet {
 }
 
 #[derive(Debug, Clone)]
-pub struct MultiTargetDataSetSortedFeatures<'a> {
-    pub labels: Vec<&'a Vec<f64>>,
+pub struct MultiTargetDataSetSortedFeatures {
+    pub labels: Vec<Vec<f64>>,
     pub sorted_feature_columns: Vec<Vec<(f64, usize)>>,
 }

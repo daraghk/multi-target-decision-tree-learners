@@ -13,3 +13,4 @@ multi-target-grad-boost = { path = "../multi-target-grad-boost/" }
 
 [profile.release]
 debug = true
+lto = true

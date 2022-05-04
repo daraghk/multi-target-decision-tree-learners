@@ -49,7 +49,7 @@ fn calculate_variance(mean_squared: f64, square_sum: f64, number_of_labels: f64)
 }
 
 pub fn get_multi_target_label_metrics(
-    labels: &Vec<&Vec<f64>>,
+    labels: &Vec<Vec<f64>>,
     number_of_targets: usize,
 ) -> MultiTargetLabelMetrics {
     let label_sum_vectors = get_label_sum_vectors(labels, number_of_targets);
@@ -65,10 +65,7 @@ pub fn get_multi_target_label_metrics(
     }
 }
 
-fn get_label_sum_vectors(
-    labels: &Vec<&Vec<f64>>,
-    number_of_targets: usize,
-) -> (Vec<f64>, Vec<f64>) {
+fn get_label_sum_vectors(labels: &Vec<Vec<f64>>, number_of_targets: usize) -> (Vec<f64>, Vec<f64>) {
     let mut sum_of_labels_vector = vec![0.0; number_of_targets];
     let mut sum_of_squared_labels_vector = vec![0.0; number_of_targets];
     labels.iter().for_each(|label_vector| {
@@ -101,7 +98,7 @@ mod tests {
         let label0 = vec![1., 3., 4.];
         let label1 = vec![12., 5., 3.];
         let label2 = vec![3., 5., 7.];
-        let labels = vec![&label0, &label1, &label2];
+        let labels = vec![label0, label1, label2];
         let label_metrics = super::get_multi_target_label_metrics(&labels, 3);
         println!("{:?}", label_metrics);
     }
@@ -111,7 +108,7 @@ mod tests {
         let label0 = vec![1., 3., 4.];
         let label1 = vec![2., 5., 3.];
         let label2 = vec![3., -5., 7.];
-        let labels = vec![&label0, &label1, &label2];
+        let labels = vec![label0, label1, label2];
         let number_of_targets = 3;
         let label_metrics = super::get_multi_target_label_metrics(&labels, number_of_targets);
         let variance_vector = calculate_variance_vector(

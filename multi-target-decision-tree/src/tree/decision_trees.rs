@@ -15,12 +15,12 @@ pub struct TreeConfig {
 
 // Multi target decision tree where each label vector, and each label-vector
 // is of the form e.g [1.90, 2.56, 828.1, 0.2828], i.e label vectors contain floating numbers (and also discrete labellings)
-pub struct RegressionMultiTargetDecisionTree<'a> {
-    pub root: TreeNode<RegressionLeaf<'a>>,
+pub struct RegressionMultiTargetDecisionTree {
+    pub root: TreeNode<RegressionLeaf>,
 }
 
-impl<'a> RegressionMultiTargetDecisionTree<'a> {
-    pub fn new(data: MultiTargetDataSetSortedFeatures<'a>, tree_config: TreeConfig) -> Self {
+impl RegressionMultiTargetDecisionTree {
+    pub fn new(data: MultiTargetDataSetSortedFeatures, tree_config: TreeConfig) -> Self {
         let all_labels = &data.labels.clone();
         Self {
             root: match tree_config.use_multi_threading {

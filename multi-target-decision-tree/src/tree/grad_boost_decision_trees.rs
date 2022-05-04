@@ -19,13 +19,13 @@ mod grad_boost_tree_builder;
 
 // Multi target decision tree where each label is a vector, and each label-vector
 // contains floating values. These are used to build a multi-target gradient boosting ensemble.
-pub struct GradBoostMultiTargetDecisionTree<'a> {
-    pub root: TreeNode<GradBoostLeaf<'a>>,
+pub struct GradBoostMultiTargetDecisionTree {
+    pub root: TreeNode<GradBoostLeaf>,
 }
 
-impl<'a> GradBoostMultiTargetDecisionTree<'a> {
+impl GradBoostMultiTargetDecisionTree {
     pub fn new(
-        data: MultiTargetDataSetSortedFeatures<'a>,
+        data: MultiTargetDataSetSortedFeatures,
         tree_config: TreeConfig,
         leaf_output_calculator: LeafOutputCalculator,
     ) -> Self {
@@ -55,13 +55,13 @@ impl<'a> GradBoostMultiTargetDecisionTree<'a> {
 
 // Multi target decision tree where each label is a vector, and each label-vector
 // contains floating values. These are used to build an approximate multi-target gradient boosting ensemble. (AMGBoost)
-pub struct AMGBoostTree<'a> {
-    pub root: TreeNode<AMGBoostLeaf<'a>>,
+pub struct AMGBoostTree {
+    pub root: TreeNode<AMGBoostLeaf>,
 }
 
-impl<'a> AMGBoostTree<'a> {
+impl AMGBoostTree {
     pub fn new(
-        data: MultiTargetDataSetSortedFeatures<'a>,
+        data: MultiTargetDataSetSortedFeatures,
         tree_config: TreeConfig,
         leaf_output_calculator: LeafOutputCalculator,
     ) -> Self {

@@ -17,13 +17,14 @@ use multi_target_decision_tree::{
 
 use super::{calculate_approximate_value, GradBoostTrainingData};
 
+//TODO THIS NEEDS CLEANUP FOR UPDATING MUTABLE LABELS ETC
 pub(crate) fn execute_gradient_boosting_loop(
     training_data: &mut GradBoostTrainingData,
     number_of_iterations: u32,
     tree_config: TreeConfig,
     learning_rate: f64,
-) -> Vec<(Box<TreeNode<AMGBoostLeaf>>, Vec<Vec<f64>>)> {
-    let mut trees_and_residuals = Vec::with_capacity(number_of_iterations as usize);
+) -> Vec<Box<TreeNode<AMGBoostLeaf>>> {
+    let mut trees = Vec::with_capacity(number_of_iterations as usize);
     let leaf_output_calculator =
         LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let processed_data = create_dataset_with_sorted_features(&training_data.data);
@@ -31,9 +32,13 @@ pub(crate) fn execute_gradient_boosting_loop(
         //TODO how to remove / make faster?
         //TODO how to get rid of clone - processed_data never changes - at least the feature cols don't
         let mut learner_data = processed_data.clone();
+
         let residuals = calculate_residuals(training_data);
-        learner_data.labels = residuals.iter().map(|label| label).collect();
-        
+        learner_data.labels = residuals;
+
+        let residuals = calculate_residuals(training_data);
+        learner_data.labels = residuals;
+
         let residual_tree = AMGBoostTree::new(learner_data, tree_config, leaf_output_calculator);
         let boxed_residual_tree = Box::new(residual_tree.root);
         {
@@ -45,16 +50,15 @@ pub(crate) fn execute_gradient_boosting_loop(
             for i in 0..training_data.size {
                 let feature_row = &training_data.data.feature_rows[i];
                 //TODO for each iteration here in this loop we traverse the current tree being looked at for each data instance
-                let (weighted_max_value, weighted_non_max_value, max_value_index) =
-                    {
-                        let leaf_data = find_leaf_node_for_data(feature_row, boxed_tree_ref);
-                        let max_value = leaf_data.max_value.unwrap();
-                        let weighted_max_value = learning_rate * max_value;
-                        let weighted_non_max_value =
-                            learning_rate * calculate_approximate_value(max_value, number_of_classes_f64);
-                        let max_value_index = leaf_data.class.unwrap();
-                        (weighted_max_value, weighted_non_max_value, max_value_index)
-                    };
+                let (weighted_max_value, weighted_non_max_value, max_value_index) = {
+                    let leaf_data = find_leaf_node_for_data(feature_row, boxed_tree_ref);
+                    let max_value = leaf_data.max_value.unwrap();
+                    let weighted_max_value = learning_rate * max_value;
+                    let weighted_non_max_value = learning_rate
+                        * calculate_approximate_value(max_value, number_of_classes_f64);
+                    let max_value_index = leaf_data.class.unwrap();
+                    (weighted_max_value, weighted_non_max_value, max_value_index)
+                };
 
                 //update label values below, first max class then rest
                 let current_label = &mut training_data.mutable_labels[i];
@@ -66,9 +70,9 @@ pub(crate) fn execute_gradient_boosting_loop(
                 }
             }
         };
-        trees_and_residuals.push((boxed_residual_tree, residuals));
+        trees.push(boxed_residual_tree);
     }
-    trees_and_residuals
+    trees
 }
 
 fn traverse_tree_to_create_map_of_index_to_leaf_output<'a>(
@@ -81,14 +85,14 @@ fn traverse_tree_to_create_map_of_index_to_leaf_output<'a>(
             traverse_tree_to_create_map_of_index_to_leaf_output(
                 &node.true_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
-                number_of_classes
+                number_of_classes,
             );
         }
         if node.false_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
                 &node.false_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
-                number_of_classes
+                number_of_classes,
             );
         }
     }
@@ -99,8 +103,8 @@ fn traverse_tree_to_create_map_of_index_to_leaf_output<'a>(
     let weighted_non_max_value = 0.1 * calculate_approximate_value(max_value, number_of_classes);
     let max_value_index = leaf.class.unwrap();
     let weighted_leaf_outputs = (weighted_max_value, weighted_non_max_value, max_value_index);
-    
-    let data_points_in_leaf = leaf.data.as_ref().unwrap(); 
+
+    let data_points_in_leaf = leaf.data.as_ref().unwrap();
     let data_indices_in_leaf: Vec<usize> = data_points_in_leaf.sorted_feature_columns[0]
         .iter()
         .map(|(_value, index)| *index)

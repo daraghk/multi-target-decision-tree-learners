@@ -4,9 +4,9 @@ use crate::{
 };
 use rayon::prelude::*;
 
-pub fn create_dataset_with_sorted_features<'a>(
-    original_dataset: &'a MultiTargetDataSet,
-) -> MultiTargetDataSetSortedFeatures<'a> {
+pub fn create_dataset_with_sorted_features(
+    original_dataset: &MultiTargetDataSet,
+) -> MultiTargetDataSetSortedFeatures {
     let mut sorted_feature_columns = Vec::new();
     for feature_column in original_dataset.feature_columns.iter() {
         let sorted_feature_col = get_sorted_feature_tuple_vector(feature_column);
@@ -18,19 +18,19 @@ pub fn create_dataset_with_sorted_features<'a>(
         label_refs.push(label);
     }
     MultiTargetDataSetSortedFeatures {
-        labels: label_refs,
+        labels: original_dataset.labels.clone(),
         sorted_feature_columns,
     }
 }
 
-pub fn partition<'a>(
+pub fn partition(
     dataset: &MultiTargetDataSetSortedFeatures,
     split_column: usize,
     split_value: f64,
-    all_labels: &Vec<&'a Vec<f64>>,
+    all_labels: &Vec<Vec<f64>>,
 ) -> (
-    MultiTargetDataSetSortedFeatures<'a>,
-    MultiTargetDataSetSortedFeatures<'a>,
+    MultiTargetDataSetSortedFeatures,
+    MultiTargetDataSetSortedFeatures,
 ) {
     let all_labels_size = all_labels.len();
     let partitioned_indices =
@@ -87,18 +87,18 @@ fn collect_indices_for_partitioning(
     (true_indices, false_indices)
 }
 
-fn collect_partitioned_labels<'a>(
+fn collect_partitioned_labels(
     true_indices: &Vec<u8>,
     false_indices: &Vec<u8>,
-    all_labels: &Vec<&'a Vec<f64>>,
-) -> (Vec<&'a Vec<f64>>, Vec<&'a Vec<f64>>) {
+    all_labels: &Vec<Vec<f64>>,
+) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
     let mut true_labels = Vec::new();
     let mut false_labels = Vec::new();
     for i in 0..all_labels.len() {
         if true_indices[i] == 1 {
-            true_labels.push(all_labels[i]);
+            true_labels.push(all_labels[i].clone());
         } else if false_indices[i] == 1 {
-            false_labels.push(all_labels[i]);
+            false_labels.push(all_labels[i].clone());
         }
     }
     (true_labels, false_labels)
@@ -195,10 +195,6 @@ mod tests {
         let original_dataset_size = data_set.feature_rows.len();
         let all_labels = data_set.labels.clone();
         let all_labels_size = data_set.labels.len();
-        let mut label_refs = vec![];
-        for label in all_labels.iter() {
-            label_refs.push(label);
-        }
         let sorted_features_dataset = create_dataset_with_sorted_features(&data_set);
 
         let split_column = 1;
@@ -215,7 +211,7 @@ mod tests {
         let false_indices = partitioned_indices.1;
 
         let partitioned_labels =
-            collect_partitioned_labels(&true_indices, &false_indices, &label_refs);
+            collect_partitioned_labels(&true_indices, &false_indices, &all_labels);
         println!(
             "{:?}",
             (partitioned_labels.0.len(), partitioned_labels.1.len())

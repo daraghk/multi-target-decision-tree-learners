@@ -14,7 +14,7 @@ pub enum SplitMetric {
 pub struct SplitFinder {
     split_metric: SplitMetric,
     pub find_best_split:
-        fn(&MultiTargetDataSetSortedFeatures, &Vec<&Vec<f64>>, u32, usize) -> BestSplitResult,
+        fn(&MultiTargetDataSetSortedFeatures, &Vec<Vec<f64>>, u32, usize) -> BestSplitResult,
 }
 
 impl SplitFinder {

@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use common::data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target};
+use common::{data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target}, data_processor::create_dataset_with_sorted_features};
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
     split_finder::{SplitFinder, SplitMetric},
@@ -82,6 +82,21 @@ fn test_mtgbdt_multi_threaded() {
     let prediction = grad_boost_ensemble.predict(&test_set.feature_rows[0]);
     println!("{:?}", test_set.labels[0]);
     println!("{:?}", prediction);
+}
+
+#[test]
+fn test_cloning_of_sorted_features(){
+   let data = read_csv_data_multi_target(
+        "./../common/data-files/multi-target/features_train_mt.csv",
+        "./../common/data-files/multi-target/labels_train_mt.csv",
+    );
+
+    let processed_data = create_dataset_with_sorted_features(&data);
+    let before = Instant::now();
+    for _i in 0..1000{
+        let sorted_features_clone = processed_data.sorted_feature_columns.clone();
+    }
+    println!("Elapsed time: {:.2?}", before.elapsed());
 }
 
 #[test]

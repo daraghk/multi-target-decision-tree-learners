@@ -28,8 +28,8 @@ pub(crate) fn execute_gradient_boosting_loop(
     number_of_iterations: u32,
     tree_config: TreeConfig,
     learning_rate: f64,
-) -> Vec<(Box<TreeNode<GradBoostLeaf>>, Vec<Vec<f64>>)> {
-    let mut trees_and_residuals = Vec::with_capacity(number_of_iterations as usize);
+) -> Vec<Box<TreeNode<GradBoostLeaf>>> {
+    let mut trees = Vec::with_capacity(number_of_iterations as usize);
     let leaf_output_calculator =
         LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let processed_data = create_dataset_with_sorted_features(&training_data.data);
@@ -37,8 +37,9 @@ pub(crate) fn execute_gradient_boosting_loop(
         //TODO how to remove / make faster?
         //TODO how to get rid of clone - processed_data never changes - at least the feature cols don't
         let mut learner_data = processed_data.clone();
+
         let residuals = calculate_residuals(training_data);
-        learner_data.labels = residuals.iter().map(|label| label).collect();
+        learner_data.labels = residuals;
 
         let residual_tree = GradBoostMultiTargetDecisionTree::new(
             learner_data,
@@ -61,9 +62,9 @@ pub(crate) fn execute_gradient_boosting_loop(
                 );
             }
         };
-        trees_and_residuals.push((boxed_residual_tree, residuals));
+        trees.push(boxed_residual_tree);
     }
-    trees_and_residuals
+    trees
 }
 
 fn traverse_tree_to_create_map_of_index_to_leaf_output<'a>(

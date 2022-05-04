@@ -15,7 +15,7 @@ use super::{
 
 mod regression_boost_executor_functions;
 
-impl GradientBoostedEnsemble for RegressionBoostModel<'_> {
+impl GradientBoostedEnsemble for RegressionBoostModel {
     fn train(
         data: MultiTargetDataSet,
         tree_config: TreeConfig,
