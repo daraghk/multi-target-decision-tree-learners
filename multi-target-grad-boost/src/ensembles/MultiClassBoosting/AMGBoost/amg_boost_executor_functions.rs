@@ -17,7 +17,6 @@ use multi_target_decision_tree::{
 
 use super::{calculate_approximate_value, GradBoostTrainingData};
 
-//TODO THIS NEEDS CLEANUP FOR UPDATING MUTABLE LABELS ETC
 pub(crate) fn execute_gradient_boosting_loop(
     training_data: &mut GradBoostTrainingData,
     number_of_iterations: u32,
@@ -29,8 +28,6 @@ pub(crate) fn execute_gradient_boosting_loop(
         LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
     let processed_data = create_dataset_with_sorted_features(&training_data.data);
     for _i in 0..number_of_iterations {
-        //TODO how to remove / make faster?
-        //TODO how to get rid of clone - processed_data never changes - at least the feature cols don't
         let mut learner_data = processed_data.clone();
 
         let residuals = calculate_residuals(training_data);
@@ -46,7 +43,6 @@ pub(crate) fn execute_gradient_boosting_loop(
             let number_of_classes = training_data.mutable_labels[0].len();
             let number_of_classes_f64 = number_of_classes as f64;
 
-            //TODO this can be done concurrently in theory as different mutable labels are updated in each iteration
             for i in 0..training_data.size {
                 let feature_row = &training_data.data.feature_rows[i];
                 //TODO for each iteration here in this loop we traverse the current tree being looked at for each data instance

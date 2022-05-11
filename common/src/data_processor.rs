@@ -34,7 +34,7 @@ pub fn partition(
 ) {
     let all_labels_size = all_labels.len();
     let partitioned_indices =
-        collect_indices_for_partitioning(&dataset, split_column, split_value, all_labels_size);
+        collect_indices_for_partitioning(dataset, split_column, split_value, all_labels_size);
     let true_indices = partitioned_indices.0;
     let false_indices = partitioned_indices.1;
 
@@ -42,7 +42,7 @@ pub fn partition(
     let true_labels = partitioned_labels.0;
     let false_labels = partitioned_labels.1;
 
-    let partitioned_feature_colummns = collect_partitioned_feature_columns(&dataset, &true_indices);
+    let partitioned_feature_colummns = collect_partitioned_feature_columns(dataset, &true_indices);
     let feature_columns_with_true_values = partitioned_feature_colummns.0;
     let feature_columns_with_false_values = partitioned_feature_colummns.1;
 

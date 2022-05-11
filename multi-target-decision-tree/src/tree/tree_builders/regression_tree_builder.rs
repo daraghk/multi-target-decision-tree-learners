@@ -23,7 +23,7 @@ pub(crate) fn build_regression_tree(
     );
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf = RegressionLeaf { data: Some(data) };
-        return TreeNode::leaf_node(split_result.question, leaf);
+        TreeNode::leaf_node(split_result.question, leaf)
     } else {
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
@@ -59,7 +59,7 @@ pub(crate) fn build_regression_tree_using_multiple_threads(
     );
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf = RegressionLeaf { data: Some(data) };
-        return TreeNode::leaf_node(split_result.question, leaf);
+        TreeNode::leaf_node(split_result.question, leaf)
     } else {
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
@@ -71,20 +71,20 @@ pub(crate) fn build_regression_tree_using_multiple_threads(
         let new_level = current_level + 1;
         let (left_tree, right_tree) = rayon::join(
             || {
-                return build_regression_tree_using_multiple_threads(
+                build_regression_tree_using_multiple_threads(
                     left_data,
                     all_labels,
                     tree_config,
                     new_level,
-                );
+                )
             },
             || {
-                return build_regression_tree_using_multiple_threads(
+                build_regression_tree_using_multiple_threads(
                     right_data,
                     all_labels,
                     tree_config,
                     new_level,
-                );
+                )
             },
         );
         TreeNode::new(

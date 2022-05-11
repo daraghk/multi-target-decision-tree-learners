@@ -15,7 +15,7 @@ pub struct RegressionLeaf {
 
 #[derive(Debug, Clone)]
 pub struct GradBoostLeaf {
-    pub data: Option<MultiTargetDataSetSortedFeatures>,
+    pub data_indices: Vec<usize>,
     pub leaf_output: Option<Vec<f64>>,
 }
 

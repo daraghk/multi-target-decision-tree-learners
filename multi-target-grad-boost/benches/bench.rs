@@ -23,9 +23,7 @@ fn perform_gradient_boosting_single_threaded(c: &mut Criterion) {
     };
 
     c.bench_function("multi target grad boost tree build - single thread", |b| {
-        b.iter(|| {
-            return RegressionBoostModel::train(data_set.clone(), tree_config, 300, 0.1);
-        })
+        b.iter(|| RegressionBoostModel::train(data_set.clone(), tree_config, 300, 0.1))
     });
 }
 
@@ -44,9 +42,7 @@ fn perform_gradient_boosting_multi_threaded(c: &mut Criterion) {
     };
 
     c.bench_function("multi target grad boost tree build - multi threaded", |b| {
-        b.iter(|| {
-            return RegressionBoostModel::train(data_set.clone(), tree_config, 300, 0.1);
-        })
+        b.iter(|| RegressionBoostModel::train(data_set.clone(), tree_config, 300, 0.1))
     });
 }
 

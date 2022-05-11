@@ -33,18 +33,17 @@ impl LeafOutputCalculator {
 }
 
 pub fn calculate_leaf_output_squared_loss(leaf_labels: &Vec<Vec<f64>>) -> Vec<f64> {
-    let average_residuals = calculate_average_f64_vector(&leaf_labels);
-    average_residuals
+    calculate_average_f64_vector(leaf_labels)
 }
 
 pub fn calculate_leaf_output_multi_class_loss(leaf_labels: &Vec<Vec<f64>>) -> Vec<f64> {
-    let numerator = sum_of_f64_vectors(&leaf_labels);
-    let denominator = calculate_denominator_term_for_leaf_output(&leaf_labels);
+    let numerator = sum_of_f64_vectors(leaf_labels);
+    let denominator = calculate_denominator_term_for_leaf_output(leaf_labels);
     let numerator_over_denominator = divide_f64_slices_as_vector(&numerator, &denominator);
     let number_of_classes = leaf_labels[0].len() as f64;
     let scalar = (number_of_classes - 1.) / number_of_classes;
-    let result = multiply_f64_slice_by_f64_scalar(scalar, &numerator_over_denominator);
-    result
+
+    multiply_f64_slice_by_f64_scalar(scalar, &numerator_over_denominator)
 }
 
 fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {

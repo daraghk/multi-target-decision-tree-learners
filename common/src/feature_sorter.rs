@@ -3,7 +3,7 @@ pub fn get_sorted_feature_tuple_vector(feature_column: &[f64]) -> Vec<(f64, usiz
     for (i, feature_value) in feature_column.iter().enumerate() {
         feature_tuple_vector.push((*feature_value, i));
     }
-    feature_tuple_vector.sort_by(|a, b| a.partial_cmp(&b).unwrap());
+    feature_tuple_vector.sort_by(|a, b| a.partial_cmp(b).unwrap());
     feature_tuple_vector
 }
 

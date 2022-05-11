@@ -128,7 +128,7 @@ mod tests {
         let columns = create_feature_columns(&data_set.features);
 
         let multi_target_dataset = MultiTargetDataSet {
-            feature_rows: data_set.features.clone(),
+            feature_rows: data_set.features,
             feature_columns: columns,
             labels: mt_labels,
         };

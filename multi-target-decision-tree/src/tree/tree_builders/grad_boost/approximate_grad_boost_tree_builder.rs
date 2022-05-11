@@ -30,7 +30,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree(
             class: Some(class),
             data: Some(data),
         };
-        return TreeNode::leaf_node(split_result.question, leaf);
+        TreeNode::leaf_node(split_result.question, leaf)
     } else {
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
@@ -85,7 +85,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
             class: Some(class),
             data: Some(data),
         };
-        return TreeNode::leaf_node(split_result.question, leaf);
+        TreeNode::leaf_node(split_result.question, leaf)
     } else {
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
@@ -97,22 +97,22 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
         let new_level = current_level + 1;
         let (left_tree, right_tree) = rayon::join(
             || {
-                return build_approximate_grad_boost_regression_tree_using_multiple_threads(
+                build_approximate_grad_boost_regression_tree_using_multiple_threads(
                     left_data,
                     all_labels,
                     tree_config,
                     leaf_output_calculator,
                     new_level,
-                );
+                )
             },
             || {
-                return build_approximate_grad_boost_regression_tree_using_multiple_threads(
+                build_approximate_grad_boost_regression_tree_using_multiple_threads(
                     right_data,
                     all_labels,
                     tree_config,
                     leaf_output_calculator,
                     new_level,
-                );
+                )
             },
         );
         TreeNode::new(

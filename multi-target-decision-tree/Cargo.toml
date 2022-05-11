@@ -16,6 +16,3 @@ criterion = "0.3.5"
 [[bench]]
 name = "bench_tree_building" 
 harness = false
-
-[profile.release]
-lto = true

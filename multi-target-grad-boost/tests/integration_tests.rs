@@ -1,6 +1,9 @@
 use std::time::Instant;
 
-use common::{data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target}, data_processor::create_dataset_with_sorted_features};
+use common::{
+    data_processor::create_dataset_with_sorted_features,
+    data_reader::{read_csv_data_multi_target, read_csv_data_one_hot_multi_target},
+};
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
     split_finder::{SplitFinder, SplitMetric},
@@ -85,16 +88,16 @@ fn test_mtgbdt_multi_threaded() {
 }
 
 #[test]
-fn test_cloning_of_sorted_features(){
-   let data = read_csv_data_multi_target(
+fn test_cloning_of_sorted_features() {
+    let data = read_csv_data_multi_target(
         "./../common/data-files/multi-target/features_train_mt.csv",
         "./../common/data-files/multi-target/labels_train_mt.csv",
     );
 
     let processed_data = create_dataset_with_sorted_features(&data);
     let before = Instant::now();
-    for _i in 0..1000{
-        let sorted_features_clone = processed_data.sorted_feature_columns.clone();
+    for _i in 0..1000 {
+        let _sorted_features_clone = processed_data.sorted_feature_columns.clone();
     }
     println!("Elapsed time: {:.2?}", before.elapsed());
 }
@@ -145,7 +148,7 @@ fn test_mtgbdt_multi_threaded_for_mcc_mnist() {
     };
 
     let before = Instant::now();
-    let grad_boost_ensemble = MultiClassBoostModel::train(true_data, tree_config, 50, 0.1);
+    let grad_boost_ensemble = MultiClassBoostModel::train(true_data, tree_config, 10, 0.1);
     println!("Elapsed time: {:.2?}", before.elapsed());
 
     let test_set = read_csv_data_one_hot_multi_target("./../common/data-files/mnist_test.csv", 10);

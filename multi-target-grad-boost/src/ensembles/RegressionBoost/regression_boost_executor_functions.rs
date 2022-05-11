@@ -2,7 +2,8 @@ use std::rc::Rc;
 
 use common::{
     data_processor::create_dataset_with_sorted_features,
-    numerical_calculations::{subtract_f64_slices_as_vector, add_f64_slices_mutating}, datasets::MultiTargetDataSetSortedFeatures,
+    datasets::MultiTargetDataSetSortedFeatures,
+    numerical_calculations::{add_f64_slices_mutating, subtract_f64_slices_as_vector},
 };
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
@@ -10,16 +11,12 @@ use multi_target_decision_tree::{
         grad_boost_leaf_output::{LeafOutputCalculator, LeafOutputType},
         GradBoostMultiTargetDecisionTree,
     },
-    leaf::{GradBoostLeaf},
+    leaf::GradBoostLeaf,
     node::TreeNode,
 };
 use rayon::prelude::*;
 
-use crate::{
-    boosting_ensemble::{
-        boosting_types::GradBoostTrainingData,
-    },
-};
+use crate::boosting_ensemble::boosting_types::GradBoostTrainingData;
 
 pub(super) fn execute_gradient_boosting_loop<'a>(
     training_data: &mut GradBoostTrainingData,
@@ -32,7 +29,7 @@ pub(super) fn execute_gradient_boosting_loop<'a>(
     let processed_data = create_dataset_with_sorted_features(&training_data.data);
     for _i in 0..number_of_iterations {
         let residuals = calculate_residuals(training_data);
-        let learner_data = MultiTargetDataSetSortedFeatures{
+        let learner_data = MultiTargetDataSetSortedFeatures {
             sorted_feature_columns: processed_data.sorted_feature_columns.clone(),
             labels: residuals,
         };
@@ -47,7 +44,7 @@ pub(super) fn execute_gradient_boosting_loop<'a>(
         traverse_tree_to_create_map_of_index_to_leaf_output(
             &boxed_residual_tree,
             &mut map_data_indices_to_weighted_leaf_output,
-            learning_rate
+            learning_rate,
         );
 
         for i in 0..training_data.size {
@@ -73,33 +70,32 @@ fn calculate_residuals(training_data: &GradBoostTrainingData) -> Vec<Vec<f64>> {
 fn traverse_tree_to_create_map_of_index_to_leaf_output(
     node: &Box<TreeNode<GradBoostLeaf>>,
     map_data_indices_to_weighted_leaf_output: &mut Vec<Vec<f64>>,
-    learning_rate: f64
+    learning_rate: f64,
 ) {
     if node.is_leaf_node() {
         let leaf = node.leaf.as_ref().unwrap();
         let leaf_output = leaf.leaf_output.as_ref().unwrap();
-        let weighted_leaf_output = leaf_output.into_iter().map(|x| learning_rate * x).collect::<Vec<_>>();
-        let data_points_in_leaf = leaf.data.as_ref().unwrap();
-        let data_indices_in_leaf: Vec<usize> = data_points_in_leaf.sorted_feature_columns[0]
-            .iter()
-            .map(|(_value, index)| *index)
-            .collect();
+        let weighted_leaf_output = leaf_output
+            .into_iter()
+            .map(|x| learning_rate * x)
+            .collect::<Vec<_>>();
+        let data_indices_in_leaf = &leaf.data_indices;
         data_indices_in_leaf.iter().for_each(|index| {
-            map_data_indices_to_weighted_leaf_output[*index] =  weighted_leaf_output.clone();
+            map_data_indices_to_weighted_leaf_output[*index] = weighted_leaf_output.clone();
         });
     } else {
         if node.true_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
                 &node.true_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
-                learning_rate
+                learning_rate,
             );
         }
         if node.false_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
                 &node.false_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
-                learning_rate
+                learning_rate,
             );
         }
     }

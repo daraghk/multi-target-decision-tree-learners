@@ -14,22 +14,22 @@ pub fn print_tree_regression(
         "{}",
         format!(
             "{} {:?}",
-            spacing.clone(),
+            spacing,
             root.question
                 .to_string(&feature_names[root.question.column as usize])
         )
     );
     println!("{}", spacing.clone() + "--> True: ");
     print_tree_regression(
-        &root.true_branch.as_ref().unwrap(),
+        root.true_branch.as_ref().unwrap(),
         spacing.clone() + "    ",
         feature_names,
     );
 
     println!("{}", spacing.clone() + "--> False: ");
     print_tree_regression(
-        &root.false_branch.as_ref().unwrap(),
-        spacing.clone() + "    ",
+        root.false_branch.as_ref().unwrap(),
+        spacing + "    ",
         feature_names,
     );
 }

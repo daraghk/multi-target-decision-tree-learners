@@ -25,9 +25,7 @@ fn benchmark_build_tree(c: &mut Criterion) {
     };
 
     c.bench_function("multi target tree build", |b| {
-        b.iter(|| {
-            return RegressionMultiTargetDecisionTree::new(data.clone(), tree_config);
-        })
+        b.iter(|| RegressionMultiTargetDecisionTree::new(data.clone(), tree_config))
     });
 }
 

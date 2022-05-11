@@ -28,11 +28,15 @@ pub(crate) fn build_grad_boost_regression_tree(
     );
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf_output = (leaf_output_calculator.calculate_leaf_output)(&data.labels);
+       let data_indices_in_leaf: Vec<usize> = data.sorted_feature_columns[0]
+            .iter()
+            .map(|(_value, index)| *index)
+            .collect();
         let leaf = GradBoostLeaf {
             leaf_output: Some(leaf_output),
-            data: Some(data),
+            data_indices: data_indices_in_leaf
         };
-        return TreeNode::leaf_node(split_result.question, leaf);
+        TreeNode::leaf_node(split_result.question, leaf)
     } else {
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
@@ -81,11 +85,15 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
     );
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf_output = (leaf_output_calculator.calculate_leaf_output)(&data.labels);
+        let data_indices_in_leaf: Vec<usize> = data.sorted_feature_columns[0]
+            .iter()
+            .map(|(_value, index)| *index)
+            .collect();
         let leaf = GradBoostLeaf {
             leaf_output: Some(leaf_output),
-            data: Some(data),
+            data_indices: data_indices_in_leaf
         };
-        return TreeNode::leaf_node(split_result.question, leaf);
+        TreeNode::leaf_node(split_result.question, leaf)
     } else {
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
@@ -97,22 +105,22 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
         let new_level = current_level + 1;
         let (left_tree, right_tree) = rayon::join(
             || {
-                return build_grad_boost_regression_tree_using_multiple_threads(
+                build_grad_boost_regression_tree_using_multiple_threads(
                     left_data,
                     all_labels,
                     tree_config,
                     leaf_output_calculator,
                     new_level,
-                );
+                )
             },
             || {
-                return build_grad_boost_regression_tree_using_multiple_threads(
+                build_grad_boost_regression_tree_using_multiple_threads(
                     right_data,
                     all_labels,
                     tree_config,
                     leaf_output_calculator,
                     new_level,
-                );
+                )
             },
         );
         TreeNode::new(
