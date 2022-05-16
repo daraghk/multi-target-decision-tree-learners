@@ -1,7 +1,4 @@
-use std::rc::Rc;
-
 use common::{
-    data_processor::create_dataset_with_sorted_features,
     datasets::MultiTargetDataSetSortedFeatures,
     numerical_calculations::{add_f64_slices_mutating, subtract_f64_slices_as_vector},
 };
@@ -14,7 +11,6 @@ use multi_target_decision_tree::{
     leaf::GradBoostLeaf,
     node::TreeNode,
 };
-use rayon::prelude::*;
 
 use crate::boosting_ensemble::boosting_types::GradBoostTrainingData;
 
@@ -26,16 +22,15 @@ pub(super) fn execute_gradient_boosting_loop<'a>(
 ) -> Vec<Box<TreeNode<GradBoostLeaf>>> {
     let mut trees = Vec::with_capacity(number_of_iterations as usize);
     let leaf_output_calculator = LeafOutputCalculator::new(LeafOutputType::Regression);
-    let processed_data = create_dataset_with_sorted_features(&training_data.data);
+    let mut current_residual_learner_data = MultiTargetDataSetSortedFeatures {
+        sorted_feature_columns: training_data.data.sorted_feature_columns.clone(),
+        labels: training_data.data.labels.clone(),
+    };
     for _i in 0..number_of_iterations {
         let residuals = calculate_residuals(training_data);
-        let learner_data = MultiTargetDataSetSortedFeatures {
-            sorted_feature_columns: processed_data.sorted_feature_columns.clone(),
-            labels: residuals,
-        };
-
+        current_residual_learner_data.labels = residuals;
         let residual_tree = GradBoostMultiTargetDecisionTree::new(
-            learner_data,
+            &current_residual_learner_data,
             tree_config,
             leaf_output_calculator,
         );

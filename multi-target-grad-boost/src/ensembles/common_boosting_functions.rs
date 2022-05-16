@@ -1,12 +1,4 @@
 pub mod update_common {
-    use common::numerical_calculations::add_f64_slices_as_vector;
-    use multi_target_decision_tree::{leaf::GradBoostLeaf, node::TreeNode};
-
-    use crate::{
-        boosting_ensemble::boosting_types::GradBoostTrainingData,
-        tree_traverse::find_leaf_node_for_data,
-    };
-
     //Common to AMGBoost MultiClassBoost and RegressionBoost
     pub fn update_dataset_labels_with_initial_guess(
         mutable_labels: &mut Vec<Vec<f64>>,
@@ -14,25 +6,6 @@ pub mod update_common {
     ) {
         for i in 0..mutable_labels.len() {
             mutable_labels[i] = initial_guess.clone();
-        }
-    }
-
-    //Common to MultiClassBoost and RegressionBoost
-    pub fn update_dataset_labels(
-        training_data: &mut GradBoostTrainingData,
-        boxed_tree_ref: &Box<TreeNode<GradBoostLeaf>>,
-        learning_rate: f64,
-    ) {
-        for i in 0..training_data.size {
-            let leaf_data =
-                find_leaf_node_for_data(&training_data.data.feature_rows[i], boxed_tree_ref);
-            let leaf_output = leaf_data.leaf_output.as_ref().unwrap();
-            let weighted_leaf_output = leaf_output
-                .into_iter()
-                .map(|x| learning_rate * x)
-                .collect::<Vec<_>>();
-            training_data.mutable_labels[i] =
-                add_f64_slices_as_vector(&training_data.mutable_labels[i], &weighted_leaf_output);
         }
     }
 }

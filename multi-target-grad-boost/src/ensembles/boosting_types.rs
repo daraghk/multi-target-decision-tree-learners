@@ -1,4 +1,4 @@
-use common::datasets::MultiTargetDataSet;
+use common::datasets::MultiTargetDataSetSortedFeatures;
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
     leaf::{AMGBoostLeaf, GradBoostLeaf, Leaf},
@@ -46,7 +46,7 @@ pub struct BoostingExecutor<T: Leaf> {
 }
 
 pub struct GradBoostTrainingData {
-    pub data: MultiTargetDataSet,
+    pub data: MultiTargetDataSetSortedFeatures, //contains unchanging labels also and sorted feature cols
     pub mutable_labels: Vec<Vec<f64>>,
     pub size: usize,
 }

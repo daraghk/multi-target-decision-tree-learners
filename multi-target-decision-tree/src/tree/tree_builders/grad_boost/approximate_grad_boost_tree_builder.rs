@@ -8,7 +8,7 @@ use common::{
 };
 
 pub(crate) fn build_approximate_grad_boost_regression_tree(
-    data: MultiTargetDataSetSortedFeatures,
+    data: &MultiTargetDataSetSortedFeatures,
     all_labels: &Vec<Vec<f64>>,
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
@@ -25,10 +25,14 @@ pub(crate) fn build_approximate_grad_boost_regression_tree(
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf_output = (leaf_output_calculator.calculate_leaf_output)(&data.labels);
         let (max_value, class) = find_max_value_and_index_from_vector(&leaf_output);
+        let data_indices_in_leaf: Vec<usize> = data.sorted_feature_columns[0]
+            .iter()
+            .map(|(_value, index)| *index)
+            .collect();
         let leaf = AMGBoostLeaf {
             max_value: Some(max_value),
             class: Some(class),
-            data: Some(data),
+            data_indices: data_indices_in_leaf,
         };
         TreeNode::leaf_node(split_result.question, leaf)
     } else {
@@ -41,14 +45,14 @@ pub(crate) fn build_approximate_grad_boost_regression_tree(
 
         let new_level = current_level + 1;
         let left_tree = build_approximate_grad_boost_regression_tree(
-            left_data,
+            &left_data,
             all_labels,
             tree_config,
             leaf_output_calculator,
             new_level,
         );
         let right_tree = build_approximate_grad_boost_regression_tree(
-            right_data,
+            &right_data,
             all_labels,
             tree_config,
             leaf_output_calculator,
@@ -63,7 +67,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree(
 }
 
 pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_threads(
-    data: MultiTargetDataSetSortedFeatures,
+    data: &MultiTargetDataSetSortedFeatures,
     all_labels: &Vec<Vec<f64>>,
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
@@ -80,10 +84,14 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
     if split_result.gain == 0.0 || current_level == tree_config.max_levels {
         let leaf_output = (leaf_output_calculator.calculate_leaf_output)(&data.labels);
         let (max_value, class) = find_max_value_and_index_from_vector(&leaf_output);
+        let data_indices_in_leaf: Vec<usize> = data.sorted_feature_columns[0]
+            .iter()
+            .map(|(_value, index)| *index)
+            .collect();
         let leaf = AMGBoostLeaf {
             max_value: Some(max_value),
             class: Some(class),
-            data: Some(data),
+            data_indices: data_indices_in_leaf,
         };
         TreeNode::leaf_node(split_result.question, leaf)
     } else {
@@ -98,7 +106,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
         let (left_tree, right_tree) = rayon::join(
             || {
                 build_approximate_grad_boost_regression_tree_using_multiple_threads(
-                    left_data,
+                    &left_data,
                     all_labels,
                     tree_config,
                     leaf_output_calculator,
@@ -107,7 +115,7 @@ pub(crate) fn build_approximate_grad_boost_regression_tree_using_multiple_thread
             },
             || {
                 build_approximate_grad_boost_regression_tree_using_multiple_threads(
-                    right_data,
+                    &right_data,
                     all_labels,
                     tree_config,
                     leaf_output_calculator,

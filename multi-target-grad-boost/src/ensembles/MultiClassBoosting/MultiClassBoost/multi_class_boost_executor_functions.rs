@@ -1,7 +1,5 @@
 use common::{
-    data_processor::create_dataset_with_sorted_features,
-    datasets::MultiTargetDataSetSortedFeatures,
-    numerical_calculations::{add_f64_slices_mutating},
+    datasets::MultiTargetDataSetSortedFeatures, numerical_calculations::add_f64_slices_mutating,
 };
 use multi_target_decision_tree::{
     decision_trees::TreeConfig,
@@ -13,11 +11,9 @@ use multi_target_decision_tree::{
     node::TreeNode,
 };
 
-use crate::{
-    boosting_ensemble::{
-        boosting_types::GradBoostTrainingData,
-        common_multi_class_boosting_functions::executor_helper_functions::calculate_residuals,
-    },
+use crate::boosting_ensemble::{
+    boosting_types::GradBoostTrainingData,
+    common_multi_class_boosting_functions::executor_helper_functions::calculate_residuals,
 };
 
 pub(crate) fn execute_gradient_boosting_loop(
@@ -29,16 +25,15 @@ pub(crate) fn execute_gradient_boosting_loop(
     let mut trees = Vec::with_capacity(number_of_iterations as usize);
     let leaf_output_calculator =
         LeafOutputCalculator::new(LeafOutputType::MultiClassClassification);
-    let processed_data = create_dataset_with_sorted_features(&training_data.data);
+    let mut current_residual_learner_data = MultiTargetDataSetSortedFeatures {
+        sorted_feature_columns: training_data.data.sorted_feature_columns.clone(),
+        labels: training_data.data.labels.clone(),
+    };
     for _i in 0..number_of_iterations {
         let residuals = calculate_residuals(training_data);
-        let learner_data = MultiTargetDataSetSortedFeatures {
-            sorted_feature_columns: processed_data.sorted_feature_columns.clone(),
-            labels: residuals,
-        };
-
+        current_residual_learner_data.labels = residuals;
         let residual_tree = GradBoostMultiTargetDecisionTree::new(
-            learner_data,
+            &current_residual_learner_data,
             tree_config,
             leaf_output_calculator,
         );
@@ -52,7 +47,6 @@ pub(crate) fn execute_gradient_boosting_loop(
 
         for i in 0..training_data.size {
             let weighted_leaf_output = &map_data_indices_to_weighted_leaf_output[i];
-            // println!("{:?} {:?}", i, weighted_leaf_output);
             add_f64_slices_mutating(&mut training_data.mutable_labels[i], weighted_leaf_output);
         }
         trees.push(boxed_residual_tree);

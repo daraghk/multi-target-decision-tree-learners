@@ -21,7 +21,7 @@ pub struct GradBoostLeaf {
 
 #[derive(Debug, Clone)]
 pub struct AMGBoostLeaf {
-    pub data: Option<MultiTargetDataSetSortedFeatures>,
+    pub data_indices: Vec<usize>,
     pub max_value: Option<f64>,
     pub class: Option<usize>,
 }

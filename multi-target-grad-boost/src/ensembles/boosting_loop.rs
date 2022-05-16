@@ -1,4 +1,7 @@
-use common::{datasets::MultiTargetDataSet, numerical_calculations::calculate_average_f64_vector};
+use common::{
+    data_processor::create_dataset_with_sorted_features, datasets::MultiTargetDataSet,
+    numerical_calculations::calculate_average_f64_vector,
+};
 use multi_target_decision_tree::{decision_trees::TreeConfig, leaf::Leaf};
 
 use super::{
@@ -17,8 +20,9 @@ pub fn boosting_loop<T: Leaf>(
 ) -> BoostingResult<T> {
     let mutable_labels = data.labels.clone();
     let training_data_size = data.labels.len();
+    let processed_data = create_dataset_with_sorted_features(&data);
     let mut training_data = GradBoostTrainingData {
-        data,
+        data: processed_data,
         mutable_labels,
         size: training_data_size,
     };

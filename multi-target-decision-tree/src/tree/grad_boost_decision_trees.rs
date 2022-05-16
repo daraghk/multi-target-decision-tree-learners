@@ -25,7 +25,7 @@ pub struct GradBoostMultiTargetDecisionTree {
 
 impl GradBoostMultiTargetDecisionTree {
     pub fn new(
-        data: MultiTargetDataSetSortedFeatures,
+        data: &MultiTargetDataSetSortedFeatures,
         tree_config: TreeConfig,
         leaf_output_calculator: LeafOutputCalculator,
     ) -> Self {
@@ -61,7 +61,7 @@ pub struct AMGBoostTree {
 
 impl AMGBoostTree {
     pub fn new(
-        data: MultiTargetDataSetSortedFeatures,
+        data: &MultiTargetDataSetSortedFeatures,
         tree_config: TreeConfig,
         leaf_output_calculator: LeafOutputCalculator,
     ) -> Self {
