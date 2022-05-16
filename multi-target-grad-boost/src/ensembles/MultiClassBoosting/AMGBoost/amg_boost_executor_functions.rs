@@ -84,7 +84,7 @@ fn traverse_tree_to_create_map_of_index_to_leaf_output(
     } else {
         if node.true_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
-                &node.true_branch.as_ref().unwrap(),
+                node.true_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
                 number_of_classes,
                 learning_rate,
@@ -92,7 +92,7 @@ fn traverse_tree_to_create_map_of_index_to_leaf_output(
         }
         if node.false_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
-                &node.false_branch.as_ref().unwrap(),
+                node.false_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
                 number_of_classes,
                 learning_rate,

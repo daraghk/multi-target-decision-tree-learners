@@ -16,7 +16,7 @@ pub mod predict_helper_functions {
     }
 
     pub fn calculate_accuracy_from_predictions(
-        predictions: &Vec<Vec<f64>>,
+        predictions: &[Vec<f64>],
         test_set: &MultiTargetDataSet,
     ) -> f64 {
         let mut correct_count = 0.;
@@ -58,7 +58,7 @@ pub mod executor_helper_functions {
     }
 
     //current label ~ current prediction
-    fn calculate_probabilities_of_predictions(current_label: &Vec<f64>) -> Vec<f64> {
+    fn calculate_probabilities_of_predictions(current_label: &[f64]) -> Vec<f64> {
         let exponential_of_current_data_label: Vec<f64> =
             current_label.iter().map(|element| element.exp()).collect();
         let sum_of_exponentials_of_predictions: f64 =

@@ -27,7 +27,7 @@ pub fn partition(
     dataset: &MultiTargetDataSetSortedFeatures,
     split_column: usize,
     split_value: f64,
-    all_labels: &Vec<Vec<f64>>,
+    all_labels: &[Vec<f64>],
 ) -> (
     MultiTargetDataSetSortedFeatures,
     MultiTargetDataSetSortedFeatures,
@@ -88,9 +88,9 @@ fn collect_indices_for_partitioning(
 }
 
 fn collect_partitioned_labels(
-    true_indices: &Vec<u8>,
-    false_indices: &Vec<u8>,
-    all_labels: &Vec<Vec<f64>>,
+    true_indices: &[u8],
+    false_indices: &[u8],
+    all_labels: &[Vec<f64>],
 ) -> (Vec<Vec<f64>>, Vec<Vec<f64>>) {
     let mut true_labels = Vec::new();
     let mut false_labels = Vec::new();
@@ -106,7 +106,7 @@ fn collect_partitioned_labels(
 
 fn collect_partitioned_feature_columns(
     dataset: &MultiTargetDataSetSortedFeatures,
-    true_indices: &Vec<u8>,
+    true_indices: &[u8],
 ) -> (Vec<Vec<(f64, usize)>>, Vec<Vec<(f64, usize)>>) {
     let (true_feature_columns, false_feature_columns): (
         Vec<Vec<(f64, usize)>>,

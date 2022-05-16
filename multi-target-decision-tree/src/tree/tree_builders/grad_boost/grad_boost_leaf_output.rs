@@ -17,7 +17,7 @@ pub enum LeafOutputType {
 #[derive(Clone, Copy)]
 pub struct LeafOutputCalculator {
     leaf_output_type: LeafOutputType,
-    pub calculate_leaf_output: fn(&Vec<Vec<f64>>) -> Vec<f64>,
+    pub calculate_leaf_output: fn(&[Vec<f64>]) -> Vec<f64>,
 }
 
 impl LeafOutputCalculator {
@@ -32,11 +32,11 @@ impl LeafOutputCalculator {
     }
 }
 
-pub fn calculate_leaf_output_squared_loss(leaf_labels: &Vec<Vec<f64>>) -> Vec<f64> {
+pub fn calculate_leaf_output_squared_loss(leaf_labels: &[Vec<f64>]) -> Vec<f64> {
     calculate_average_f64_vector(leaf_labels)
 }
 
-pub fn calculate_leaf_output_multi_class_loss(leaf_labels: &Vec<Vec<f64>>) -> Vec<f64> {
+pub fn calculate_leaf_output_multi_class_loss(leaf_labels: &[Vec<f64>]) -> Vec<f64> {
     let numerator = sum_of_f64_vectors(leaf_labels);
     let denominator = calculate_denominator_term_for_leaf_output(leaf_labels);
     let numerator_over_denominator = divide_f64_slices_as_vector(&numerator, &denominator);
@@ -46,7 +46,7 @@ pub fn calculate_leaf_output_multi_class_loss(leaf_labels: &Vec<Vec<f64>>) -> Ve
     multiply_f64_slice_by_f64_scalar(scalar, &numerator_over_denominator)
 }
 
-fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &Vec<Vec<f64>>) -> Vec<f64> {
+fn calculate_denominator_term_for_leaf_output(vector_of_vectors: &[Vec<f64>]) -> Vec<f64> {
     let length_of_inner_vectors = vector_of_vectors[0].len();
     let mut sum_vector = vec![0.; length_of_inner_vectors];
     vector_of_vectors.iter().for_each(|inner_vector| {

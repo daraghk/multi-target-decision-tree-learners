@@ -6,7 +6,7 @@ use super::calculate_approximate_value;
 
 pub fn predict_instance(
     test_feature_row: &[f64],
-    trees: &Vec<Box<TreeNode<AMGBoostLeaf>>>,
+    trees: &[Box<TreeNode<AMGBoostLeaf>>],
     initial_guess: &[f64],
     learning_rate: f64,
     number_of_classes: usize,
@@ -28,7 +28,7 @@ pub fn predict_instance(
 
 fn collect_leaf_outputs_for_test_instance(
     test_feature_row: &[f64],
-    trees: &Vec<Box<TreeNode<AMGBoostLeaf>>>,
+    trees: &[Box<TreeNode<AMGBoostLeaf>>],
     learning_rate: f64,
     number_of_classes: usize,
 ) -> Vec<Vec<f64>> {

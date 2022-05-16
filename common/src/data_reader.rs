@@ -103,7 +103,7 @@ fn create_multi_target_labels(labels: Vec<f64>, number_of_targets: usize) -> Vec
     multi_target_labels
 }
 
-pub fn create_feature_columns(data_set_features: &Vec<Vec<f64>>) -> Vec<Vec<f64>> {
+pub fn create_feature_columns(data_set_features: &[Vec<f64>]) -> Vec<Vec<f64>> {
     let mut columns = vec![];
     for col in 0..data_set_features[0].len() {
         let mut column = vec![];

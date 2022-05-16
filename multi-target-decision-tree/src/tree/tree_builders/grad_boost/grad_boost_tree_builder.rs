@@ -13,7 +13,7 @@ use common::{
 use super::{LeafOutputCalculator, TreeConfig};
 pub(crate) fn build_grad_boost_regression_tree(
     data: &MultiTargetDataSetSortedFeatures,
-    all_labels: &Vec<Vec<f64>>,
+    all_labels: &[Vec<f64>],
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
     current_level: u32,
@@ -21,7 +21,7 @@ pub(crate) fn build_grad_boost_regression_tree(
     let number_of_cols = data.sorted_feature_columns.len();
     let number_of_targets = data.labels[0].len() as u32;
     let split_result = split_finder::split_finder_variance::find_best_split(
-        &data,
+        data,
         all_labels,
         number_of_targets,
         number_of_cols,
@@ -41,7 +41,7 @@ pub(crate) fn build_grad_boost_regression_tree(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(data, split_column, split_value, all_labels);
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 
@@ -70,7 +70,7 @@ pub(crate) fn build_grad_boost_regression_tree(
 
 pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
     data: &MultiTargetDataSetSortedFeatures,
-    all_labels: &Vec<Vec<f64>>,
+    all_labels: &[Vec<f64>],
     tree_config: TreeConfig,
     leaf_output_calculator: LeafOutputCalculator,
     current_level: u32,
@@ -78,7 +78,7 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
     let number_of_cols = data.sorted_feature_columns.len();
     let number_of_targets = data.labels[0].len() as u32;
     let split_result = split_finder::split_finder_variance::find_best_split(
-        &data,
+        data,
         all_labels,
         number_of_targets,
         number_of_cols,
@@ -98,7 +98,7 @@ pub(crate) fn build_grad_boost_regression_tree_using_multiple_threads(
         let split_column = split_result.question.column as usize;
         let split_value = split_result.question.value;
         let partitioned_data =
-            data_processor::partition(&data, split_column, split_value, all_labels);
+            data_processor::partition(data, split_column, split_value, all_labels);
         let left_data = partitioned_data.0;
         let right_data = partitioned_data.1;
 

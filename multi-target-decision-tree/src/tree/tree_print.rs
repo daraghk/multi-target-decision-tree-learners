@@ -3,7 +3,7 @@ use crate::{leaf::RegressionLeaf, node::TreeNode};
 pub fn print_tree_regression(
     root: &Box<TreeNode<RegressionLeaf>>,
     spacing: String,
-    feature_names: &Vec<String>,
+    feature_names: &[String],
 ) {
     if root.leaf.is_some() {
         let leaf_ref = &root.leaf.as_ref().unwrap();

@@ -11,7 +11,7 @@ struct VarianceValueTrackerMultiTarget {
 
 pub(super) fn determine_best_threshold(
     number_of_labels_in_subset: usize,
-    all_labels: &Vec<Vec<f64>>,
+    all_labels: &[Vec<f64>],
     feature_column: &[(f64, usize)],
     total_multi_target_label_metrics: &MultiTargetLabelMetrics,
     number_of_targets: usize,

@@ -28,7 +28,7 @@ pub mod classification {
         accuracy / test_data.feature_rows.len() as f64
     }
 
-    pub fn predict_class(feature_row: &Vec<f64>, node: &Box<TreeNode<RegressionLeaf>>) -> Vec<f64> {
+    pub fn predict_class(feature_row: &[f64], node: &Box<TreeNode<RegressionLeaf>>) -> Vec<f64> {
         let leaf = find_leaf_node_for_data(feature_row, node);
         let labels = &leaf.data.as_ref().unwrap().labels;
         let number_of_classes = labels[0].len();
@@ -49,7 +49,7 @@ pub mod classification {
     }
 
     fn get_class_counts_multi_target(
-        labels: &Vec<Vec<f64>>,
+        labels: &[Vec<f64>],
         number_of_classes: usize,
     ) -> ClassCounter {
         let mut class_counter = ClassCounter::new(number_of_classes);
@@ -83,7 +83,7 @@ pub mod regression {
         total_error / test_data.feature_rows.len() as f64
     }
 
-    fn calculate_average_label_vector(leaf_labels: &Vec<Vec<f64>>) -> Vec<f64> {
+    fn calculate_average_label_vector(leaf_labels: &[Vec<f64>]) -> Vec<f64> {
         let label_length = leaf_labels[0].len();
         let mut average_vector = vec![0.; label_length];
         for i in 0..leaf_labels.len() {
@@ -98,7 +98,7 @@ pub mod regression {
     }
 
     fn mean_sum_of_squared_differences_between_vectors(
-        prediction: &Vec<f64>,
+        prediction: &[f64],
         actual: &Vec<f64>,
     ) -> f64 {
         let mut sum_of_squared_differences = 0.;
@@ -111,8 +111,8 @@ pub mod regression {
 }
 
 fn find_leaf_node_for_data<'a, L: Leaf>(
-    feature_row: &Vec<f64>,
-    node: &'a Box<TreeNode<L>>,
+    feature_row: &[f64],
+    node: &'a TreeNode<L>,
 ) -> &'a L {
     if !node.is_leaf_node() {
         if node.question.solve(feature_row) {

@@ -46,7 +46,7 @@ fn determine_initial_guess(
     ensemble_type: BoostingEnsembleType,
 ) -> Vec<f64> {
     let number_of_classes = training_data.mutable_labels[0].len() as f64;
-    let initial_guess = match ensemble_type {
+    match ensemble_type {
         BoostingEnsembleType::AMGBoost => vec![1. / number_of_classes; number_of_classes as usize],
         BoostingEnsembleType::MultiClassBoost => {
             vec![1. / number_of_classes; number_of_classes as usize]
@@ -54,6 +54,5 @@ fn determine_initial_guess(
         BoostingEnsembleType::RegressionBoost => {
             calculate_average_f64_vector(&training_data.data.labels)
         }
-    };
-    initial_guess
+    }
 }

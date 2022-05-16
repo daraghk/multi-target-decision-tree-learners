@@ -9,7 +9,7 @@ use super::TreeConfig;
 
 pub(crate) fn build_regression_tree(
     data: MultiTargetDataSetSortedFeatures,
-    all_labels: &Vec<Vec<f64>>,
+    all_labels: &[Vec<f64>],
     tree_config: TreeConfig,
     current_level: u32,
 ) -> TreeNode<RegressionLeaf> {
@@ -45,7 +45,7 @@ pub(crate) fn build_regression_tree(
 
 pub(crate) fn build_regression_tree_using_multiple_threads(
     data: MultiTargetDataSetSortedFeatures,
-    all_labels: &Vec<Vec<f64>>,
+    all_labels: &[Vec<f64>],
     tree_config: TreeConfig,
     current_level: u32,
 ) -> TreeNode<RegressionLeaf> {

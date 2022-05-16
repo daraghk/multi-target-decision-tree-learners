@@ -14,7 +14,7 @@ use multi_target_decision_tree::{
 
 use crate::boosting_ensemble::boosting_types::GradBoostTrainingData;
 
-pub(super) fn execute_gradient_boosting_loop<'a>(
+pub(super) fn execute_gradient_boosting_loop(
     training_data: &mut GradBoostTrainingData,
     number_of_iterations: u32,
     tree_config: TreeConfig,
@@ -71,7 +71,7 @@ fn traverse_tree_to_create_map_of_index_to_leaf_output(
         let leaf = node.leaf.as_ref().unwrap();
         let leaf_output = leaf.leaf_output.as_ref().unwrap();
         let weighted_leaf_output = leaf_output
-            .into_iter()
+            .iter()
             .map(|x| learning_rate * x)
             .collect::<Vec<_>>();
         let data_indices_in_leaf = &leaf.data_indices;
@@ -81,14 +81,14 @@ fn traverse_tree_to_create_map_of_index_to_leaf_output(
     } else {
         if node.true_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
-                &node.true_branch.as_ref().unwrap(),
+                node.true_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
                 learning_rate,
             );
         }
         if node.false_branch.is_some() {
             traverse_tree_to_create_map_of_index_to_leaf_output(
-                &node.false_branch.as_ref().unwrap(),
+                node.false_branch.as_ref().unwrap(),
                 map_data_indices_to_weighted_leaf_output,
                 learning_rate,
             );

@@ -41,13 +41,12 @@ impl GradientBoostedEnsemble for RegressionBoostModel {
     }
 
     fn predict(&self, feature_row: &[f64]) -> Vec<f64> {
-        let result = predict_instance(
+        predict_instance(
             feature_row,
             &self.trees,
             &self.initial_guess,
             self.learning_rate,
-        );
-        result
+        )
     }
 
     fn calculate_all_predictions(&self, test_set: &MultiTargetDataSet) -> Vec<Vec<f64>> {
@@ -63,14 +62,13 @@ impl GradientBoostedEnsemble for RegressionBoostModel {
 
     fn calculate_score(&self, test_set: &MultiTargetDataSet) -> f64 {
         let predictions = self.calculate_all_predictions(test_set);
-        let error = calculate_mean_squared_error(&test_set.labels, &predictions);
-        error
+        calculate_mean_squared_error(&test_set.labels, &predictions)
     }
 }
 
 fn calculate_mean_squared_error(
-    test_data_labels: &Vec<Vec<f64>>,
-    predictions: &Vec<Vec<f64>>,
+    test_data_labels: &[Vec<f64>],
+    predictions: &[Vec<f64>],
 ) -> f64 {
     let mut total_error = 0.;
     let number_of_labels = test_data_labels.len();

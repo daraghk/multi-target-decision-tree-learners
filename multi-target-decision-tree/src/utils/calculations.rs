@@ -49,7 +49,7 @@ fn calculate_variance(mean_squared: f64, square_sum: f64, number_of_labels: f64)
 }
 
 pub fn get_multi_target_label_metrics(
-    labels: &Vec<Vec<f64>>,
+    labels: &[Vec<f64>],
     number_of_targets: usize,
 ) -> MultiTargetLabelMetrics {
     let label_sum_vectors = get_label_sum_vectors(labels, number_of_targets);
@@ -65,7 +65,7 @@ pub fn get_multi_target_label_metrics(
     }
 }
 
-fn get_label_sum_vectors(labels: &Vec<Vec<f64>>, number_of_targets: usize) -> (Vec<f64>, Vec<f64>) {
+fn get_label_sum_vectors(labels: &[Vec<f64>], number_of_targets: usize) -> (Vec<f64>, Vec<f64>) {
     let mut sum_of_labels_vector = vec![0.0; number_of_targets];
     let mut sum_of_squared_labels_vector = vec![0.0; number_of_targets];
     labels.iter().for_each(|label_vector| {
@@ -80,7 +80,7 @@ fn get_label_sum_vectors(labels: &Vec<Vec<f64>>, number_of_targets: usize) -> (V
 fn get_mean_of_labels_vector(
     number_of_labels: f64,
     number_of_targets: usize,
-    sum_of_labels_vector: &Vec<f64>,
+    sum_of_labels_vector: &[f64],
 ) -> Vec<f64> {
     let mut mean_of_labels_vector = vec![0.0; number_of_targets];
     for (i, sum_of_labels_vector_element) in sum_of_labels_vector.iter().enumerate() {
